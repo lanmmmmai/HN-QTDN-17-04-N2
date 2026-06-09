@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_import_cham_cong_wizard_form" model="ir.ui.view">
+            <field name="name">import_cham_cong_wizard.form</field>
+            <field name="model">import_cham_cong_wizard</field>
+            <field name="arch" type="xml">
+                <form string="Import chấm công">
+                    <sheet>
+                        <group>
+                            <field name="file_name"/>
+                            <field name="file_data" filename="file_name"/>
+                        </group>
+                        <group>
+                            <field name="ket_qua_import" nolabel="1" readonly="1"/>
+                        </group>
+                        <footer>
+                            <button name="action_import" type="object" string="Import" class="btn-primary"/>
+                            <button string="Hủy" special="cancel" class="btn-secondary"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_import_cham_cong_wizard" model="ir.actions.act_window">
+            <field name="name">Import chấm công</field>
+            <field name="res_model">import_cham_cong_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

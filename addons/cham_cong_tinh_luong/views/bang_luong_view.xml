@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_bang_luong_tree" model="ir.ui.view">
+            <field name="name">bang_luong.tree</field>
+            <field name="model">bang_luong</field>
+            <field name="arch" type="xml">
+                <tree string="Bảng lương" decoration-muted="state in ('nhap', 'draft')" decoration-info="state in ('da_tinh', 'computed')" decoration-success="state in ('xac_nhan', 'confirmed')" decoration-bf="state == 'da_thanh_toan'" decoration-danger="state in ('huy', 'cancel')">
+                    <field name="nhan_vien_id"/>
+                    <field name="thang"/>
+                    <field name="nam"/>
+                    <field name="tong_ngay_cong"/>
+                    <field name="tong_gio_lam"/>
+                    <field name="tong_gio_tang_ca"/>
+                    <field name="luong_co_ban"/>
+                    <field name="tong_phu_cap"/>
+                    <field name="tien_bao_hiem"/>
+                    <field name="tong_luong"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_bang_luong_form" model="ir.ui.view">
+            <field name="name">bang_luong.form</field>
+            <field name="model">bang_luong</field>
+            <field name="arch" type="xml">
+                <form string="Bảng lương" class="o_cctl_form">
+                    <header>
+                        <button name="action_tinh_luong" type="object" string="Tính lương" class="btn-primary" attrs="{'invisible': [('state', '!=', 'nhap')]}"/>
+                        <button name="action_xac_nhan" type="object" string="Xác nhận" attrs="{'invisible': [('state', '!=', 'da_tinh')]}"/>
+                        <button name="action_da_thanh_toan" type="object" string="Đã thanh toán" attrs="{'invisible': [('state', '!=', 'xac_nhan')]}"/>
+                        <button name="action_draft" type="object" string="Đặt về nháp" attrs="{'invisible': [('state', '=', 'nhap')]}"/>
+                        <button name="action_huy" type="object" string="Hủy" attrs="{'invisible': [('state', '=', 'huy')]}"/>
+                        <button name="action_in_phieu_luong" type="object" string="In phiếu lương" attrs="{'invisible': [('state', '=', 'nhap')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="nhap,da_tinh,xac_nhan,da_thanh_toan,huy"/>
+                    </header>
+                    <sheet>
+                        <div class="o_cctl_form_shell">
+                            <div class="o_cctl_form_hero o_cctl_form_hero_payroll">
+                                <div class="o_cctl_form_hero_title">Bảng lương nhân viên</div>
+                                <div class="o_cctl_form_hero_subtitle">Tổng hợp công, thu nhập, khấu trừ và lương thực nhận trong kỳ.</div>
+                            </div>
+                            <div class="o_cctl_warning_banner alert alert-warning" role="alert" attrs="{'invisible': [('canh_bao', '=', False)]}">
+                                <field name="canh_bao" nolabel="1" readonly="1"/>
+                            </div>
+                            <group col="4" class="o_cctl_section o_cctl_section_box o_cctl_section_box_primary" string="Kỳ lương">
+                                <field name="nhan_vien_id"/>
+                                <field name="ma_nhan_vien" readonly="1"/>
+                                <field name="thang"/>
+                                <field name="nam"/>
+                                <field name="ngay_tao"/>
+                                <field name="phong_ban_id" readonly="1"/>
+                                <field name="chuc_vu_id" readonly="1"/>
+                            </group>
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <group col="2" class="o_cctl_section o_cctl_section_box" string="Tổng hợp công">
+                                        <field name="tong_ngay_cong" readonly="1" class="o_cctl_metric_value"/>
+                                        <field name="tong_gio_lam" readonly="1" class="o_cctl_metric_value"/>
+                                        <field name="tong_gio_tang_ca" readonly="1" class="o_cctl_metric_value"/>
+                                        <field name="so_ngay_nghi" readonly="1" class="o_cctl_metric_value"/>
+                                    </group>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <group col="2" class="o_cctl_section o_cctl_section_box" string="Thu nhập">
+                                        <field name="luong_co_ban" readonly="1" class="o_cctl_salary_total"/>
+                                        <field name="luong_theo_cong" readonly="1"/>
+                                        <field name="don_gia_gio" readonly="1"/>
+                                        <field name="tien_tang_ca" readonly="1"/>
+                                        <field name="tong_phu_cap" readonly="1" class="o_cctl_salary_total"/>
+                                        <field name="he_so_tang_ca"/>
+                                    </group>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <group col="2" class="o_cctl_section o_cctl_section_box" string="Khấu trừ">
+                                        <field name="tien_bao_hiem" readonly="1"/>
+                                        <field name="thue_tncn" readonly="1"/>
+                                        <field name="khau_tru_khac" readonly="1"/>
+                                    </group>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="o_cctl_salary_total_box">
+                                        <div class="text-muted">Tổng lương thực nhận</div>
+                                        <div class="o_cctl_salary_total_value o_cctl_salary_total">
+                                            <field name="tong_luong" readonly="1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <notebook>
+                                <page string="Chi tiết chấm công">
+                                    <field name="cham_cong_ids" readonly="1">
+                                        <tree decoration-success="trang_thai == 'di_lam'" decoration-warning="trang_thai == 'di_muon'" decoration-danger="trang_thai == 'nghi'" decoration-info="trang_thai == 'tang_ca'">
+                                            <field name="nhan_vien_id"/>
+                                            <field name="ngay_cham_cong"/>
+                                            <field name="gio_vao"/>
+                                            <field name="gio_ra"/>
+                                            <field name="so_gio_lam"/>
+                                            <field name="so_gio_tang_ca"/>
+                                            <field name="trang_thai"/>
+                                            <field name="state"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Công thức tính">
+                                    <group class="o_cctl_section">
+                                        <field name="cong_thuc_tinh_luong" nolabel="1" readonly="1"/>
+                                    </group>
+                                </page>
+                                <page string="Cảnh báo">
+                                    <group class="o_cctl_section">
+                                        <field name="canh_bao" nolabel="1" readonly="1"/>
+                                    </group>
+                                </page>
+                                <page string="Ghi chú">
+                                    <field name="ghi_chu" nolabel="1"/>
+                                </page>
+                            </notebook>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_bang_luong_search" model="ir.ui.view">
+            <field name="name">bang_luong.search</field>
+            <field name="model">bang_luong</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm bảng lương">
+                    <field name="nhan_vien_id"/>
+                    <field name="thang"/>
+                    <field name="nam"/>
+                    <field name="state"/>
+                    <filter name="filter_month" string="Tháng này" domain="[('thang_so', '=', context_today().month), ('nam', '=', context_today().year)]"/>
+                    <filter name="filter_computed" string="Đã tính" domain="['|', ('state', '=', 'da_tinh'), ('state', '=', 'computed')]"/>
+                    <filter name="filter_confirmed" string="Đã xác nhận" domain="['|', ('state', '=', 'xac_nhan'), ('state', '=', 'confirmed')]"/>
+                    <filter name="filter_paid" string="Đã thanh toán" domain="[('state', '=', 'da_thanh_toan')]"/>
+                    <filter name="filter_high_salary" string="Lương cao" domain="[('tong_luong', '&gt;=', 10000000)]"/>
+                    <filter name="filter_low_salary" string="Lương thấp bất thường" domain="[('tong_luong', '&lt;=', 5000000)]"/>
+                    <separator/>
+                    <filter name="group_employee" string="Nhân viên" context="{'group_by': 'nhan_vien_id'}"/>
+                    <filter name="group_month" string="Tháng" context="{'group_by': 'thang'}"/>
+                    <filter name="group_year" string="Năm" context="{'group_by': 'nam'}"/>
+                    <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_bang_luong" model="ir.actions.act_window">
+            <field name="name">Bảng lương</field>
+            <field name="res_model">bang_luong</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="search_view_id" ref="view_bang_luong_search"/>
+        </record>
+
+        <record id="action_bang_luong_cua_toi" model="ir.actions.act_window">
+            <field name="name">Bảng lương của tôi</field>
+            <field name="res_model">bang_luong</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_bang_luong_search"/>
+            <field name="domain">[('nhan_vien_id.user_id', '=', uid)]</field>
+            <field name="context">{'search_default_filter_month': 1}</field>
+        </record>
+    </data>
+</odoo>

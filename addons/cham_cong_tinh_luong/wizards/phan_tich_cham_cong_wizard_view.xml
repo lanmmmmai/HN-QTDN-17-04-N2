@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_phan_tich_cham_cong_wizard_form" model="ir.ui.view">
+            <field name="name">phan_tich_cham_cong_wizard.form</field>
+            <field name="model">phan_tich_cham_cong_wizard</field>
+            <field name="arch" type="xml">
+                <form string="Phân tích cảnh báo">
+                    <sheet>
+                        <group>
+                            <field name="thang"/>
+                            <field name="nam"/>
+                            <field name="nhan_vien_id"/>
+                            <field name="xoa_canh_bao_cu"/>
+                        </group>
+                        <footer>
+                            <button name="action_phan_tich_canh_bao" type="object" string="Phân tích cảnh báo" class="btn-primary"/>
+                            <button string="Hủy" special="cancel" class="btn-secondary"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_phan_tich_canh_bao_wizard" model="ir.actions.act_window">
+            <field name="name">Phân tích cảnh báo</field>
+            <field name="res_model">phan_tich_cham_cong_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

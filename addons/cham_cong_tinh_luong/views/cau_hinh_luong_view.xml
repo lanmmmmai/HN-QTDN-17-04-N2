@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_cau_hinh_luong_tree" model="ir.ui.view">
+            <field name="name">cau_hinh_luong.tree</field>
+            <field name="model">cau_hinh_luong</field>
+            <field name="arch" type="xml">
+                <tree string="Cấu hình lương"
+                      decoration-success="trang_thai in ('dang_ap_dung', 'ap_dung')"
+                      decoration-muted="trang_thai == 'ngung_ap_dung'"
+                      decoration-warning="luong_co_ban &lt;= 0"
+                      decoration-danger="ngay_bat_dau and ngay_ket_thuc and ngay_ket_thuc &lt; ngay_bat_dau">
+                    <field name="nhan_vien_id"/>
+                    <field name="ma_nhan_vien"/>
+                    <field name="luong_co_ban"/>
+                    <field name="tong_phu_cap"/>
+                    <field name="ty_le_bao_hiem"/>
+                    <field name="ngay_bat_dau"/>
+                    <field name="trang_thai"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_cau_hinh_luong_kanban" model="ir.ui.view">
+            <field name="name">cau_hinh_luong.kanban</field>
+            <field name="model">cau_hinh_luong</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_small_column o_cctl_dashboard">
+                    <field name="nhan_vien_id"/>
+                    <field name="ma_nhan_vien"/>
+                    <field name="luong_co_ban"/>
+                    <field name="tong_phu_cap"/>
+                    <field name="ty_le_bao_hiem"/>
+                    <field name="trang_thai"/>
+                    <field name="ngay_bat_dau"/>
+                    <field name="ngay_ket_thuc"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record">
+                                <div class="o_kanban_card_content">
+                                    <div class="o_cctl_dashboard_card_header">
+                                        <div>
+                                            <div class="fw-bold fs-5"><field name="nhan_vien_id"/></div>
+                                            <div class="text-muted small">
+                                                Mã NV: <field name="ma_nhan_vien"/>
+                                            </div>
+                                        </div>
+                                        <t t-if="record.trang_thai.raw_value in ('dang_ap_dung', 'ap_dung')">
+                                            <span class="o_cctl_badge_success">Đang áp dụng</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="o_cctl_badge_danger">Ngừng áp dụng</span>
+                                        </t>
+                                    </div>
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-6">
+                                            <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                                <div class="o_cctl_stat_label">Lương cơ bản</div>
+                                                <div class="o_cctl_stat_value"><field name="luong_co_ban" nolabel="1"/></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="o_cctl_stat_card o_cctl_stat_card--success">
+                                                <div class="o_cctl_stat_label">Tổng phụ cấp</div>
+                                                <div class="o_cctl_stat_value"><field name="tong_phu_cap" nolabel="1"/></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="o_cctl_stat_card o_cctl_stat_card--warning">
+                                                <div class="o_cctl_stat_label">Tỷ lệ bảo hiểm</div>
+                                                <div class="o_cctl_stat_value"><field name="ty_le_bao_hiem" nolabel="1"/></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                                <div class="o_cctl_stat_label">Áp dụng từ</div>
+                                                <div class="o_cctl_stat_value"><field name="ngay_bat_dau" nolabel="1"/></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_cau_hinh_luong_form" model="ir.ui.view">
+            <field name="name">cau_hinh_luong.form</field>
+            <field name="model">cau_hinh_luong</field>
+            <field name="arch" type="xml">
+                <form string="Cấu hình lương" class="o_cctl_form">
+                    <header>
+                        <button name="action_ap_dung" type="object" string="Đang áp dụng" class="btn-primary" attrs="{'invisible': [('trang_thai', '=', 'dang_ap_dung')]}"/>
+                        <button name="action_ngung_ap_dung" type="object" string="Ngừng áp dụng" attrs="{'invisible': [('trang_thai', '=', 'ngung_ap_dung')]}"/>
+                        <field name="trang_thai" widget="statusbar" statusbar_visible="dang_ap_dung,ngung_ap_dung"/>
+                    </header>
+                    <sheet>
+                        <div class="o_cctl_form_shell">
+                            <div class="o_cctl_form_hero">
+                                <div class="o_cctl_form_hero_title">Cấu hình lương nhân viên</div>
+                                <div class="o_cctl_form_hero_subtitle">Thiết lập mức lương, phụ cấp, bảo hiểm và thời gian áp dụng theo từng nhân viên.</div>
+                            </div>
+                            <group col="4" class="o_cctl_section o_cctl_section_box o_cctl_section_box_primary" string="Thông tin nhân viên">
+                                <field name="nhan_vien_id"/>
+                                <field name="ma_nhan_vien" readonly="1"/>
+                                <field name="phong_ban_id" readonly="1"/>
+                            </group>
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <group col="2" class="o_cctl_section o_cctl_section_box" string="Lương cơ bản">
+                                        <field name="luong_co_ban" class="o_cctl_salary_total"/>
+                                        <field name="so_ngay_cong_chuan"/>
+                                        <field name="so_gio_cong_chuan"/>
+                                    </group>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <group col="2" class="o_cctl_section o_cctl_section_box" string="Phụ cấp">
+                                        <field name="phu_cap_an_trua"/>
+                                        <field name="phu_cap_xang_xe"/>
+                                        <field name="phu_cap_trach_nhiem"/>
+                                        <field name="phu_cap_khac"/>
+                                        <field name="tong_phu_cap" readonly="1" class="o_cctl_salary_total"/>
+                                    </group>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <group col="2" class="o_cctl_section o_cctl_section_box" string="Bảo hiểm và khấu trừ">
+                                        <field name="ty_le_bao_hiem"/>
+                                        <field name="thue_tncn"/>
+                                        <field name="khau_tru_khac"/>
+                                    </group>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <group col="2" class="o_cctl_section o_cctl_section_box" string="Thời gian áp dụng">
+                                        <field name="ngay_bat_dau"/>
+                                        <field name="ngay_ket_thuc"/>
+                                    </group>
+                                </div>
+                            </div>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_cau_hinh_luong_search" model="ir.ui.view">
+            <field name="name">cau_hinh_luong.search</field>
+            <field name="model">cau_hinh_luong</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm cấu hình lương">
+                    <field name="nhan_vien_id"/>
+                    <field name="trang_thai"/>
+                    <filter name="filter_ap_dung" string="Đang áp dụng" domain="['|', ('trang_thai', '=', 'dang_ap_dung'), ('trang_thai', '=', 'ap_dung')]"/>
+                    <filter name="filter_ngung" string="Ngừng áp dụng" domain="[('trang_thai', '=', 'ngung_ap_dung')]"/>
+                    <separator/>
+                    <filter name="group_employee" string="Nhân viên" context="{'group_by': 'nhan_vien_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_cau_hinh_luong" model="ir.actions.act_window">
+            <field name="name">Cấu hình lương</field>
+            <field name="res_model">cau_hinh_luong</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_cau_hinh_luong_search"/>
+        </record>
+    </data>
+</odoo>

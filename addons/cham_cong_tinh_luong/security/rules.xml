@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="rule_cham_cong_nhan_vien_own" model="ir.rule">
+            <field name="name">Chấm công - Nhân viên chỉ xem dữ liệu của mình</field>
+            <field name="model_id" ref="model_cham_cong"/>
+            <field name="domain_force">[('nhan_vien_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_cham_cong_nhan_vien')), (4, ref('group_cham_cong_user'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <record id="rule_bang_luong_nhan_vien_own" model="ir.rule">
+            <field name="name">Bảng lương - Nhân viên chỉ xem dữ liệu của mình</field>
+            <field name="model_id" ref="model_bang_luong"/>
+            <field name="domain_force">[('nhan_vien_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_cham_cong_nhan_vien')), (4, ref('group_cham_cong_user'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <record id="rule_canh_bao_nhan_vien_own" model="ir.rule">
+            <field name="name">Cảnh báo - Nhân viên chỉ xem dữ liệu của mình</field>
+            <field name="model_id" ref="model_canh_bao_cham_cong"/>
+            <field name="domain_force">[('nhan_vien_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_cham_cong_nhan_vien')), (4, ref('group_cham_cong_user'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+    </data>
+</odoo>

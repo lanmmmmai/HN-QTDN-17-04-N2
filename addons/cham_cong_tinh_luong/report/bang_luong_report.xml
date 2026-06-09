@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_bang_luong" model="ir.actions.report">
+        <field name="name">Phiếu lương</field>
+        <field name="model">bang_luong</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cham_cong_tinh_luong.report_bang_luong_document</field>
+        <field name="report_file">cham_cong_tinh_luong.report_bang_luong_document</field>
+        <field name="print_report_name">'Phieu_luong_%s_%s_%s' % (object.nhan_vien_id.ho_va_ten or '', object.thang or '', object.nam or '')</field>
+    </record>
+
+    <template id="report_bang_luong_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 style="text-align:center;">PHIẾU LƯƠNG</h2>
+
+                        <p style="text-align:center;">
+                            <strong>Kỳ lương:</strong>
+                            Tháng <span t-esc="o.thang"/> /
+                            <span t-esc="o.nam"/>
+                        </p>
+
+                        <h4>Thông tin nhân viên</h4>
+                        <table style="width:100%; border-collapse: collapse;" border="1">
+                            <tr>
+                                <td><strong>Nhân viên</strong></td>
+                                <td><span t-field="o.nhan_vien_id"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mã nhân viên</strong></td>
+                                <td><span t-field="o.ma_nhan_vien"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ngày tạo</strong></td>
+                                <td><span t-field="o.ngay_tao"/></td>
+                            </tr>
+                        </table>
+
+                        <h4 style="margin-top:20px;">Tổng hợp công</h4>
+                        <table style="width:100%; border-collapse: collapse;" border="1">
+                            <tr>
+                                <td><strong>Tổng ngày công</strong></td>
+                                <td><span t-field="o.tong_ngay_cong"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tổng giờ làm</strong></td>
+                                <td><span t-field="o.tong_gio_lam"/></td>
+                            </tr>
+                        </table>
+
+                        <h4 style="margin-top:20px;">Thông tin lương</h4>
+                        <table style="width:100%; border-collapse: collapse;" border="1">
+                            <tr>
+                                <td><strong>Lương cơ bản</strong></td>
+                                <td><span t-field="o.luong_co_ban"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tổng phụ cấp</strong></td>
+                                <td><span t-field="o.tong_phu_cap"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tiền bảo hiểm</strong></td>
+                                <td><span t-field="o.tien_bao_hiem"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tổng lương thực nhận</strong></td>
+                                <td><strong><span t-field="o.tong_luong"/></strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

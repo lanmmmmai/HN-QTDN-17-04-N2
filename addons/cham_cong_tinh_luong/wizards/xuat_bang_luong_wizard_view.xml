@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_xuat_bang_luong_wizard_form" model="ir.ui.view">
+            <field name="name">xuat_bang_luong_wizard.form</field>
+            <field name="model">xuat_bang_luong_wizard</field>
+            <field name="arch" type="xml">
+                <form string="Xuất bảng lương Excel">
+                    <sheet>
+                        <group>
+                            <field name="thang"/>
+                            <field name="nam"/>
+                            <field name="file_name" readonly="1"/>
+                            <field name="file_data" filename="file_name"/>
+                        </group>
+                        <footer>
+                            <button name="action_xuat_excel" type="object" string="Xuất Excel" class="btn-primary"/>
+                            <button string="Hủy" special="cancel" class="btn-secondary"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_xuat_bang_luong_wizard" model="ir.actions.act_window">
+            <field name="name">Xuất bảng lương Excel</field>
+            <field name="res_model">xuat_bang_luong_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

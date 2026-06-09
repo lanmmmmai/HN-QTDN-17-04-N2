@@ -1,0 +1,32 @@
+<odoo>
+    <record id="module_category_cham_cong_tinh_luong" model="ir.module.category">
+        <field name="name">Chấm công / Tính lương</field>
+        <field name="description">Phân quyền cho module Chấm công và Tính lương</field>
+        <field name="sequence">25</field>
+    </record>
+
+    <record id="group_cham_cong_nhan_vien" model="res.groups">
+        <field name="name">Chấm công/Lương - Nhân viên</field>
+        <field name="category_id" ref="module_category_cham_cong_tinh_luong"/>
+    </record>
+
+    <record id="group_cham_cong_nhan_su" model="res.groups">
+        <field name="name">Chấm công/Lương - Nhân sự</field>
+        <field name="category_id" ref="module_category_cham_cong_tinh_luong"/>
+    </record>
+
+    <record id="group_cham_cong_ke_toan" model="res.groups">
+        <field name="name">Chấm công/Lương - Kế toán</field>
+        <field name="category_id" ref="module_category_cham_cong_tinh_luong"/>
+    </record>
+
+    <record id="group_cham_cong_quan_tri" model="res.groups">
+        <field name="name">Chấm công/Lương - Quản trị</field>
+        <field name="category_id" ref="module_category_cham_cong_tinh_luong"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_cham_cong_nhan_vien')),
+            (4, ref('group_cham_cong_nhan_su')),
+            (4, ref('group_cham_cong_ke_toan'))
+        ]"/>
+    </record>
+</odoo>

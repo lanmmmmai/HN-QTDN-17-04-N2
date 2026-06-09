@@ -1,0 +1,181 @@
+# -*- coding: utf-8 -*-
+
+from datetime import date
+
+from odoo import api, fields, models
+
+
+class DashboardChamCongLuong(models.Model):
+    _name = 'dashboard_cham_cong_luong'
+    _description = 'Dashboard Chấm công và Tính lương'
+    _order = 'nam desc, thang desc, id desc'
+
+    name = fields.Char(string='Tên dashboard', required=True, default='Dashboard quản lý')
+    thang = fields.Selection(
+        [(str(i), 'Tháng %s' % i) for i in range(1, 13)],
+        string='Tháng',
+        required=True,
+        default=lambda self: str(fields.Date.context_today(self).month),
+    )
+    nam = fields.Integer(
+        string='Năm',
+        required=True,
+        default=lambda self: fields.Date.context_today(self).year,
+    )
+    tong_nhan_vien = fields.Integer(string='Tổng số nhân viên', compute='_compute_dashboard')
+    tong_cham_cong = fields.Integer(string='Tổng bản ghi chấm công', compute='_compute_dashboard')
+    tong_ngay_cong = fields.Float(string='Tổng ngày công', compute='_compute_dashboard')
+    tong_gio_lam = fields.Float(string='Tổng giờ làm', compute='_compute_dashboard')
+    tong_gio_tang_ca = fields.Float(string='Tổng giờ tăng ca', compute='_compute_dashboard')
+    tong_tang_ca = fields.Integer(string='Số lượt tăng ca', compute='_compute_dashboard')
+    so_luot_di_muon = fields.Integer(string='Số lượt đi muộn', compute='_compute_dashboard')
+    so_ngay_nghi = fields.Integer(string='Số ngày nghỉ', compute='_compute_dashboard')
+    tong_quy_luong = fields.Float(string='Tổng quỹ lương', compute='_compute_dashboard')
+    tong_bao_hiem = fields.Float(string='Tổng tiền bảo hiểm', compute='_compute_dashboard')
+    tong_phu_cap = fields.Float(string='Tổng phụ cấp', compute='_compute_dashboard')
+    bang_luong_da_tinh = fields.Integer(string='Bảng lương đã tính', compute='_compute_dashboard')
+    bang_luong_xac_nhan = fields.Integer(string='Bảng lương đã xác nhận', compute='_compute_dashboard')
+    bang_luong_da_thanh_toan = fields.Integer(string='Bảng lương đã thanh toán', compute='_compute_dashboard')
+    tong_canh_bao = fields.Integer(string='Cảnh báo thông minh', compute='_compute_dashboard')
+    so_canh_bao_cao = fields.Integer(string='Cảnh báo mức cao', compute='_compute_dashboard')
+
+    @api.depends('thang', 'nam')
+    def _compute_dashboard(self):
+        employee_model = self.env['nhan_vien']
+        attendance_model = self.env['cham_cong']
+        salary_model = self.env['bang_luong']
+        warning_model = self.env['canh_bao_cham_cong']
+        current_employee = self.env['nhan_vien'].search([('user_id', '=', self.env.uid)], limit=1)
+        scope_mine = self.env.context.get('dashboard_scope') == 'mine'
+
+        for record in self:
+            start_date, end_date = record._get_month_range()
+            attendance_domain = [
+                ('ngay_cham_cong', '>=', start_date),
+                ('ngay_cham_cong', '<', end_date),
+            ]
+            salary_domain = [
+                ('thang', '=', record.thang),
+                ('nam', '=', record.nam),
+            ]
+            warning_domain = [
+                ('thang', '=', record.thang),
+                ('nam', '=', record.nam),
+            ]
+            if scope_mine and not current_employee:
+                record.tong_nhan_vien = 0
+                record.tong_cham_cong = 0
+                record.tong_ngay_cong = 0.0
+                record.tong_gio_lam = 0.0
+                record.tong_gio_tang_ca = 0.0
+                record.tong_tang_ca = 0
+                record.so_luot_di_muon = 0
+                record.so_ngay_nghi = 0
+                record.tong_quy_luong = 0.0
+                record.tong_bao_hiem = 0.0
+                record.tong_phu_cap = 0.0
+                record.bang_luong_da_tinh = 0
+                record.bang_luong_xac_nhan = 0
+                record.bang_luong_da_thanh_toan = 0
+                record.tong_canh_bao = 0
+                record.so_canh_bao_cao = 0
+                continue
+            if scope_mine and current_employee:
+                attendance_domain.append(('nhan_vien_id', '=', current_employee.id))
+                salary_domain.append(('nhan_vien_id', '=', current_employee.id))
+                warning_domain.append(('nhan_vien_id', '=', current_employee.id))
+
+            attendances = attendance_model.search(attendance_domain)
+            salaries = salary_model.search(salary_domain)
+            warnings = warning_model.search(warning_domain)
+
+            if scope_mine and current_employee:
+                record.tong_nhan_vien = 1
+            else:
+                record.tong_nhan_vien = employee_model.search_count([])
+            record.tong_cham_cong = len(attendances)
+            record.tong_ngay_cong = float(len(attendances.filtered(lambda item: item.trang_thai != 'nghi')))
+            record.tong_gio_lam = round(sum(attendances.mapped('so_gio_lam')), 2)
+            record.tong_gio_tang_ca = round(sum(attendances.mapped('so_gio_tang_ca')), 2)
+            record.tong_tang_ca = len(attendances.filtered(lambda item: item.so_gio_tang_ca > 0))
+            record.so_luot_di_muon = len(attendances.filtered(lambda item: item.trang_thai == 'di_muon'))
+            record.so_ngay_nghi = len(attendances.filtered(lambda item: item.trang_thai == 'nghi'))
+            record.tong_quy_luong = round(sum(salaries.mapped('tong_luong')), 2)
+            record.tong_bao_hiem = round(sum(salaries.mapped('tien_bao_hiem')), 2)
+            record.tong_phu_cap = round(sum(salaries.mapped('tong_phu_cap')), 2)
+            record.bang_luong_da_tinh = len(salaries.filtered(lambda item: item.state in ('da_tinh', 'computed')))
+            record.bang_luong_xac_nhan = len(salaries.filtered(lambda item: item.state in ('xac_nhan', 'confirmed')))
+            record.bang_luong_da_thanh_toan = len(salaries.filtered(lambda item: item.state == 'da_thanh_toan'))
+            record.tong_canh_bao = len(warnings)
+            record.so_canh_bao_cao = len(warnings.filtered(lambda item: item.muc_do == 'cao'))
+
+    def _get_month_range(self):
+        self.ensure_one()
+        month = int(self.thang)
+        year = self.nam
+        start_date = date(year, month, 1)
+        if month == 12:
+            end_date = date(year + 1, 1, 1)
+        else:
+            end_date = date(year, month + 1, 1)
+        return start_date, end_date
+
+    def _build_action(self, xmlid, domain=None, context=None):
+        self.ensure_one()
+        action = self.env.ref(xmlid).read()[0]
+        if domain is not None:
+            action['domain'] = domain
+        if context:
+            action['context'] = dict(self.env.context, **context)
+        return action
+
+    def action_refresh_dashboard(self):
+        today = fields.Date.context_today(self)
+        self.write({
+            'thang': str(today.month),
+            'nam': today.year,
+        })
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    def action_open_cham_cong(self):
+        self.ensure_one()
+        start_date, end_date = self._get_month_range()
+        return self._build_action(
+            'cham_cong_tinh_luong.action_thong_ke_cham_cong',
+            domain=[('ngay_cham_cong', '>=', start_date), ('ngay_cham_cong', '<', end_date)],
+            context={'search_default_filter_confirmed': 1},
+        )
+
+    def action_open_bang_luong(self):
+        self.ensure_one()
+        return self._build_action(
+            'cham_cong_tinh_luong.action_thong_ke_bang_luong',
+            domain=[('thang', '=', self.thang), ('nam', '=', self.nam)],
+            context={'search_default_filter_computed': 1},
+        )
+
+    def action_open_canh_bao(self):
+        self.ensure_one()
+        return self._build_action(
+            'cham_cong_tinh_luong.action_canh_bao_cham_cong',
+            domain=[('thang', '=', self.thang), ('nam', '=', self.nam)],
+        )
+
+    def action_open_my_dashboard(self):
+        self.ensure_one()
+        return self._build_action(
+            'cham_cong_tinh_luong.action_dashboard_cua_toi',
+            context={'dashboard_scope': 'mine'},
+        )
+
+    def action_open_my_cham_cong(self):
+        self.ensure_one()
+        return self._build_action('cham_cong_tinh_luong.action_cham_cong_cua_toi')
+
+    def action_open_my_bang_luong(self):
+        self.ensure_one()
+        return self._build_action('cham_cong_tinh_luong.action_bang_luong_cua_toi')
+
+    def action_open_my_canh_bao(self):
+        self.ensure_one()
+        return self._build_action('cham_cong_tinh_luong.action_canh_bao_cua_toi')

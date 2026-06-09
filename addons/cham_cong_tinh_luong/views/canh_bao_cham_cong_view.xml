@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_canh_bao_cham_cong_tree" model="ir.ui.view">
+            <field name="name">canh_bao_cham_cong.tree</field>
+            <field name="model">canh_bao_cham_cong</field>
+            <field name="arch" type="xml">
+                <tree string="Cảnh báo thông minh" decoration-danger="muc_do == 'cao'" decoration-warning="muc_do == 'trung_binh'" decoration-info="muc_do == 'thap'" decoration-success="state == 'da_xu_ly'">
+                    <field name="nhan_vien_id"/>
+                    <field name="thang"/>
+                    <field name="nam"/>
+                    <field name="loai_canh_bao"/>
+                    <field name="muc_do"/>
+                    <field name="state"/>
+                    <field name="ngay_tao"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_canh_bao_cham_cong_form" model="ir.ui.view">
+            <field name="name">canh_bao_cham_cong.form</field>
+            <field name="model">canh_bao_cham_cong</field>
+            <field name="arch" type="xml">
+                <form string="Cảnh báo thông minh" class="o_cctl_form">
+                    <header>
+                        <button name="action_danh_dau_da_xem" type="object" string="Đánh dấu đã xem" class="btn-primary" attrs="{'invisible': [('state', '!=', 'moi')]}"/>
+                        <button name="action_danh_dau_da_xu_ly" type="object" string="Đánh dấu đã xử lý" class="btn-success" attrs="{'invisible': [('state', '=', 'da_xu_ly')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="moi,da_xem,da_xu_ly"/>
+                    </header>
+                    <sheet>
+                        <div class="o_cctl_form_shell">
+                            <div class="o_cctl_form_hero o_cctl_form_hero_warning">
+                                <div class="o_cctl_form_hero_title">AI cảnh báo bất thường</div>
+                                <div class="o_cctl_form_hero_subtitle">Hệ thống phân tích rule-based để phát hiện đi muộn, thiếu công và lương bất thường.</div>
+                            </div>
+                            <group col="4" class="o_cctl_section o_cctl_section_box o_cctl_section_box_primary" string="Thông tin cảnh báo">
+                                <field name="nhan_vien_id"/>
+                                <field name="thang"/>
+                                <field name="nam"/>
+                                <field name="loai_canh_bao"/>
+                                <field name="muc_do"/>
+                                <field name="ngay_tao"/>
+                            </group>
+                            <group class="o_cctl_section o_cctl_section_box" string="Nội dung AI phân tích">
+                                <field name="noi_dung" nolabel="1"/>
+                                <field name="goi_y_xu_ly" nolabel="1"/>
+                            </group>
+                            <group class="o_cctl_section o_cctl_section_box" string="Trạng thái xử lý">
+                                <field name="state" readonly="1"/>
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_canh_bao_cham_cong_search" model="ir.ui.view">
+            <field name="name">canh_bao_cham_cong.search</field>
+            <field name="model">canh_bao_cham_cong</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm cảnh báo">
+                    <field name="nhan_vien_id"/>
+                    <field name="loai_canh_bao"/>
+                    <field name="muc_do"/>
+                    <field name="state"/>
+                    <filter name="filter_high" string="Mức độ cao" domain="[('muc_do', '=', 'cao')]"/>
+                    <filter name="filter_new" string="Cảnh báo mới" domain="[('state', '=', 'moi')]"/>
+                    <filter name="filter_processed" string="Đã xử lý" domain="[('state', '=', 'da_xu_ly')]"/>
+                    <separator/>
+                    <filter name="group_employee" string="Nhân viên" context="{'group_by': 'nhan_vien_id'}"/>
+                    <filter name="group_level" string="Mức độ" context="{'group_by': 'muc_do'}"/>
+                    <filter name="group_type" string="Loại cảnh báo" context="{'group_by': 'loai_canh_bao'}"/>
+                    <filter name="group_month" string="Tháng" context="{'group_by': 'thang'}"/>
+                    <filter name="group_year" string="Năm" context="{'group_by': 'nam'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_canh_bao_cham_cong" model="ir.actions.act_window">
+            <field name="name">Cảnh báo thông minh</field>
+            <field name="res_model">canh_bao_cham_cong</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_canh_bao_cham_cong_search"/>
+        </record>
+
+        <record id="action_canh_bao_cua_toi" model="ir.actions.act_window">
+            <field name="name">Cảnh báo của tôi</field>
+            <field name="res_model">canh_bao_cham_cong</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_canh_bao_cham_cong_search"/>
+            <field name="domain">[('nhan_vien_id.user_id', '=', uid)]</field>
+            <field name="context">{'search_default_filter_new': 1}</field>
+        </record>
+    </data>
+</odoo>
