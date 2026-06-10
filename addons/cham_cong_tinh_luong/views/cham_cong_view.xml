@@ -97,7 +97,7 @@
         <record id="action_cham_cong" model="ir.actions.act_window">
             <field name="name">Chấm công</field>
             <field name="res_model">cham_cong</field>
-            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_cham_cong_search"/>
         </record>
 

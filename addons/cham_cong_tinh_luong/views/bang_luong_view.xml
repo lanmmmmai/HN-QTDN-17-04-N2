@@ -5,7 +5,7 @@
             <field name="name">bang_luong.tree</field>
             <field name="model">bang_luong</field>
             <field name="arch" type="xml">
-                <tree string="Bảng lương" decoration-muted="state in ('nhap', 'draft')" decoration-info="state in ('da_tinh', 'computed')" decoration-success="state in ('xac_nhan', 'confirmed')" decoration-bf="state == 'da_thanh_toan'" decoration-danger="state in ('huy', 'cancel')">
+                <tree string="Bảng lương" decoration-muted="state == 'nhap' or state == 'draft'" decoration-info="state == 'da_tinh' or state == 'computed'" decoration-success="state == 'xac_nhan' or state == 'confirmed'" decoration-bf="state == 'da_thanh_toan'" decoration-danger="state == 'huy' or state == 'cancel'">
                     <field name="nhan_vien_id"/>
                     <field name="thang"/>
                     <field name="nam"/>
@@ -152,7 +152,7 @@
         <record id="action_bang_luong" model="ir.actions.act_window">
             <field name="name">Bảng lương</field>
             <field name="res_model">bang_luong</field>
-            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_bang_luong_search"/>
         </record>
 
@@ -162,6 +162,14 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_bang_luong_search"/>
             <field name="domain">[('nhan_vien_id.user_id', '=', uid)]</field>
+            <field name="context">{'search_default_filter_month': 1}</field>
+        </record>
+
+        <record id="action_in_phieu_luong_pdf" model="ir.actions.act_window">
+            <field name="name">In phiếu lương PDF</field>
+            <field name="res_model">bang_luong</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_bang_luong_search"/>
             <field name="context">{'search_default_filter_month': 1}</field>
         </record>
     </data>

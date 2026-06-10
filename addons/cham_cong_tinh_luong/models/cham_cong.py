@@ -103,18 +103,20 @@ class ChamCong(models.Model):
 
     @api.depends('nhan_vien_id')
     def _compute_thong_tin_nhan_vien(self):
-        for record in self:
-            record.phong_ban_id = False
-            record.chuc_vu_id = False
-            if not record.nhan_vien_id:
-                continue
-            history = self.env['lich_su_cong_tac'].search(
-                [('nhan_vien_id', '=', record.nhan_vien_id.id)],
-                order='id desc',
-                limit=1,
+        employee_ids = self.mapped('nhan_vien_id').ids
+        latest_histories = {}
+        if employee_ids:
+            histories = self.env['lich_su_cong_tac'].search(
+                [('nhan_vien_id', 'in', employee_ids)],
+                order='nhan_vien_id desc, id desc',
             )
-            record.phong_ban_id = history.don_vi_id
-            record.chuc_vu_id = history.chuc_vu_id
+            for history in histories:
+                latest_histories.setdefault(history.nhan_vien_id.id, history)
+
+        for record in self:
+            history = latest_histories.get(record.nhan_vien_id.id)
+            record.phong_ban_id = history.don_vi_id if history else False
+            record.chuc_vu_id = history.chuc_vu_id if history else False
 
     @api.depends('gio_vao', 'gio_ra', 'trang_thai')
     def _compute_so_gio_lam(self):
@@ -155,7 +157,7 @@ class ChamCong(models.Model):
                 ('ngay_cham_cong', '=', record.ngay_cham_cong),
                 ('ca_lam_viec', '=', record.ca_lam_viec),
             ]
-            if self.search_count(domain):
+            if self.search(domain, limit=1):
                 raise ValidationError('Một nhân viên không được có 2 bản ghi chấm công cùng ngày và cùng ca làm việc.')
 
     @api.constrains('trang_thai', 'ly_do_di_muon')

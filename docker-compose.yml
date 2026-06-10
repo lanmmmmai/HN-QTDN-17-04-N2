@@ -2,19 +2,27 @@ services:
   db:
     image: postgres:15
     container_name: odoo_db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: odoo
       POSTGRES_PASSWORD: odoo
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d ${POSTGRES_DB:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   odoo:
     image: odoo:15
     container_name: odoo15
     platform: linux/amd64
+    restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8069:8069"
     environment:

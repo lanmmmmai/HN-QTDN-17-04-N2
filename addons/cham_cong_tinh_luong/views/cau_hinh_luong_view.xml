@@ -6,10 +6,9 @@
             <field name="model">cau_hinh_luong</field>
             <field name="arch" type="xml">
                 <tree string="Cấu hình lương"
-                      decoration-success="trang_thai in ('dang_ap_dung', 'ap_dung')"
+                      decoration-success="trang_thai == 'dang_ap_dung' or trang_thai == 'ap_dung'"
                       decoration-muted="trang_thai == 'ngung_ap_dung'"
-                      decoration-warning="luong_co_ban &lt;= 0"
-                      decoration-danger="ngay_bat_dau and ngay_ket_thuc and ngay_ket_thuc &lt; ngay_bat_dau">
+                      decoration-warning="luong_co_ban &lt;= 0">
                     <field name="nhan_vien_id"/>
                     <field name="ma_nhan_vien"/>
                     <field name="luong_co_ban"/>

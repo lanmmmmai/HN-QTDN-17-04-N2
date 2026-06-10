@@ -26,3 +26,36 @@ class NhanVien(models.Model):
         inverse_name='nhan_vien_id',
         string='Cảnh báo thông minh',
     )
+
+    def _open_related_action(self, xmlid, domain=None, context=None):
+        self.ensure_one()
+        action = self.env.ref(xmlid).read()[0]
+        if domain is not None:
+            action['domain'] = domain
+        if context:
+            action['context'] = dict(self.env.context, **context)
+        return action
+
+    def action_open_cham_cong(self):
+        return self._open_related_action(
+            'cham_cong_tinh_luong.action_cham_cong_cua_toi',
+            domain=[('nhan_vien_id', '=', self.id)],
+        )
+
+    def action_open_bang_luong(self):
+        return self._open_related_action(
+            'cham_cong_tinh_luong.action_bang_luong_cua_toi',
+            domain=[('nhan_vien_id', '=', self.id)],
+        )
+
+    def action_open_cau_hinh_luong(self):
+        return self._open_related_action(
+            'cham_cong_tinh_luong.action_cau_hinh_luong',
+            domain=[('nhan_vien_id', '=', self.id)],
+        )
+
+    def action_open_canh_bao(self):
+        return self._open_related_action(
+            'cham_cong_tinh_luong.action_canh_bao_cua_toi',
+            domain=[('nhan_vien_id', '=', self.id)],
+        )

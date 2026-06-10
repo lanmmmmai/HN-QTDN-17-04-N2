@@ -105,18 +105,20 @@ class BangLuong(models.Model):
 
     @api.depends('nhan_vien_id')
     def _compute_thong_tin_nhan_vien(self):
-        for record in self:
-            record.phong_ban_id = False
-            record.chuc_vu_id = False
-            if not record.nhan_vien_id:
-                continue
-            history = self.env['lich_su_cong_tac'].search(
-                [('nhan_vien_id', '=', record.nhan_vien_id.id)],
-                order='id desc',
-                limit=1,
+        employee_ids = self.mapped('nhan_vien_id').ids
+        latest_histories = {}
+        if employee_ids:
+            histories = self.env['lich_su_cong_tac'].search(
+                [('nhan_vien_id', 'in', employee_ids)],
+                order='nhan_vien_id desc, id desc',
             )
-            record.phong_ban_id = history.don_vi_id
-            record.chuc_vu_id = history.chuc_vu_id
+            for history in histories:
+                latest_histories.setdefault(history.nhan_vien_id.id, history)
+
+        for record in self:
+            history = latest_histories.get(record.nhan_vien_id.id)
+            record.phong_ban_id = history.don_vi_id if history else False
+            record.chuc_vu_id = history.chuc_vu_id if history else False
 
     @api.depends('thang')
     def _compute_thang_so(self):
@@ -291,6 +293,7 @@ class BangLuong(models.Model):
             'thang',
             'nam',
             'ngay_tao',
+            'ngay_tao_bang_luong',
             'he_so_tang_ca',
             'ghi_chu',
             'tong_ngay_cong',

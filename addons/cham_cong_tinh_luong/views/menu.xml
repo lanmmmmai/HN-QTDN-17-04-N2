@@ -5,127 +5,124 @@
             id="menu_cham_cong_root"
             name="Chấm công"
             sequence="20"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
+        <menuitem
+            id="menu_dashboard_cham_cong"
+            name="Dashboard chấm công"
+            parent="menu_cham_cong_root"
+            action="action_dashboard_cham_cong_server"
+            sequence="0"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
+        <menuitem
+            id="menu_du_lieu_cham_cong"
+            name="Dữ liệu chấm công"
+            parent="menu_cham_cong_root"
             action="action_cham_cong"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_user,cham_cong_tinh_luong.group_cham_cong_hr,cham_cong_tinh_luong.group_cham_cong_accountant,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
+            sequence="1"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
+        <menuitem
+            id="menu_cham_cong_cua_toi"
+            name="Chấm công của tôi"
+            parent="menu_cham_cong_root"
+            action="action_cham_cong_cua_toi"
+            sequence="2"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_vien"/>
 
         <menuitem
             id="menu_import_cham_cong"
             name="Import chấm công"
             parent="menu_cham_cong_root"
             action="action_import_cham_cong_wizard"
-            sequence="1"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_hr,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
+            sequence="3"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
+        <menuitem
+            id="menu_canh_bao_cham_cong"
+            name="Cảnh báo chấm công"
+            parent="menu_cham_cong_root"
+            action="action_canh_bao_cham_cong"
+            sequence="4"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
+        <menuitem
+            id="menu_phan_tich_canh_bao"
+            name="Phân tích cảnh báo"
+            parent="menu_cham_cong_root"
+            action="action_phan_tich_canh_bao_wizard"
+            sequence="5"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
+        <menuitem
+            id="menu_bao_cao_cham_cong"
+            name="Báo cáo chấm công"
+            parent="menu_cham_cong_root"
+            action="action_thong_ke_cham_cong"
+            sequence="6"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
             id="menu_tinh_luong_root"
             name="Tính lương"
             sequence="21"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_user,cham_cong_tinh_luong.group_cham_cong_hr,cham_cong_tinh_luong.group_cham_cong_accountant,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
         <menuitem
-            id="menu_dashboard_cua_toi"
-            name="Dashboard của tôi"
-            parent="menu_tinh_luong_root"
-            action="action_dashboard_cua_toi"
-            sequence="1"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_user"
-        />
-        <menuitem
-            id="menu_dashboard_quan_ly"
-            name="Dashboard quản lý"
+            id="menu_dashboard_tinh_luong"
+            name="Dashboard tính lương"
             parent="menu_tinh_luong_root"
             action="action_dashboard_cham_cong_luong"
-            sequence="1"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_hr,cham_cong_tinh_luong.group_cham_cong_accountant,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
+            sequence="0"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
         <menuitem
-            id="menu_cham_cong_cua_toi"
-            name="Chấm công của tôi"
+            id="menu_cau_hinh_luong"
+            name="Cấu hình lương"
             parent="menu_tinh_luong_root"
-            action="action_cham_cong_cua_toi"
+            action="action_cau_hinh_luong"
+            sequence="1"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
+        <menuitem
+            id="menu_bang_luong"
+            name="Bảng lương"
+            parent="menu_tinh_luong_root"
+            action="action_bang_luong"
             sequence="2"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_user"
-        />
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
         <menuitem
             id="menu_bang_luong_cua_toi"
             name="Bảng lương của tôi"
             parent="menu_tinh_luong_root"
             action="action_bang_luong_cua_toi"
             sequence="3"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_user"
-        />
-        <menuitem
-            id="menu_canh_bao_cua_toi"
-            name="Cảnh báo của tôi"
-            parent="menu_tinh_luong_root"
-            action="action_canh_bao_cua_toi"
-            sequence="4"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_user"
-        />
-        <menuitem
-            id="menu_cau_hinh_luong"
-            name="Cấu hình lương"
-            parent="menu_tinh_luong_root"
-            action="action_cau_hinh_luong"
-            sequence="2"
-            groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_accountant,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
-        <menuitem
-            id="menu_bang_luong"
-            name="Bảng lương"
-            parent="menu_tinh_luong_root"
-            action="action_bang_luong"
-            sequence="5"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_hr,cham_cong_tinh_luong.group_cham_cong_accountant,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
-        <menuitem
-            id="menu_bao_cao_thong_ke_root"
-            name="Báo cáo &amp; Thống kê"
-            parent="menu_tinh_luong_root"
-            sequence="6"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_hr,cham_cong_tinh_luong.group_cham_cong_accountant,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
-        <menuitem
-            id="menu_thong_ke_cham_cong"
-            name="Thống kê Chấm công"
-            parent="menu_bao_cao_thong_ke_root"
-            action="action_thong_ke_cham_cong"
-            sequence="1"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_hr,cham_cong_tinh_luong.group_cham_cong_manager,cham_cong_tinh_luong.group_cham_cong_accountant"
-        />
-        <menuitem
-            id="menu_thong_ke_bang_luong"
-            name="Thống kê Bảng lương"
-            parent="menu_bao_cao_thong_ke_root"
-            action="action_thong_ke_bang_luong"
-            sequence="2"
-            groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_accountant,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_vien"/>
+
         <menuitem
             id="menu_xuat_bang_luong_excel"
             name="Xuất bảng lương Excel"
             parent="menu_tinh_luong_root"
             action="action_xuat_bang_luong_wizard"
-            sequence="7"
-            groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_accountant,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
+            sequence="4"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
         <menuitem
-            id="menu_canh_bao_cham_cong"
-            name="AI cảnh báo"
+            id="menu_in_phieu_luong_pdf"
+            name="In phiếu lương PDF"
             parent="menu_tinh_luong_root"
-            action="action_canh_bao_cham_cong"
-            sequence="8"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_hr,cham_cong_tinh_luong.group_cham_cong_accountant,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
+            action="action_in_phieu_luong_pdf"
+            sequence="5"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
         <menuitem
-            id="menu_phan_tich_canh_bao"
-            name="Phân tích cảnh báo"
+            id="menu_bao_cao_bang_luong"
+            name="Báo cáo &amp; Thống kê lương"
             parent="menu_tinh_luong_root"
-            action="action_phan_tich_canh_bao_wizard"
-            sequence="9"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_tinh_luong.group_cham_cong_hr,cham_cong_tinh_luong.group_cham_cong_accountant,cham_cong_tinh_luong.group_cham_cong_manager"
-        />
+            action="action_thong_ke_bang_luong"
+            sequence="6"
+            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
     </data>
 </odoo>

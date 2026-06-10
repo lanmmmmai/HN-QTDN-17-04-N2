@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'web'],
 
     # always loaded
     'data': [
@@ -31,6 +31,7 @@
         'views/lich_su_cong_tac.xml',
         'views/chung_chi_bang_cap.xml',
         'views/danh_sach_chung_chi_bang_cap.xml',
+        'views/dashboard_nhan_su.xml',
         'views/menu.xml',
     ],
     # only loaded in demonstration mode
