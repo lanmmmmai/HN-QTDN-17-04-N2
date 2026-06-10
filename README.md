@@ -1,103 +1,140 @@
-<h2 align="center">
-    <a href="https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin">
-    🎓 Faculty of Information Technology (DaiNam University)
-    </a>
-</h2>
-<h2 align="center">
-    PLATFORM ERP
-</h2>
-<div align="center">
-    <p align="center">
-        <img src="docs/logo/aiotlab_logo.png" alt="AIoTLab Logo" width="170"/>
-        <img src="docs/logo/fitdnu_logo.png" alt="AIoTLab Logo" width="180"/>
-        <img src="docs/logo/dnu_logo.png" alt="DaiNam University Logo" width="200"/>
-    </p>
+# Hệ Thống Chấm Công Và Tính Lương
 
-[![AIoTLab](https://img.shields.io/badge/AIoTLab-green?style=for-the-badge)](https://www.facebook.com/DNUAIoTLab)
-[![Faculty of Information Technology](https://img.shields.io/badge/Faculty%20of%20Information%20Technology-blue?style=for-the-badge)](https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin)
-[![DaiNam University](https://img.shields.io/badge/DaiNam%20University-orange?style=for-the-badge)](https://dainam.edu.vn)
+## Mô tả ngắn
+Dự án xây dựng trên **Odoo 15** nhằm quản lý nhân sự, chấm công, cấu hình lương, tính lương, cảnh báo thông minh và xuất báo cáo cho doanh nghiệp. Hệ thống kế thừa module `nhan_su` có sẵn và phát triển thêm module `cham_cong_tinh_luong` để kết nối dữ liệu nhân sự với dữ liệu chấm công thực tế.
 
-</div>
+## Chức năng chính
+| Chức năng | Mô tả |
+|---|---|
+| Quản lý nhân viên | Sử dụng model nhân viên của module `nhan_su` |
+| Chấm công | Tạo, xác nhận, hủy bản ghi chấm công |
+| Cấu hình lương | Thiết lập lương cơ bản, phụ cấp, bảo hiểm và thời gian áp dụng |
+| Bảng lương | Tính lương theo tháng/năm và theo dữ liệu chấm công |
+| Báo cáo PDF | In phiếu lương nhân viên dạng PDF |
+| Excel | Xuất bảng lương theo tháng/năm ra file Excel |
+| Import dữ liệu | Import chấm công từ CSV/XLSX |
 
-## 📖 1. Giới thiệu
-Platform ERP được áp dụng vào học phần Thực tập doanh nghiệp dựa trên mã nguồn mở Odoo. 
+## Chức năng nâng cao
+| Chức năng nâng cao | Mô tả |
+|---|---|
+| Workflow chấm công | Trạng thái nháp, đã xác nhận, hủy |
+| Workflow bảng lương | Nháp, đã tính, đã xác nhận, đã thanh toán, hủy |
+| Dashboard thống kê | Tree, graph, pivot cho chấm công và bảng lương |
+| Cảnh báo thông minh | Rule-based alert cho đi muộn, thiếu công, tăng ca quá nhiều, lương bất thường |
+| Wizard phân tích | Tạo cảnh báo theo tháng/năm bằng một wizard |
+| Phân quyền | Tách nhóm Nhân viên, Nhân sự, Kế toán, Quản trị |
+| Liên kết hồ sơ nhân viên | Hiển thị chấm công, cấu hình lương, bảng lương, cảnh báo ngay trên form nhân viên |
 
-## 🔧 2. Các công nghệ được sử dụng
-<div align="center">
+## Công nghệ sử dụng
+- **Odoo 15**
+- Python
+- XML / QWeb
+- PostgreSQL
+- Docker Compose
+- CSV / XLSX
 
-### Hệ điều hành
-[![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
-### Công nghệ chính
-[![Odoo](https://img.shields.io/badge/Odoo-714B67?style=for-the-badge&logo=odoo&logoColor=white)](https://www.odoo.com/)
-[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![XML](https://img.shields.io/badge/XML-FF6600?style=for-the-badge&logo=codeforces&logoColor=white)](https://www.w3.org/XML/)
-### Cơ sở dữ liệu
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-</div>
+## Cấu trúc thư mục
+```text
+Business-Internship/
+├── addons/
+│   ├── nhan_su/
+│   │   ├── models/
+│   │   ├── views/
+│   │   └── security/
+│   └── cham_cong_tinh_luong/
+│       ├── models/
+│       ├── views/
+│       ├── wizards/
+│       ├── reports/
+│       ├── security/
+│       └── __manifest__.py
+├── docker-compose.yml
+├── Dockerfile.odoo
+└── README.md
+```
 
-## 🚀 3. Các project đã thực hiện dựa trên Platform
+## Hướng dẫn cài đặt
+### 1. Clone dự án
+```bash
+git clone <repository-url>
+cd Business-Internship
+```
 
-Một số project sinh viên đã thực hiện:
-- #### [Khoá 15](./docs/projects/K15/README.md)
-- #### [Khoá 16](./docs/projects/K16/README.md)
-- #### [Khoá 17](./docs/projects/K17/README.md)
-## ⚙️ 4. Cài đặt
+### 2. Chuẩn bị môi trường
+- Cài Docker và Docker Compose
+- Đảm bảo máy có quyền chạy Docker
 
-### 4.1. Cài đặt công cụ, môi trường và các thư viện cần thiết
+### 3. Kiểm tra module
+- `addons/nhan_su` là module nhân sự gốc
+- `addons/cham_cong_tinh_luong` là module phát triển thêm
 
-#### 4.1.1. Tải project.
+## Hướng dẫn chạy bằng Docker Compose
+### Khởi động database và Odoo
+```bash
+docker compose up -d
 ```
-git clone https://github.com/FIT-DNU/Business-Internship.git
-```
-#### 4.1.2. Cài đặt các thư viện cần thiết
-Người sử dụng thực thi các lệnh sau đề cài đặt các thư viện cần thiết
 
+### Cập nhật module sau khi thay đổi code
+```bash
+docker compose run --rm odoo odoo -d MaiLan --addons-path=/usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons -u nhan_su,cham_cong_tinh_luong --stop-after-init
+docker compose up --build
 ```
-sudo apt-get install libxml2-dev libxslt-dev libldap2-dev libsasl2-dev libssl-dev python3.10-distutils python3.10-dev build-essential libssl-dev libffi-dev zlib1g-dev python3.10-venv libpq-dev
-```
-#### 4.1.3. Khởi tạo môi trường ảo.
-- Khởi tạo môi trường ảo
-```
-python3.10 -m venv ./venv
-```
-- Thay đổi trình thông dịch sang môi trường ảo
-```
-source venv/bin/activate
-```
-- Chạy requirements.txt để cài đặt tiếp các thư viện được yêu cầu
-```
-pip3 install -r requirements.txt
-```
-### 4.2. Setup database
 
-Khởi tạo database trên docker bằng việc thực thi file dockercompose.yml.
-```
-sudo docker-compose up -d
-```
-### 4.3. Setup tham số chạy cho hệ thống
-Tạo tệp **odoo.conf** có nội dung như sau:
-```
-[options]
-addons_path = addons
-db_host = localhost
-db_password = odoo
-db_user = odoo
-db_port = 5431
-xmlrpc_port = 8069
-```
-Có thể kế thừa từ file **odoo.conf.template**
-### 4.4. Chạy hệ thống và cài đặt các ứng dụng cần thiết
-Lệnh chạy
-```
-python3 odoo-bin.py -c odoo.conf -u all
-```
-Người sử dụng truy cập theo đường dẫn _http://localhost:8069/_ để đăng nhập vào hệ thống.
+### Ghi chú
+- Service Odoo trong `docker-compose.yml` là `odoo`
+- Project sử dụng Odoo 15
 
-## 📝 5. License
+## Hướng dẫn cài module trong Odoo
+1. Mở Odoo tại `http://localhost:8069`
+2. Đăng nhập bằng tài khoản quản trị
+3. Vào `Apps`
+4. Bấm `Update Apps List` nếu cần
+5. Tìm và cài các module:
+   - `nhan_su`
+   - `cham_cong_tinh_luong`
 
-© 2024 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
+## Tài khoản demo
+Hiện tại dự án **chưa đi kèm tài khoản demo cố định** trong README.
 
----
+Nếu bạn có dữ liệu demo hoặc người dùng mẫu, hãy bổ sung tại đây:
+| Tài khoản | Mật khẩu | Vai trò |
+|---|---|---|
+| `admin` | `admin` | Quản trị |
 
-    
+## Quy trình demo
+1. Vào `QLNS` tạo nhân viên mới.
+2. Vào `Chấm công` tạo bản ghi chấm công và xác nhận.
+3. Vào `Tính lương > Cấu hình lương` tạo cấu hình lương cho từng nhân viên.
+4. Vào `Tính lương > Bảng lương` bấm `Tính lương`.
+5. Xem bảng lương, mở form chi tiết và in `Phiếu lương PDF`.
+6. Vào `Tính lương > Báo cáo & Thống kê` để xem graph/pivot.
+7. Vào `Tính lương > Cảnh báo thông minh` và `Phân tích cảnh báo` để tạo rule-based warning.
+8. Vào `Tính lương > Xuất bảng lương Excel` để tải file Excel.
+9. Vào `Chấm công > Import chấm công` để nhập dữ liệu từ CSV/XLSX.
+
+## Ảnh minh họa
+Hiện tại repo **chưa đính kèm ảnh minh họa**.
+
+Nếu có screenshot giao diện, có thể đặt trong thư mục `docs/images/` và chèn như sau:
+```md
+![Màn hình chấm công](docs/images/cham-cong.png)
+![Màn hình bảng lương](docs/images/bang-luong.png)
+```
+
+## Nguồn tham khảo
+- [Odoo 15 Documentation](https://www.odoo.com/documentation/15.0/)
+- [Odoo QWeb Reports](https://www.odoo.com/documentation/15.0/developer/reference/backend/reports.html)
+- [Odoo ORM](https://www.odoo.com/documentation/15.0/developer/reference/backend/orm.html)
+- Tài liệu học phần Thực tập doanh nghiệp / Hội nhập và Quản trị phần mềm doanh nghiệp
+
+## Thành viên thực hiện
+| Họ tên | Vai trò | Ghi chú |
+|---|---|---|
+| `lanmmmmai` | Phát triển module | Cập nhật theo thông tin git hiện có |
+
+## Thông tin kỹ thuật
+- Hệ thống chạy trên **Odoo 15**
+- Không dùng `hr.employee`
+- Module chấm công và tính lương liên kết trực tiếp với module `nhan_su`
+- Có hỗ trợ báo cáo PDF, dashboard, wizard và import/export dữ liệu
+
