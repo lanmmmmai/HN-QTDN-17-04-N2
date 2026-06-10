@@ -41,13 +41,36 @@ $cctl-border: rgba(23, 50, 77, 0.10);
     justify-content: space-between;
     gap: 12px;
   }
+}
 
-  .o_cctl_dashboard_summary {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 18px;
-  }
+.o_cctl_dashboard_summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.o_cctl_card_button,
+.o_cctl_dashboard_badge_button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.o_cctl_card_button {
+  display: block;
+}
+
+.o_cctl_dashboard_badge_button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
 }
 
 .o_cctl_stat_card {
