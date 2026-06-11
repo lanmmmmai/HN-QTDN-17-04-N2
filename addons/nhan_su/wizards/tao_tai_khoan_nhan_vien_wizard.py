@@ -39,7 +39,16 @@ class TaoTaiKhoanNhanVienWizard(models.TransientModel):
         )
 
         if existing_user:
-            # Email đã có user — gán luôn vào nhân viên, không tạo trùng
+            # Email đã có user — kiểm tra tài khoản này chưa thuộc nhân viên khác
+            other_employee = self.env['nhan_vien'].sudo().search(
+                [('user_id', '=', existing_user.id), ('id', '!=', self.nhan_vien_id.id)],
+                limit=1,
+            )
+            if other_employee:
+                raise UserError(
+                    'Email "%s" đã được liên kết với nhân viên khác (%s). '
+                    'Vui lòng dùng email khác.' % (self.login, other_employee.ho_va_ten)
+                )
             self.nhan_vien_id.sudo().write({'user_id': existing_user.id})
             return {
                 'type': 'ir.actions.client',

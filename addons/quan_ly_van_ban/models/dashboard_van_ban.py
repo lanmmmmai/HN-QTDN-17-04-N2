@@ -85,7 +85,7 @@ class DashboardVanBan(models.Model):
 
     @api.model
     def open_dashboard(self):
-        record = self.search([], limit=1)
+        record = self.sudo().search([], limit=1)
         if not record:
             record = self.sudo().create({'name': 'Dashboard văn bản'})
         return {

@@ -38,7 +38,6 @@
             (4, ref('group_cham_cong_nhan_su')),
             (4, ref('group_cham_cong_ke_toan'))
         ]"/>
-        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
     </record>
 
     <!-- Legacy English-name aliases -->

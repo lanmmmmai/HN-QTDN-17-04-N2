@@ -146,27 +146,18 @@ class NhanVien(models.Model):
     def create(self, vals_list):
         records = super().create(vals_list)
         for record in records:
-            if not record.user_id and record.ten and record.ho_ten_dem:
-                ten_norm = _normalize_vi(record.ten)
-                hodem_norm = _normalize_vi(record.ho_ten_dem)
-                login = f"{ten_norm}.{hodem_norm}@cty.com"
-                existing = self.env['res.users'].sudo().search([('login', '=', login)], limit=1)
-                if existing:
+            if record.user_id:
+                continue
+            ten_norm = _normalize_vi(record.ten)
+            hodem_norm = _normalize_vi(record.ho_ten_dem)
+            if not ten_norm or not hodem_norm:
+                continue
+            login = f"{ten_norm}.{hodem_norm}@cty.com"
+            existing = self.env['res.users'].sudo().search([('login', '=', login)], limit=1)
+            if existing:
+                already_linked = self.sudo().search(
+                    [('user_id', '=', existing.id), ('id', '!=', record.id)], limit=1
+                )
+                if not already_linked:
                     record.sudo().write({'user_id': existing.id})
-                else:
-                    group_self_service = self.env.ref(
-                        'cham_cong_tinh_luong.group_cham_cong_self_service',
-                        raise_if_not_found=False,
-                    )
-                    groups = [self.env.ref('base.group_user').id]
-                    if group_self_service:
-                        groups.append(group_self_service.id)
-                    user = self.env['res.users'].sudo().create({
-                        'name': record.ho_va_ten or f"{record.ho_ten_dem} {record.ten}",
-                        'login': login,
-                        'email': login,
-                        'password': '123456',
-                        'groups_id': [(6, 0, groups)],
-                    })
-                    record.sudo().write({'user_id': user.id})
         return records
