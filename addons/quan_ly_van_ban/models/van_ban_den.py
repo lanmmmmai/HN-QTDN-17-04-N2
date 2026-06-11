@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class VanBanDen(models.Model):
@@ -24,9 +24,31 @@ class VanBanDen(models.Model):
 
     han_xu_ly = fields.Date(string='Hạn xử lý')
 
+    do_mat = fields.Selection(
+        [
+            ('thuong', 'Thường'),
+            ('mat', 'Mật'),
+            ('toi_mat', 'Tối mật'),
+            ('tuyet_mat', 'Tuyệt mật'),
+        ],
+        string='Độ mật',
+        default='thuong',
+    )
+    do_khan = fields.Selection(
+        [
+            ('thuong', 'Thường'),
+            ('khan', 'Khẩn'),
+            ('hoa_toc', 'Hỏa tốc'),
+            ('thuong_khan', 'Thượng khẩn'),
+        ],
+        string='Độ khẩn',
+        default='thuong',
+    )
+
     trang_thai = fields.Selection(
         [
             ('moi', 'Mới'),
+            ('vao_so', 'Đã vào sổ'),
             ('dang_xu_ly', 'Đang xử lý'),
             ('da_xu_ly', 'Đã xử lý'),
             ('luu_tru', 'Lưu trữ'),
@@ -36,4 +58,35 @@ class VanBanDen(models.Model):
     )
 
     ghi_chu = fields.Text(string='Ghi chú')
+
+    # --- Onchange liên kết Đơn vị ↔ Nhân viên ---
+    # nhan_vien.phong_ban_id là computed Many2one tới don_vi
+
+    @api.onchange('don_vi_nhan_id')
+    def _onchange_don_vi_nhan_id(self):
+        if self.don_vi_nhan_id:
+            if (self.nhan_vien_xu_ly_id
+                    and self.nhan_vien_xu_ly_id.phong_ban_id != self.don_vi_nhan_id):
+                self.nhan_vien_xu_ly_id = False
+            return {'domain': {'nhan_vien_xu_ly_id': [('phong_ban_id', '=', self.don_vi_nhan_id.id)]}}
+        return {'domain': {'nhan_vien_xu_ly_id': []}}
+
+    @api.onchange('nhan_vien_xu_ly_id')
+    def _onchange_nhan_vien_xu_ly_id(self):
+        if self.nhan_vien_xu_ly_id and self.nhan_vien_xu_ly_id.phong_ban_id:
+            self.don_vi_nhan_id = self.nhan_vien_xu_ly_id.phong_ban_id
+
+    # --- Chuyển trạng thái ---
+
+    def action_vao_so(self):
+        self.write({'trang_thai': 'vao_so'})
+
+    def action_chuyen_xu_ly(self):
+        self.write({'trang_thai': 'dang_xu_ly'})
+
+    def action_da_xu_ly(self):
+        self.write({'trang_thai': 'da_xu_ly'})
+
+    def action_luu_tru(self):
+        self.write({'trang_thai': 'luu_tru'})
 
