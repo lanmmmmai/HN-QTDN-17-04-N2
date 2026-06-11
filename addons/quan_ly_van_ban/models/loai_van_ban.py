@@ -1,13 +1,14 @@
-from odoo import models, fields, api
-from datetime import date
+# -*- coding: utf-8 -*-
+from odoo import models, fields
 
-from odoo.exceptions import ValidationError
 
 class LoaiVanBan(models.Model):
     _name = 'loai_van_ban'
-    _description = 'Bảng chứa thông tin loại văn bản'
-    _rec_name = 'ten_loai_van_ban'
+    _description = 'Loại văn bản'
+    _rec_name = 'ten_loai'
 
-    ma_loai_van_ban = fields.Char("Số hiệu văn bản", required=True)
-    ten_loai_van_ban = fields.Char("Tên văn bản", required=True)
+    ten_loai = fields.Char(string='Tên loại văn bản', required=True)
+    ma_loai = fields.Char(string='Mã loại')
+    mo_ta = fields.Text(string='Mô tả')
+    active = fields.Boolean(string='Đang sử dụng', default=True)
 

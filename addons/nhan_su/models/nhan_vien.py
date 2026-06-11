@@ -1,7 +1,18 @@
+import unicodedata
+
 from odoo import models, fields, api
 from datetime import date
 
 from odoo.exceptions import ValidationError
+
+
+def _normalize_vi(text):
+    """Chuyển chuỗi có dấu tiếng Việt sang không dấu, viết thường, không khoảng trắng."""
+    if not text:
+        return ''
+    nfkd = unicodedata.normalize('NFKD', text)
+    ascii_str = nfkd.encode('ascii', 'ignore').decode('ascii')
+    return ascii_str.lower().replace(' ', '')
 
 class NhanVien(models.Model):
     _name = 'nhan_vien'
@@ -110,3 +121,24 @@ class NhanVien(models.Model):
         for record in self:
             if record.tuoi < 18:
                 raise ValidationError("Tuổi không được bé hơn 18")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            if not record.user_id and record.ten and record.ho_ten_dem:
+                ten_norm = _normalize_vi(record.ten)
+                hodem_norm = _normalize_vi(record.ho_ten_dem)
+                login = f"{ten_norm}.{hodem_norm}@cty.com"
+                # Dùng login khác nếu đã tồn tại
+                existing = self.env['res.users'].sudo().search([('login', '=', login)], limit=1)
+                if not existing:
+                    user = self.env['res.users'].sudo().create({
+                        'name': record.ho_va_ten or f"{record.ho_ten_dem} {record.ten}",
+                        'login': login,
+                        'email': login,
+                        'password': '123456',
+                        'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+                    })
+                    record.sudo().write({'user_id': user.id})
+        return records
