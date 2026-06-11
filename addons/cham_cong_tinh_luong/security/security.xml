@@ -5,9 +5,18 @@
         <field name="sequence">25</field>
     </record>
 
+    <!-- Nhân viên: dùng cho scoping model access (implied bởi các group trên) -->
     <record id="group_cham_cong_nhan_vien" model="res.groups">
         <field name="name">Chấm công/Lương - Nhân viên</field>
         <field name="category_id" ref="module_category_cham_cong_tinh_luong"/>
+    </record>
+
+    <!-- Self-service: chỉ dành cho nhân viên thực tế đăng nhập.
+         KHÔNG implied bởi quan_tri/nhan_su → Admin không thấy menu "của tôi" -->
+    <record id="group_cham_cong_self_service" model="res.groups">
+        <field name="name">Chấm công/Lương - Self-service (Nhân viên)</field>
+        <field name="category_id" ref="module_category_cham_cong_tinh_luong"/>
+        <field name="implied_ids" eval="[(4, ref('group_cham_cong_nhan_vien'))]"/>
     </record>
 
     <record id="group_cham_cong_nhan_su" model="res.groups">
@@ -20,21 +29,22 @@
         <field name="category_id" ref="module_category_cham_cong_tinh_luong"/>
     </record>
 
+    <!-- Quản trị: KHÔNG implied group_cham_cong_nhan_vien để tránh bị rule self-only
+         và không thấy menu "của tôi". Vẫn có full model access qua CSV riêng. -->
     <record id="group_cham_cong_quan_tri" model="res.groups">
         <field name="name">Chấm công/Lương - Quản trị</field>
         <field name="category_id" ref="module_category_cham_cong_tinh_luong"/>
         <field name="implied_ids" eval="[
-            (4, ref('group_cham_cong_nhan_vien')),
             (4, ref('group_cham_cong_nhan_su')),
             (4, ref('group_cham_cong_ke_toan'))
         ]"/>
     </record>
 
-    <!-- Legacy English-name aliases — map to the Vietnamese groups above -->
+    <!-- Legacy English-name aliases -->
     <record id="group_cham_cong_user" model="res.groups">
         <field name="name">Chấm công/Lương - User</field>
         <field name="category_id" ref="module_category_cham_cong_tinh_luong"/>
-        <field name="implied_ids" eval="[(4, ref('group_cham_cong_nhan_vien'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_cham_cong_self_service'))]"/>
     </record>
 
     <record id="group_cham_cong_hr" model="res.groups">

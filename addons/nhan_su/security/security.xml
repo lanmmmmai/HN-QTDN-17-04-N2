@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_nhan_su" model="ir.module.category">
+        <field name="name">Quản lý nhân sự</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- Nhân viên thường: chỉ đọc dữ liệu cơ bản (dùng cho relationship access) -->
+    <record id="group_nhan_su_nhan_vien" model="res.groups">
+        <field name="name">QLNS - Nhân viên</field>
+        <field name="category_id" ref="module_category_nhan_su"/>
+    </record>
+
+    <!-- Nhân sự: quản lý nhân viên, không xóa -->
+    <record id="group_nhan_su_nhan_su" model="res.groups">
+        <field name="name">QLNS - Nhân sự</field>
+        <field name="category_id" ref="module_category_nhan_su"/>
+        <field name="implied_ids" eval="[(4, ref('group_nhan_su_nhan_vien'))]"/>
+    </record>
+
+    <!-- Quản trị: toàn quyền -->
+    <record id="group_nhan_su_quan_tri" model="res.groups">
+        <field name="name">QLNS - Quản trị</field>
+        <field name="category_id" ref="module_category_nhan_su"/>
+        <field name="implied_ids" eval="[(4, ref('group_nhan_su_nhan_su'))]"/>
+    </record>
+</odoo>

@@ -150,6 +150,17 @@ class DashboardChamCongLuong(models.Model):
             action['context'] = dict(self.env.context, **context)
         return action
 
+    def _open_payroll_list(self, extra_domain=None, action_xmlid='cham_cong_tinh_luong.action_bang_luong'):
+        self.ensure_one()
+        domain = [('thang', '=', self.thang), ('nam', '=', self.nam)]
+        if extra_domain:
+            domain.extend(extra_domain)
+        return self._build_action(
+            action_xmlid,
+            domain=domain,
+            context={'search_default_filter_month': 1},
+        )
+
     def action_refresh_dashboard(self):
         today = fields.Date.context_today(self)
         self.write({
@@ -185,12 +196,7 @@ class DashboardChamCongLuong(models.Model):
         return self.env.ref('cham_cong_tinh_luong.action_phan_tich_canh_bao_wizard').read()[0]
 
     def action_open_bang_luong(self):
-        self.ensure_one()
-        return self._build_action(
-            'cham_cong_tinh_luong.action_thong_ke_bang_luong',
-            domain=[('thang', '=', self.thang), ('nam', '=', self.nam)],
-            context={'search_default_filter_computed': 1},
-        )
+        return self._open_payroll_list()
 
     def action_open_canh_bao(self):
         self.ensure_one()
@@ -200,27 +206,34 @@ class DashboardChamCongLuong(models.Model):
         )
 
     def action_open_thong_ke_luong(self):
-        self.ensure_one()
-        return self._build_action(
-            'cham_cong_tinh_luong.action_thong_ke_bang_luong',
-            domain=[('thang', '=', self.thang), ('nam', '=', self.nam)],
-            context={'search_default_filter_month': 1},
-        )
+        return self._open_payroll_list(action_xmlid='cham_cong_tinh_luong.action_thong_ke_bang_luong')
 
     def action_open_bang_luong_list(self):
-        self.ensure_one()
-        return self._build_action(
-            'cham_cong_tinh_luong.action_bang_luong',
-            domain=[('thang', '=', self.thang), ('nam', '=', self.nam)],
-            context={'search_default_filter_month': 1},
-        )
+        return self._open_payroll_list()
 
     def action_open_in_phieu_luong_pdf(self):
-        self.ensure_one()
-        return self._build_action(
-            'cham_cong_tinh_luong.action_in_phieu_luong_pdf',
-            context={'search_default_filter_month': 1},
-        )
+        return self._open_payroll_list(action_xmlid='cham_cong_tinh_luong.action_in_phieu_luong_pdf')
+
+    def action_open_bang_luong_da_tinh(self):
+        return self._open_payroll_list([('state', 'in', ['da_tinh', 'computed'])])
+
+    def action_open_bang_luong_da_xac_nhan(self):
+        return self._open_payroll_list([('state', 'in', ['xac_nhan', 'confirmed'])])
+
+    def action_open_bang_luong_chua_xac_nhan(self):
+        return self._open_payroll_list([('state', 'not in', ['xac_nhan', 'confirmed', 'da_thanh_toan', 'huy', 'cancel'])])
+
+    def action_open_bang_luong_da_thanh_toan(self):
+        return self._open_payroll_list([('state', '=', 'da_thanh_toan')])
+
+    def action_open_tong_quy_luong(self):
+        return self._open_payroll_list()
+
+    def action_open_tong_phu_cap(self):
+        return self._open_payroll_list()
+
+    def action_open_tong_bao_hiem(self):
+        return self._open_payroll_list()
 
     def action_open_cau_hinh_luong(self):
         self.ensure_one()

@@ -1,28 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <menuitem
-            id="menu_root"
-            name="QLVB"
-            sequence="0"/>
-          
-        <menuitem name="Quản lý văn bản đến" 
-            id="menu_van_ban_den" 
-            parent="menu_root" 
-            sequence="1"
-            action="action_van_ban_den"
-        />
-        <menuitem name="Quản lý văn bản đi" 
-            id="menu_van_ban_di" 
-            parent="menu_root" 
-            sequence="2"
-            action="action_van_ban_di"
-        />
-        <menuitem name="Danh mục loại văn bản" 
-            id="menu_loai_van_ban" 
-            parent="menu_root" 
-            sequence="2"
-            action="action_loai_van_ban"
-        />
-    </data>
+    <!-- Root: hiển thị cho tất cả nhóm văn bản -->
+    <menuitem id="menu_quan_ly_van_ban_root"
+              name="Quản lý văn bản"
+              sequence="30"
+              groups="quan_ly_van_ban.group_van_ban_nhan_vien,quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_lanh_dao,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <!-- ── Dashboard: chỉ Văn thư / Lãnh đạo / Quản trị ── -->
+    <menuitem id="menu_dashboard_van_ban"
+              name="Dashboard"
+              parent="menu_quan_ly_van_ban_root"
+              action="action_dashboard_van_ban_server"
+              sequence="1"
+              groups="quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_lanh_dao,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <!-- ── Văn bản đến ── -->
+    <menuitem id="menu_van_ban_den_root"
+              name="Văn bản đến"
+              parent="menu_quan_ly_van_ban_root"
+              sequence="10"
+              groups="quan_ly_van_ban.group_van_ban_nhan_vien,quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_lanh_dao,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <menuitem id="menu_van_ban_den"
+              name="Tất cả văn bản đến"
+              parent="menu_van_ban_den_root"
+              action="action_van_ban_den"
+              sequence="10"
+              groups="quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_lanh_dao,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <!-- Nhân viên: xem văn bản được giao (lọc bởi record rule) -->
+    <menuitem id="menu_van_ban_den_cua_toi"
+              name="Văn bản được giao"
+              parent="menu_van_ban_den_root"
+              action="action_van_ban_den"
+              sequence="11"
+              groups="quan_ly_van_ban.group_van_ban_nhan_vien"/>
+
+    <menuitem id="menu_van_ban_den_dang_xu_ly"
+              name="Đang xử lý"
+              parent="menu_van_ban_den_root"
+              action="action_van_ban_den_dang_xu_ly"
+              sequence="20"
+              groups="quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_lanh_dao,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <menuitem id="menu_van_ban_den_qua_han"
+              name="Quá hạn"
+              parent="menu_van_ban_den_root"
+              action="action_van_ban_den_qua_han"
+              sequence="30"
+              groups="quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_lanh_dao,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <!-- ── Văn bản đi ── -->
+    <menuitem id="menu_van_ban_di_root"
+              name="Văn bản đi"
+              parent="menu_quan_ly_van_ban_root"
+              sequence="20"
+              groups="quan_ly_van_ban.group_van_ban_nhan_vien,quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_lanh_dao,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <menuitem id="menu_van_ban_di"
+              name="Tất cả văn bản đi"
+              parent="menu_van_ban_di_root"
+              action="action_van_ban_di"
+              sequence="10"
+              groups="quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_lanh_dao,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <!-- Nhân viên: xem văn bản mình liên quan (lọc bởi record rule) -->
+    <menuitem id="menu_van_ban_di_cua_toi"
+              name="Văn bản liên quan"
+              parent="menu_van_ban_di_root"
+              action="action_van_ban_di"
+              sequence="11"
+              groups="quan_ly_van_ban.group_van_ban_nhan_vien"/>
+
+    <menuitem id="menu_van_ban_di_cho_ky"
+              name="Chờ ký"
+              parent="menu_van_ban_di_root"
+              action="action_van_ban_di_cho_ky"
+              sequence="20"
+              groups="quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_lanh_dao,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <menuitem id="menu_van_ban_di_da_phat_hanh"
+              name="Đã phát hành"
+              parent="menu_van_ban_di_root"
+              action="action_van_ban_di_da_phat_hanh"
+              sequence="30"
+              groups="quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_lanh_dao,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <!-- ── Cấu hình: chỉ Văn thư / Quản trị ── -->
+    <menuitem id="menu_cau_hinh_van_ban"
+              name="Cấu hình"
+              parent="menu_quan_ly_van_ban_root"
+              sequence="90"
+              groups="quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
+    <menuitem id="menu_loai_van_ban"
+              name="Loại văn bản"
+              parent="menu_cau_hinh_van_ban"
+              action="action_loai_van_ban"
+              sequence="10"
+              groups="quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_quan_tri"/>
 </odoo>

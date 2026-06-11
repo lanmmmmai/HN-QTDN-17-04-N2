@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tao_tai_khoan_nhan_vien_wizard_form" model="ir.ui.view">
+        <field name="name">tao.tai.khoan.nhan.vien.wizard.form</field>
+        <field name="model">tao_tai_khoan_nhan_vien_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tạo tài khoản người dùng">
+                <group string="Thông tin nhân viên">
+                    <field name="nhan_vien_id" readonly="1"/>
+                </group>
+                <group string="Thông tin tài khoản">
+                    <field name="name"/>
+                    <field name="login"/>
+                    <field name="password" password="True"/>
+                    <field name="confirm_password" password="True"/>
+                </group>
+                <group>
+                    <div class="text-muted">
+                        Tài khoản sẽ được cấp quyền nhân viên — chỉ xem Chấm công và Bảng lương của bản thân.
+                    </div>
+                </group>
+                <footer>
+                    <button name="action_tao_tai_khoan"
+                            type="object"
+                            string="Tạo tài khoản"
+                            class="btn-primary"/>
+                    <button string="Hủy" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,35 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- ══════════════════════════════════════════════════════
+             ROOT: Chấm công
+             Thấy bởi: Nhân viên self-service, Nhân sự, Kế toán, Quản trị
+        ══════════════════════════════════════════════════════ -->
         <menuitem
             id="menu_cham_cong_root"
             name="Chấm công"
             sequence="20"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_self_service,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
+        <!-- Dashboard: chỉ Nhân sự, Kế toán, Quản trị -->
         <menuitem
             id="menu_dashboard_cham_cong"
             name="Dashboard chấm công"
             parent="menu_cham_cong_root"
             action="action_dashboard_cham_cong_server"
             sequence="0"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
+        <!-- Dữ liệu chấm công: chỉ Nhân sự, Kế toán, Quản trị -->
         <menuitem
             id="menu_du_lieu_cham_cong"
             name="Dữ liệu chấm công"
             parent="menu_cham_cong_root"
             action="action_cham_cong"
             sequence="1"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
+        <!-- Chấm công của tôi: CHỈ Self-service (nhân viên thực tế).
+             Admin KHÔNG thấy vì không thuộc group_cham_cong_self_service -->
         <menuitem
             id="menu_cham_cong_cua_toi"
             name="Chấm công của tôi"
             parent="menu_cham_cong_root"
             action="action_cham_cong_cua_toi"
             sequence="2"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_vien"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_self_service"/>
 
         <menuitem
             id="menu_import_cham_cong"
@@ -37,7 +45,7 @@
             parent="menu_cham_cong_root"
             action="action_import_cham_cong_wizard"
             sequence="3"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
             id="menu_canh_bao_cham_cong"
@@ -45,7 +53,7 @@
             parent="menu_cham_cong_root"
             action="action_canh_bao_cham_cong"
             sequence="4"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
             id="menu_phan_tich_canh_bao"
@@ -53,7 +61,7 @@
             parent="menu_cham_cong_root"
             action="action_phan_tich_canh_bao_wizard"
             sequence="5"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
             id="menu_bao_cao_cham_cong"
@@ -61,21 +69,26 @@
             parent="menu_cham_cong_root"
             action="action_thong_ke_cham_cong"
             sequence="6"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
+        <!-- ══════════════════════════════════════════════════════
+             ROOT: Tính lương
+             Thấy bởi: Nhân viên self-service, Nhân sự, Kế toán, Quản trị
+        ══════════════════════════════════════════════════════ -->
         <menuitem
             id="menu_tinh_luong_root"
             name="Tính lương"
             sequence="21"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_self_service,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
+        <!-- Dashboard tính lương: chỉ Nhân sự, Kế toán, Quản trị -->
         <menuitem
             id="menu_dashboard_tinh_luong"
             name="Dashboard tính lương"
             parent="menu_tinh_luong_root"
             action="action_dashboard_cham_cong_luong"
             sequence="0"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
             id="menu_cau_hinh_luong"
@@ -83,7 +96,7 @@
             parent="menu_tinh_luong_root"
             action="action_cau_hinh_luong"
             sequence="1"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
             id="menu_bang_luong"
@@ -91,15 +104,17 @@
             parent="menu_tinh_luong_root"
             action="action_bang_luong"
             sequence="2"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
+        <!-- Bảng lương của tôi: CHỈ Self-service.
+             Admin KHÔNG thấy vì không thuộc group_cham_cong_self_service -->
         <menuitem
             id="menu_bang_luong_cua_toi"
             name="Bảng lương của tôi"
             parent="menu_tinh_luong_root"
             action="action_bang_luong_cua_toi"
             sequence="3"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_nhan_vien"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_self_service"/>
 
         <menuitem
             id="menu_xuat_bang_luong_excel"
@@ -107,7 +122,7 @@
             parent="menu_tinh_luong_root"
             action="action_xuat_bang_luong_wizard"
             sequence="4"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
             id="menu_in_phieu_luong_pdf"
@@ -115,7 +130,7 @@
             parent="menu_tinh_luong_root"
             action="action_in_phieu_luong_pdf"
             sequence="5"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
             id="menu_bao_cao_bang_luong"
@@ -123,6 +138,6 @@
             parent="menu_tinh_luong_root"
             action="action_thong_ke_bang_luong"
             sequence="6"
-            groups="base.group_system,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
     </data>
 </odoo>

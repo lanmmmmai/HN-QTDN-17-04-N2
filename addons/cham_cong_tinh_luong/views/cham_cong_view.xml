@@ -7,6 +7,9 @@
             <field name="arch" type="xml">
                 <tree string="Chấm công" decoration-success="trang_thai == 'di_lam'" decoration-warning="trang_thai == 'di_muon'" decoration-danger="trang_thai == 'nghi'" decoration-info="trang_thai == 'tang_ca'">
                     <field name="nhan_vien_id"/>
+                    <field name="ma_nhan_vien"/>
+                    <field name="phong_ban_id"/>
+                    <field name="chuc_vu_id"/>
                     <field name="ngay_cham_cong"/>
                     <field name="ca_lam_viec"/>
                     <field name="gio_vao"/>
@@ -98,6 +101,8 @@
             <field name="name">Chấm công</field>
             <field name="res_model">cham_cong</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_cham_cong_search"/>
         </record>
 

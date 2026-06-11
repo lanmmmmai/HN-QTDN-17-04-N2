@@ -1,70 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- QLNS root: chỉ Nhân sự và Quản trị thấy. Staff KHÔNG thấy. -->
         <menuitem
             id="menu_root"
             name="QLNS"
-            sequence="10"/>
+            sequence="10"
+            groups="nhan_su.group_nhan_su_nhan_su,nhan_su.group_nhan_su_quan_tri"/>
 
         <menuitem
             id="menu_dashboard_nhan_su"
             name="Dashboard nhân sự"
             parent="menu_root"
             sequence="0"
-            action="action_dashboard_nhan_su_server"/>
+            action="action_dashboard_nhan_su_server"
+            groups="nhan_su.group_nhan_su_nhan_su,nhan_su.group_nhan_su_quan_tri"/>
 
         <menuitem
             name="Quản lý nhân viên"
             id="menu_nhan_vien"
             parent="menu_root"
             sequence="1"
-            action="action_nhan_vien"/>
+            action="action_nhan_vien"
+            groups="nhan_su.group_nhan_su_nhan_su,nhan_su.group_nhan_su_quan_tri"/>
 
         <menuitem
             name="Danh mục chung"
             id="menu_danh_muc_chung"
             parent="menu_root"
-            sequence="2"/>
+            sequence="2"
+            groups="nhan_su.group_nhan_su_nhan_su,nhan_su.group_nhan_su_quan_tri"/>
 
         <menuitem
             name="Đơn vị / Phòng ban"
             id="menu_don_vi"
             parent="menu_danh_muc_chung"
             sequence="1"
-            action="action_don_vi"/>
+            action="action_don_vi"
+            groups="nhan_su.group_nhan_su_nhan_su,nhan_su.group_nhan_su_quan_tri"/>
 
         <menuitem
             name="Chức vụ"
             id="menu_chuc_vu"
             parent="menu_danh_muc_chung"
             sequence="2"
-            action="action_chuc_vu"/>
+            action="action_chuc_vu"
+            groups="nhan_su.group_nhan_su_nhan_su,nhan_su.group_nhan_su_quan_tri"/>
 
         <menuitem
             name="Lịch sử công tác"
             id="menu_lich_su_cong_tac"
             parent="menu_root"
             sequence="3"
-            action="action_lich_su_cong_tac"/>
+            action="action_lich_su_cong_tac"
+            groups="nhan_su.group_nhan_su_nhan_su,nhan_su.group_nhan_su_quan_tri"/>
 
         <menuitem
             name="Chứng chỉ, bằng cấp"
             id="menu_chung_chi_bang_cap"
             parent="menu_root"
-            sequence="4"/>
+            sequence="4"
+            groups="nhan_su.group_nhan_su_nhan_su,nhan_su.group_nhan_su_quan_tri"/>
 
         <menuitem
             name="Danh mục chứng chỉ, bằng cấp"
             id="menu_danh_muc_chung_chi_bang_cap"
             parent="menu_chung_chi_bang_cap"
             sequence="1"
-            action="action_chung_chi_bang_cap"/>
+            action="action_chung_chi_bang_cap"
+            groups="nhan_su.group_nhan_su_nhan_su,nhan_su.group_nhan_su_quan_tri"/>
 
         <menuitem
             name="Danh sách chứng chỉ, bằng cấp"
             id="menu_danh_sach_chung_chi_bang_cap"
             parent="menu_chung_chi_bang_cap"
             sequence="2"
-            action="action_danh_sach_chung_chi_bang_cap"/>
+            action="action_danh_sach_chung_chi_bang_cap"
+            groups="nhan_su.group_nhan_su_nhan_su,nhan_su.group_nhan_su_quan_tri"/>
     </data>
 </odoo>

@@ -3,7 +3,7 @@
 from datetime import date
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 
 
 class BangLuong(models.Model):
@@ -265,29 +265,74 @@ class BangLuong(models.Model):
             record.cong_thuc_tinh_luong = values['cong_thuc_tinh_luong']
             record.canh_bao = values['canh_bao']
 
+    # ── Helpers kiểm tra quyền ──────────────────────────────────────
+
+    def _is_payroll_manager(self):
+        return (
+            self.env.user.has_group('cham_cong_tinh_luong.group_cham_cong_quan_tri')
+            or self.env.user.has_group('cham_cong_tinh_luong.group_cham_cong_ke_toan')
+        )
+
+    def _check_payroll_manager_rights(self):
+        if not self._is_payroll_manager():
+            raise AccessError(
+                'Bạn không có quyền thực hiện thao tác quản lý bảng lương. '
+                'Chỉ Kế toán hoặc Quản trị mới được phép.'
+            )
+
+    # ── Actions chuyển trạng thái ────────────────────────────────
+
     def action_tinh_luong(self):
+        self._check_payroll_manager_rights()
         for record in self:
             values = record._get_payroll_values(require_config=True)
             values.pop('cham_cong_ids', None)
             record.write({**values, 'state': 'da_tinh'})
 
+    def action_tinh_lai_luong(self):
+        """Cập nhật/tính lại lương — hoạt động ở mọi trạng thái (trừ hủy và đã thanh toán)."""
+        self._check_payroll_manager_rights()
+        for record in self:
+            if record.state in ('huy', 'da_thanh_toan'):
+                raise ValidationError(
+                    'Không thể tính lại bảng lương đã hủy hoặc đã thanh toán. '
+                    'Vui lòng đặt về Nháp trước.'
+                )
+            values = record._get_payroll_values(require_config=True)
+            values.pop('cham_cong_ids', None)
+            super(BangLuong, record).write({**values, 'state': 'da_tinh'})
+
     def action_xac_nhan(self):
+        self._check_payroll_manager_rights()
         self.write({'state': 'xac_nhan'})
 
     def action_da_thanh_toan(self):
+        self._check_payroll_manager_rights()
         self.write({'state': 'da_thanh_toan'})
 
     def action_huy(self):
+        self._check_payroll_manager_rights()
         self.write({'state': 'huy'})
 
     def action_draft(self):
+        self._check_payroll_manager_rights()
         self.write({'state': 'nhap'})
 
     def action_in_phieu_luong(self):
         self.ensure_one()
+        is_manager = self._is_payroll_manager()
+        is_owner = (
+            self.nhan_vien_id.user_id
+            and self.nhan_vien_id.user_id.id == self.env.user.id
+        )
+        if not is_manager and not is_owner:
+            raise AccessError('Bạn chỉ được in phiếu lương của chính mình.')
         return self.env.ref('cham_cong_tinh_luong.action_report_bang_luong').report_action(self)
 
     def write(self, vals):
+        # Admin/Kế toán được sửa tự do không bị chặn bởi state
+        if self._is_payroll_manager():
+            return super().write(vals)
         protected_fields = {
             'nhan_vien_id',
             'thang',
