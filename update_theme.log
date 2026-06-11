@@ -1,0 +1,46 @@
+time="2026-06-11T10:53:45+07:00" level=warning msg="Found orphan containers ([postgres_odoo-base-15-01]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container odoo_db  Running
+2026-06-11 03:53:57,268 1 INFO ? odoo: Odoo version 15.0-20240924 
+2026-06-11 03:53:57,269 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-06-11 03:53:57,269 1 INFO ? odoo: addons paths: ['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/15.0', '/mnt/extra-addons'] 
+2026-06-11 03:53:57,269 1 INFO ? odoo: database: odoo@db:5432 
+2026-06-11 03:53:57,395 1 INFO ? odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-06-11 03:53:57,549 1 INFO MaiLan odoo.modules.loading: loading 1 modules... 
+2026-06-11 03:53:57,553 1 INFO MaiLan odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-06-11 03:53:57,569 1 INFO MaiLan odoo.modules.loading: updating modules list 
+2026-06-11 03:53:57,571 1 INFO MaiLan odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-06-11 03:53:57,807 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'quan_ly_van_ban', defaulting to LGPL-3 
+2026-06-11 03:53:57,933 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-11 03:53:57,951 1 INFO MaiLan odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Chấm công và Tính lương'] to user __system__ #1 via n/a 
+2026-06-11 03:53:57,951 1 INFO MaiLan odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Chấm công và Tính lương'] to user __system__ #1 via n/a 
+2026-06-11 03:53:58,199 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'quan_ly_van_ban', defaulting to LGPL-3 
+2026-06-11 03:53:58,335 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-11 03:53:58,356 1 INFO MaiLan odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-06-11 03:53:58,379 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-11 03:53:58,385 1 INFO MaiLan odoo.modules.loading: loading 24 modules... 
+2026-06-11 03:53:58,426 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-11 03:53:58,441 1 INFO MaiLan odoo.modules.loading: Loading module cham_cong_tinh_luong (11/24) 
+2026-06-11 03:53:58,496 1 INFO MaiLan odoo.modules.registry: module cham_cong_tinh_luong: creating or updating database tables 
+2026-06-11 03:53:58,586 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/security/security.xml 
+2026-06-11 03:53:58,671 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/security/ir.model.access.csv 
+2026-06-11 03:53:58,732 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/security/rules.xml 
+2026-06-11 03:53:58,763 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/cham_cong_view.xml 
+2026-06-11 03:53:58,796 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/cau_hinh_luong_view.xml 
+2026-06-11 03:53:58,814 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/canh_bao_cham_cong_view.xml 
+2026-06-11 03:53:58,825 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/dashboard_views.xml 
+2026-06-11 03:53:58,851 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/nhan_vien_extend_view.xml 
+2026-06-11 03:53:58,859 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/wizards/phan_tich_cham_cong_wizard_view.xml 
+2026-06-11 03:53:58,864 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/wizards/xuat_bang_luong_wizard_view.xml 
+2026-06-11 03:53:58,869 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/wizards/import_cham_cong_wizard_view.xml 
+2026-06-11 03:53:58,879 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/report/bang_luong_report.xml 
+2026-06-11 03:53:58,888 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/bang_luong_view.xml 
+2026-06-11 03:53:58,904 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/menu.xml 
+2026-06-11 03:53:58,949 1 INFO MaiLan odoo.addons.base.models.ir_translation: module cham_cong_tinh_luong: no translation for language vi_VN 
+2026-06-11 03:53:58,961 1 INFO MaiLan odoo.modules.loading: Module cham_cong_tinh_luong loaded in 0.52s, 1043 queries 
+2026-06-11 03:53:59,022 1 INFO MaiLan odoo.modules.loading: 24 modules loaded in 0.64s, 1043 queries (+0 extra) 
+2026-06-11 03:53:59,084 1 INFO MaiLan odoo.modules.registry: verifying fields for every extended model 
+2026-06-11 03:53:59,156 1 INFO MaiLan odoo.modules.loading: Modules loaded. 
+2026-06-11 03:53:59,158 1 INFO MaiLan odoo.modules.registry: Registry loaded in 1.627s 
+2026-06-11 03:53:59,158 1 INFO MaiLan odoo.service.server: Initiating shutdown 
+2026-06-11 03:53:59,158 1 INFO MaiLan odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-06-11 03:53:59,158 1 INFO MaiLan odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 1 connections  

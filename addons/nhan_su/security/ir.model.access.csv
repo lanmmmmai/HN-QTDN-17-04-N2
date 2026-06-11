@@ -1,8 +1,21 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_nhan_vien,nhan_vien.nhan_vien,model_nhan_vien,base.group_user,1,1,1,1
-access_don_vi,don_vi.don_vi,model_don_vi,base.group_user,1,1,1,1
-access_chuc_vu,chuc_vu.chuc_vu,model_chuc_vu,base.group_user,1,1,1,1
-access_lich_su_cong_tac,lich_su_cong_tac.lich_su_cong_tac,model_lich_su_cong_tac,base.group_user,1,1,1,1
-access_chung_chi_bang_cap,chung_chi_bang_cap.chung_chi_bang_cap,model_chung_chi_bang_cap,base.group_user,1,1,1,1
-access_danh_sach_chung_chi_bang_cap,danh_sach_chung_chi_bang_cap.danh_sach_chung_chi_bang_cap,model_danh_sach_chung_chi_bang_cap,base.group_user,1,1,1,1
-access_dashboard_nhan_su,dashboard_nhan_su.dashboard_nhan_su,model_dashboard_nhan_su,base.group_user,1,1,1,1
+access_nhan_vien,nhan_vien.nhan_vien,model_nhan_vien,base.group_user,1,0,0,0
+access_nhan_vien_nhan_su,nhan_vien nhan su,model_nhan_vien,nhan_su.group_nhan_su_nhan_su,1,1,1,0
+access_nhan_vien_quan_tri,nhan_vien quan tri,model_nhan_vien,nhan_su.group_nhan_su_quan_tri,1,1,1,1
+access_don_vi,don_vi.don_vi,model_don_vi,base.group_user,1,0,0,0
+access_don_vi_nhan_su,don_vi nhan su,model_don_vi,nhan_su.group_nhan_su_nhan_su,1,1,1,0
+access_don_vi_quan_tri,don_vi quan tri,model_don_vi,nhan_su.group_nhan_su_quan_tri,1,1,1,1
+access_chuc_vu,chuc_vu.chuc_vu,model_chuc_vu,base.group_user,1,0,0,0
+access_chuc_vu_nhan_su,chuc_vu nhan su,model_chuc_vu,nhan_su.group_nhan_su_nhan_su,1,1,1,0
+access_chuc_vu_quan_tri,chuc_vu quan tri,model_chuc_vu,nhan_su.group_nhan_su_quan_tri,1,1,1,1
+access_lich_su_cong_tac,lich_su_cong_tac.lich_su_cong_tac,model_lich_su_cong_tac,base.group_user,1,0,0,0
+access_lich_su_cong_tac_nhan_su,lich_su_cong_tac nhan su,model_lich_su_cong_tac,nhan_su.group_nhan_su_nhan_su,1,1,1,0
+access_lich_su_cong_tac_quan_tri,lich_su_cong_tac quan tri,model_lich_su_cong_tac,nhan_su.group_nhan_su_quan_tri,1,1,1,1
+access_chung_chi_bang_cap,chung_chi_bang_cap.chung_chi_bang_cap,model_chung_chi_bang_cap,base.group_user,1,0,0,0
+access_chung_chi_bang_cap_nhan_su,chung_chi_bang_cap nhan su,model_chung_chi_bang_cap,nhan_su.group_nhan_su_nhan_su,1,1,1,0
+access_chung_chi_bang_cap_quan_tri,chung_chi_bang_cap quan tri,model_chung_chi_bang_cap,nhan_su.group_nhan_su_quan_tri,1,1,1,1
+access_danh_sach_chung_chi_bang_cap,danh_sach_chung_chi_bang_cap.danh_sach_chung_chi_bang_cap,model_danh_sach_chung_chi_bang_cap,base.group_user,1,0,0,0
+access_danh_sach_chung_chi_bang_cap_nhan_su,danh_sach_chung_chi_bang_cap nhan su,model_danh_sach_chung_chi_bang_cap,nhan_su.group_nhan_su_nhan_su,1,1,1,0
+access_danh_sach_chung_chi_bang_cap_quan_tri,danh_sach_chung_chi_bang_cap quan tri,model_danh_sach_chung_chi_bang_cap,nhan_su.group_nhan_su_quan_tri,1,1,1,1
+access_dashboard_nhan_su,dashboard_nhan_su.dashboard_nhan_su,model_dashboard_nhan_su,nhan_su.group_nhan_su_nhan_su,1,1,1,0
+access_dashboard_nhan_su_quan_tri,dashboard_nhan_su quan tri,model_dashboard_nhan_su,nhan_su.group_nhan_su_quan_tri,1,1,1,1

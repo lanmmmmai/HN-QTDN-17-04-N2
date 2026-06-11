@@ -1,0 +1,224 @@
+time="2026-06-10T19:25:14+07:00" level=warning msg="Found orphan containers ([postgres_odoo-base-15-01]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container odoo_db  Running
+2026-06-10 12:25:15,987 1 INFO ? odoo: Odoo version 15.0-20240924 
+2026-06-10 12:25:15,987 1 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-06-10 12:25:15,988 1 INFO ? odoo: addons paths: ['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/addons/15.0', '/mnt/extra-addons'] 
+2026-06-10 12:25:15,988 1 INFO ? odoo: database: odoo@db:5432 
+2026-06-10 12:25:16,117 1 INFO ? odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-06-10 12:25:16,253 1 INFO MaiLan odoo.modules.loading: loading 1 modules... 
+2026-06-10 12:25:16,258 1 INFO MaiLan odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-06-10 12:25:16,271 1 INFO MaiLan odoo.modules.loading: updating modules list 
+2026-06-10 12:25:16,273 1 INFO MaiLan odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-06-10 12:25:16,395 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-10 12:25:16,409 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'quan_ly_van_ban', defaulting to LGPL-3 
+2026-06-10 12:25:16,651 1 INFO MaiLan odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Chấm công và Tính lương', 'nhan_su'] to user __system__ #1 via n/a 
+2026-06-10 12:25:16,651 1 INFO MaiLan odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Chấm công và Tính lương', 'nhan_su'] to user __system__ #1 via n/a 
+2026-06-10 12:25:16,703 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-10 12:25:16,718 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'quan_ly_van_ban', defaulting to LGPL-3 
+2026-06-10 12:25:16,955 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-10 12:25:16,955 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-10 12:25:16,958 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-10 12:25:16,958 1 INFO MaiLan odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-06-10 12:25:16,976 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-10 12:25:16,977 1 INFO MaiLan odoo.modules.loading: loading 24 modules... 
+2026-06-10 12:25:16,991 1 INFO MaiLan odoo.modules.loading: Loading module nhan_su (7/24) 
+2026-06-10 12:25:17,015 1 WARNING MaiLan odoo.modules.module: Missing `license` key in manifest for 'nhan_su', defaulting to LGPL-3 
+2026-06-10 12:25:17,032 1 INFO MaiLan odoo.modules.registry: module nhan_su: creating or updating database tables 
+2026-06-10 12:25:17,139 1 INFO MaiLan odoo.modules.loading: loading nhan_su/security/ir.model.access.csv 
+2026-06-10 12:25:17,155 1 INFO MaiLan odoo.modules.loading: loading nhan_su/views/chuc_vu.xml 
+2026-06-10 12:25:17,188 1 INFO MaiLan odoo.modules.loading: loading nhan_su/views/don_vi.xml 
+2026-06-10 12:25:17,196 1 INFO MaiLan odoo.modules.loading: loading nhan_su/views/nhan_vien.xml 
+2026-06-10 12:25:17,206 1 INFO MaiLan odoo.modules.loading: loading nhan_su/views/lich_su_cong_tac.xml 
+2026-06-10 12:25:17,215 1 INFO MaiLan odoo.modules.loading: loading nhan_su/views/chung_chi_bang_cap.xml 
+2026-06-10 12:25:17,224 1 INFO MaiLan odoo.modules.loading: loading nhan_su/views/danh_sach_chung_chi_bang_cap.xml 
+2026-06-10 12:25:17,232 1 INFO MaiLan odoo.modules.loading: loading nhan_su/views/dashboard_nhan_su.xml 
+2026-06-10 12:25:17,242 1 INFO MaiLan odoo.modules.loading: loading nhan_su/views/menu.xml 
+2026-06-10 12:25:17,262 1 INFO MaiLan odoo.addons.base.models.ir_translation: module nhan_su: no translation for language vi_VN 
+2026-06-10 12:25:17,271 1 INFO MaiLan odoo.modules.loading: Module nhan_su loaded in 0.28s, 450 queries 
+2026-06-10 12:25:17,284 1 INFO MaiLan odoo.modules.loading: Loading module cham_cong_tinh_luong (11/24) 
+2026-06-10 12:25:17,331 1 INFO MaiLan odoo.modules.registry: module cham_cong_tinh_luong: creating or updating database tables 
+2026-06-10 12:25:17,372 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/security/security.xml 
+2026-06-10 12:25:17,638 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/security/ir.model.access.csv 
+2026-06-10 12:25:17,690 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/security/rules.xml 
+2026-06-10 12:25:17,700 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/cham_cong_view.xml 
+2026-06-10 12:25:17,724 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/cau_hinh_luong_view.xml 
+2026-06-10 12:25:17,738 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/canh_bao_cham_cong_view.xml 
+2026-06-10 12:25:17,751 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/dashboard_views.xml 
+2026-06-10 12:25:17,757 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-users) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 26,
+ 'name': 'dashboard.cham.cong.form',
+ 'view': ir.ui.view(499,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_cham_cong_form_cham_cong_view'} 
+2026-06-10 12:25:17,757 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-calendar-check-o) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 34,
+ 'name': 'dashboard.cham.cong.form',
+ 'view': ir.ui.view(499,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_cham_cong_form_cham_cong_view'} 
+2026-06-10 12:25:17,758 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-clock-o) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 42,
+ 'name': 'dashboard.cham.cong.form',
+ 'view': ir.ui.view(499,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_cham_cong_form_cham_cong_view'} 
+2026-06-10 12:25:17,759 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-plus-circle) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 50,
+ 'name': 'dashboard.cham.cong.form',
+ 'view': ir.ui.view(499,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_cham_cong_form_cham_cong_view'} 
+2026-06-10 12:25:17,759 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-exclamation-circle) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 58,
+ 'name': 'dashboard.cham.cong.form',
+ 'view': ir.ui.view(499,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_cham_cong_form_cham_cong_view'} 
+2026-06-10 12:25:17,760 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-bed) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 66,
+ 'name': 'dashboard.cham.cong.form',
+ 'view': ir.ui.view(499,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_cham_cong_form_cham_cong_view'} 
+2026-06-10 12:25:17,760 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-bell) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 74,
+ 'name': 'dashboard.cham.cong.form',
+ 'view': ir.ui.view(499,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_cham_cong_form_cham_cong_view'} 
+2026-06-10 12:25:17,765 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-file-text-o) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 26,
+ 'name': 'dashboard.tinh.luong.form',
+ 'view': ir.ui.view(500,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_tinh_luong_form_view'} 
+2026-06-10 12:25:17,765 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-money) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 34,
+ 'name': 'dashboard.tinh.luong.form',
+ 'view': ir.ui.view(500,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_tinh_luong_form_view'} 
+2026-06-10 12:25:17,766 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-gift) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 42,
+ 'name': 'dashboard.tinh.luong.form',
+ 'view': ir.ui.view(500,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_tinh_luong_form_view'} 
+2026-06-10 12:25:17,767 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-shield) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 50,
+ 'name': 'dashboard.tinh.luong.form',
+ 'view': ir.ui.view(500,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_tinh_luong_form_view'} 
+2026-06-10 12:25:17,767 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-hourglass-half) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 58,
+ 'name': 'dashboard.tinh.luong.form',
+ 'view': ir.ui.view(500,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_tinh_luong_form_view'} 
+2026-06-10 12:25:17,768 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-check-circle) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 66,
+ 'name': 'dashboard.tinh.luong.form',
+ 'view': ir.ui.view(500,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_tinh_luong_form_view'} 
+2026-06-10 12:25:17,769 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-credit-card) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 74,
+ 'name': 'dashboard.tinh.luong.form',
+ 'view': ir.ui.view(500,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_tinh_luong_form_view'} 
+2026-06-10 12:25:17,769 1 WARNING MaiLan odoo.addons.base.models.ir_ui_view: A <i> with fa class (fa fa-exclamation-triangle) must have title in its tag, parents, descendants or have text
+View error context:
+{'file': '/mnt/extra-addons/cham_cong_tinh_luong/views/dashboard_views.xml',
+ 'line': 82,
+ 'name': 'dashboard.tinh.luong.form',
+ 'view': ir.ui.view(500,),
+ 'view.model': 'dashboard_cham_cong_luong',
+ 'view.parent': ir.ui.view(),
+ 'xmlid': 'dashboard_tinh_luong_form_view'} 
+2026-06-10 12:25:17,792 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/nhan_vien_extend_view.xml 
+2026-06-10 12:25:17,806 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/wizards/phan_tich_cham_cong_wizard_view.xml 
+2026-06-10 12:25:17,811 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/wizards/xuat_bang_luong_wizard_view.xml 
+2026-06-10 12:25:17,817 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/wizards/import_cham_cong_wizard_view.xml 
+2026-06-10 12:25:17,823 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/report/bang_luong_report.xml 
+2026-06-10 12:25:17,834 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/bang_luong_view.xml 
+2026-06-10 12:25:17,851 1 INFO MaiLan odoo.modules.loading: loading cham_cong_tinh_luong/views/menu.xml 
+2026-06-10 12:25:17,897 1 INFO MaiLan odoo.addons.base.models.ir_translation: module cham_cong_tinh_luong: no translation for language vi_VN 
+2026-06-10 12:25:17,905 1 INFO MaiLan odoo.modules.loading: Module cham_cong_tinh_luong loaded in 0.62s, 954 queries 
+2026-06-10 12:25:17,969 1 INFO MaiLan odoo.modules.loading: 24 modules loaded in 0.99s, 1404 queries (+0 extra) 
+2026-06-10 12:25:18,036 1 INFO MaiLan odoo.addons.base.models.ir_model: Deleting 157@ir.ui.menu (cham_cong_tinh_luong.menu_canh_bao_cua_toi) 
+2026-06-10 12:25:18,074 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [17970] 
+2026-06-10 12:25:18,074 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [157] 
+2026-06-10 12:25:18,074 1 INFO MaiLan odoo.addons.base.models.ir_model: Deleting 154@ir.ui.menu (cham_cong_tinh_luong.menu_dashboard_quan_ly) 
+2026-06-10 12:25:18,078 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [17967] 
+2026-06-10 12:25:18,078 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [154] 
+2026-06-10 12:25:18,079 1 INFO MaiLan odoo.addons.base.models.ir_model: Deleting 153@ir.ui.menu (cham_cong_tinh_luong.menu_dashboard_cua_toi) 
+2026-06-10 12:25:18,083 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [17966] 
+2026-06-10 12:25:18,083 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [153] 
+2026-06-10 12:25:18,083 1 INFO MaiLan odoo.addons.base.models.ir_model: Deleting 1@dashboard_cham_cong_luong (cham_cong_tinh_luong.dashboard_cham_cong_luong_record) 
+2026-06-10 12:25:18,087 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [17942] 
+2026-06-10 12:25:18,087 1 INFO MaiLan odoo.models.unlink: User #1 deleted dashboard_cham_cong_luong records with IDs: [1] 
+2026-06-10 12:25:18,088 1 INFO MaiLan odoo.addons.base.models.ir_model: Deleting 496@ir.ui.view (cham_cong_tinh_luong.dashboard_cham_cong_luong_kanban_view) 
+2026-06-10 12:25:18,094 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [17939] 
+2026-06-10 12:25:18,094 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.ui.view records with IDs: [496] 
+2026-06-10 12:25:18,095 1 INFO MaiLan odoo.addons.base.models.ir_model: Deleting 495@ir.ui.view (cham_cong_tinh_luong.dashboard_cham_cong_luong_form_view) 
+2026-06-10 12:25:18,099 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [17938] 
+2026-06-10 12:25:18,099 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.ui.view records with IDs: [495] 
+2026-06-10 12:25:18,099 1 INFO MaiLan odoo.addons.base.models.ir_model: Deleting 149@ir.ui.menu (cham_cong_tinh_luong.menu_thong_ke_bang_luong) 
+2026-06-10 12:25:18,103 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [10096] 
+2026-06-10 12:25:18,103 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [149] 
+2026-06-10 12:25:18,105 1 INFO MaiLan odoo.addons.base.models.ir_model: Deleting 148@ir.ui.menu (cham_cong_tinh_luong.menu_thong_ke_cham_cong) 
+2026-06-10 12:25:18,109 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [10095] 
+2026-06-10 12:25:18,109 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [148] 
+2026-06-10 12:25:18,109 1 INFO MaiLan odoo.addons.base.models.ir_model: Deleting 147@ir.ui.menu (cham_cong_tinh_luong.menu_bao_cao_thong_ke_root) 
+2026-06-10 12:25:18,113 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [10094] 
+2026-06-10 12:25:18,113 1 INFO MaiLan odoo.models.unlink: User #1 deleted ir.ui.menu records with IDs: [147] 
+2026-06-10 12:25:18,113 1 INFO MaiLan odoo.modules.registry: verifying fields for every extended model 
+2026-06-10 12:25:18,270 1 INFO MaiLan odoo.modules.loading: Modules loaded. 
+2026-06-10 12:25:18,272 1 INFO MaiLan odoo.modules.registry: Registry loaded in 2.029s 
+2026-06-10 12:25:18,272 1 INFO MaiLan odoo.service.server: Initiating shutdown 
+2026-06-10 12:25:18,273 1 INFO MaiLan odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-06-10 12:25:18,273 1 INFO MaiLan odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 1 connections  

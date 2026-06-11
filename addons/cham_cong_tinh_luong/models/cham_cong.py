@@ -9,6 +9,17 @@ class ChamCong(models.Model):
     _description = 'Chấm công'
     _order = 'ngay_cham_cong desc, gio_vao desc, id desc'
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'nhan_vien_id' in fields_list and not res.get('nhan_vien_id'):
+            employee = self.env['nhan_vien'].search(
+                [('user_id', '=', self.env.user.id)], limit=1
+            )
+            if employee:
+                res['nhan_vien_id'] = employee.id
+        return res
+
     nhan_vien_id = fields.Many2one(
         'nhan_vien',
         string='Nhân viên',

@@ -44,7 +44,7 @@
                                                 Mã NV: <field name="ma_nhan_vien"/>
                                             </div>
                                         </div>
-                                        <t t-if="record.trang_thai.raw_value in ('dang_ap_dung', 'ap_dung')">
+                                        <t t-if="record.trang_thai.raw_value === 'dang_ap_dung' || record.trang_thai.raw_value === 'ap_dung'">
                                             <span class="o_cctl_badge_success">Đang áp dụng</span>
                                         </t>
                                         <t t-else="">
