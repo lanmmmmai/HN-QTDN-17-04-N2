@@ -1,24 +1,24 @@
-$cctl-navy: #17324d;
-$cctl-blue: #2563eb;
+$cctl-navy: #0369A1;      // was #17324d — đổi sang xanh chủ đạo
+$cctl-blue: #0284c7;      // hover blue
 $cctl-green: #16a34a;
 $cctl-orange: #f59e0b;
 $cctl-red: #dc2626;
-$cctl-blue-soft: #eaf2ff;
+$cctl-blue-soft: #E4F4FD;  // light bg chủ đạo
 $cctl-green-soft: #ecfdf5;
 $cctl-orange-soft: #fff7ed;
 $cctl-red-soft: #fef2f2;
 $cctl-gray: #6b7280;
 $cctl-gray-soft: #f4f7fb;
-$cctl-border: rgba(23, 50, 77, 0.10);
+$cctl-border: rgba(3, 105, 161, 0.12);
 
 .o_form_view .o_cctl_form {
   .o_form_sheet_bg {
-    background: linear-gradient(180deg, rgba(37, 99, 235, 0.03), rgba(23, 50, 77, 0.02));
+    background: #E4F4FD;
   }
 }
 
 .o_cctl_dashboard {
-  background: linear-gradient(180deg, rgba(23, 50, 77, 0.04), rgba(37, 99, 235, 0.03));
+  background: #E4F4FD;
   border-radius: 20px;
   padding: 12px;
 
@@ -26,9 +26,9 @@ $cctl-border: rgba(23, 50, 77, 0.10);
     margin-bottom: 18px;
     padding: 20px 22px;
     border-radius: 18px;
-    background: linear-gradient(135deg, $cctl-navy, $cctl-blue);
+    background: linear-gradient(135deg, #0369A1, #0284c7);
     color: #fff;
-    box-shadow: 0 18px 34px rgba(23, 50, 77, 0.14);
+    box-shadow: 0 18px 34px rgba(3, 105, 161, 0.18);
   }
 
   .o_cctl_stats_grid {
@@ -205,9 +205,9 @@ $cctl-border: rgba(23, 50, 77, 0.10);
 .o_cctl_form_hero {
   padding: 18px 20px;
   border-radius: 18px;
-  background: linear-gradient(135deg, $cctl-navy, $cctl-blue);
+  background: linear-gradient(135deg, #0369A1, #0284c7);
   color: #fff;
-  box-shadow: 0 16px 32px rgba(23, 50, 77, 0.14);
+  box-shadow: 0 16px 32px rgba(3, 105, 161, 0.18);
 }
 
 .o_cctl_form_hero_title {
@@ -223,11 +223,11 @@ $cctl-border: rgba(23, 50, 77, 0.10);
 }
 
 .o_cctl_form_hero_payroll {
-  background: linear-gradient(135deg, $cctl-navy, #0f4c81);
+  background: linear-gradient(135deg, #0369A1, #0284c7);
 }
 
 .o_cctl_form_hero_warning {
-  background: linear-gradient(135deg, #7c2d12, $cctl-orange);
+  background: linear-gradient(135deg, #b45309, $cctl-orange);
 }
 
 .o_cctl_section,
