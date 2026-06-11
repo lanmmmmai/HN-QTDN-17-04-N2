@@ -28,19 +28,26 @@
                 <form string="Bảng lương" class="o_cctl_form">
                     <header>
                         <button name="action_tinh_luong" type="object" string="Tính lương" class="btn-primary"
-                                attrs="{'invisible': [('state', '!=', 'nhap')]}"/>
+                                attrs="{'invisible': [('state', '!=', 'nhap')]}"
+                                groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
                         <button name="action_tinh_lai_luong" type="object" string="Cập nhật lương" class="btn-primary"
-                                attrs="{'invisible': [('state', 'in', ['nhap', 'huy'])]}"/>
+                                attrs="{'invisible': [('state', 'in', ['nhap', 'huy'])]}"
+                                groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
                         <button name="action_xac_nhan" type="object" string="Xác nhận"
-                                attrs="{'invisible': [('state', '!=', 'da_tinh')]}"/>
+                                attrs="{'invisible': [('state', '!=', 'da_tinh')]}"
+                                groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
                         <button name="action_da_thanh_toan" type="object" string="Đã thanh toán"
-                                attrs="{'invisible': [('state', '!=', 'xac_nhan')]}"/>
+                                attrs="{'invisible': [('state', '!=', 'xac_nhan')]}"
+                                groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
                         <button name="action_draft" type="object" string="Đặt về nháp"
-                                attrs="{'invisible': [('state', '=', 'nhap')]}"/>
+                                attrs="{'invisible': [('state', '=', 'nhap')]}"
+                                groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
                         <button name="action_huy" type="object" string="Hủy"
-                                attrs="{'invisible': [('state', '=', 'huy')]}"/>
+                                attrs="{'invisible': [('state', '=', 'huy')]}"
+                                groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
                         <button name="action_in_phieu_luong" type="object" string="In phiếu lương"
-                                attrs="{'invisible': [('state', '=', 'nhap')]}"/>
+                                attrs="{'invisible': [('state', '=', 'nhap')]}"
+                                groups="cham_cong_tinh_luong.group_cham_cong_nhan_vien,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
                         <field name="state" widget="statusbar" statusbar_visible="nhap,da_tinh,xac_nhan,da_thanh_toan,huy"/>
                     </header>
                     <sheet>
