@@ -169,6 +169,11 @@
             <field name="res_model">bang_luong</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_bang_luong_search"/>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {'sequence': 1, 'view_mode': 'tree', 'view_id': ref('view_bang_luong_tree')}),
+                (0, 0, {'sequence': 2, 'view_mode': 'form', 'view_id': ref('view_bang_luong_form')}),
+            ]"/>
         </record>
 
         <!-- Self-service tree: chỉ các cột cần thiết cho nhân viên -->
@@ -195,103 +200,171 @@
             </field>
         </record>
 
-        <!-- Self-service form: read-only, nút in luôn hiển thị -->
+        <!-- Self-service form: read-only -->
         <record id="view_bang_luong_cua_toi_form" model="ir.ui.view">
             <field name="name">bang_luong.cua_toi.form</field>
             <field name="model">bang_luong</field>
             <field name="arch" type="xml">
-                <form string="Chi tiết bảng lương" create="false" edit="false" delete="false">
+                <form string="Phiếu lương của tôi" create="false" edit="false" delete="false" class="o_cctl_form">
                     <header>
                         <button name="action_in_phieu_luong" type="object"
-                                string="In bảng lương" class="btn-primary"/>
+                                string="In phiếu lương" class="btn-primary"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="nhap,da_tinh,xac_nhan,da_thanh_toan"/>
                     </header>
                     <sheet>
-                        <!-- Tiêu đề -->
-                        <div style="text-align:center; padding: 20px 0 10px 0;">
-                            <h2 style="color: #0369A1; font-weight: 700; margin-bottom: 4px;">PHIẾU LƯƠNG</h2>
-                            <p style="color: #475569; font-size: 14px;">
-                                Tháng
-                                <field name="thang" readonly="1" nolabel="1" style="display:inline; font-weight:600;"/>
-                                /
-                                <field name="nam" readonly="1" nolabel="1" style="display:inline; font-weight:600;"/>
-                            </p>
-                        </div>
-
-                        <!-- Thông tin nhân viên -->
-                        <group string="Thông tin nhân viên" col="4">
-                            <field name="nhan_vien_id" readonly="1"/>
-                            <field name="ma_nhan_vien" readonly="1"/>
-                            <field name="phong_ban_id" readonly="1"/>
-                            <field name="chuc_vu_id" readonly="1"/>
-                            <field name="ngay_tao" readonly="1" string="Ngày lập"/>
-                        </group>
-
-                        <div class="row">
-                            <div class="col-12 col-lg-6">
-                                <!-- Tổng hợp công -->
-                                <group string="Tổng hợp công" col="2">
-                                    <field name="tong_ngay_cong" readonly="1" string="Ngày công"/>
-                                    <field name="tong_gio_lam" readonly="1" string="Giờ làm"/>
-                                    <field name="tong_gio_tang_ca" readonly="1" string="Giờ tăng ca"/>
-                                    <field name="so_ngay_nghi" readonly="1" string="Ngày nghỉ"/>
-                                </group>
+                        <div class="o_cctl_dashboard">
+                            <!-- Hero -->
+                            <div class="o_cctl_dashboard_hero">
+                                <div class="o_cctl_form_hero_title">
+                                    <i class="fa fa-file-text-o" title="Phiếu lương"/> Phiếu lương
+                                    — Tháng <field name="thang" readonly="1" nolabel="1"/>/<field name="nam" readonly="1" nolabel="1"/>
+                                </div>
+                                <div class="o_cctl_form_hero_subtitle">
+                                    <field name="nhan_vien_id" readonly="1" nolabel="1"/>
+                                    <span class="mx-2">·</span>
+                                    <field name="phong_ban_id" readonly="1" nolabel="1"/>
+                                    <span class="mx-2">·</span>
+                                    <field name="chuc_vu_id" readonly="1" nolabel="1"/>
+                                </div>
                             </div>
-                            <div class="col-12 col-lg-6">
-                                <!-- Thu nhập -->
-                                <group string="Thu nhập" col="2">
-                                    <field name="luong_co_ban" readonly="1" string="Lương cơ bản"/>
-                                    <field name="luong_theo_cong" readonly="1" string="Lương theo công"/>
-                                    <field name="don_gia_gio" readonly="1" string="Đơn giá giờ"/>
-                                    <field name="tien_tang_ca" readonly="1" string="Tiền tăng ca"/>
-                                    <field name="tong_phu_cap" readonly="1" string="Tổng phụ cấp"/>
-                                    <field name="he_so_tang_ca" readonly="1" string="Hệ số tăng ca"/>
-                                </group>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-12 col-lg-6">
-                                <!-- Khấu trừ -->
-                                <group string="Khấu trừ" col="2">
-                                    <field name="tien_bao_hiem" readonly="1" string="Bảo hiểm"/>
-                                    <field name="thue_tncn" readonly="1" string="Thuế TNCN"/>
-                                    <field name="khau_tru_khac" readonly="1" string="Khấu trừ khác"/>
-                                </group>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                                <div style="background: #E4F4FD; border: 2px solid #0369A1; border-radius: 12px; padding: 20px; margin-top: 16px; text-align: center;">
-                                    <div style="color: #475569; font-size: 13px; margin-bottom: 6px;">LƯƠNG THỰC NHẬN</div>
-                                    <div style="color: #0369A1; font-size: 24px; font-weight: 700;">
-                                        <field name="tong_luong" readonly="1" nolabel="1"/>
+                            <!-- Thông tin nhân viên -->
+                            <div class="o_cctl_section o_cctl_section_box mt-2">
+                                <div class="fw-bold text-primary mb-2">Thông tin nhân viên</div>
+                                <div class="row g-2">
+                                    <div class="col-6 col-md-3">
+                                        <div class="text-muted small">Họ và tên</div>
+                                        <div class="fw-semibold"><field name="nhan_vien_id" readonly="1" nolabel="1"/></div>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="text-muted small">Mã nhân viên</div>
+                                        <div class="fw-semibold"><field name="ma_nhan_vien" readonly="1" nolabel="1"/></div>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="text-muted small">Phòng ban</div>
+                                        <div class="fw-semibold"><field name="phong_ban_id" readonly="1" nolabel="1"/></div>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="text-muted small">Chức vụ</div>
+                                        <div class="fw-semibold"><field name="chuc_vu_id" readonly="1" nolabel="1"/></div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Chi tiết chấm công -->
-                        <notebook>
-                            <page string="Chi tiết chấm công">
-                                <field name="cham_cong_ids" readonly="1">
-                                    <tree decoration-success="trang_thai == 'di_lam'"
-                                          decoration-warning="trang_thai == 'di_muon'"
-                                          decoration-danger="trang_thai == 'nghi'"
-                                          decoration-info="trang_thai == 'tang_ca'">
-                                        <field name="ngay_cham_cong" string="Ngày"/>
-                                        <field name="ca_lam_viec" string="Ca"/>
-                                        <field name="gio_vao" string="Giờ vào"/>
-                                        <field name="gio_ra" string="Giờ ra"/>
-                                        <field name="so_gio_lam" string="Giờ làm"/>
-                                        <field name="so_gio_tang_ca" string="Tăng ca"/>
-                                        <field name="trang_thai" string="Trạng thái"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            <page string="Ghi chú">
-                                <field name="ghi_chu" readonly="1" nolabel="1"/>
-                            </page>
-                        </notebook>
+                            <!-- Stats cards -->
+                            <div class="row g-3 o_cctl_stats_grid mt-1">
+                                <div class="col-6 col-md-3">
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-calendar-check-o" title="Ngày công"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_ngay_cong" readonly="1" nolabel="1"/></div>
+                                        <div class="o_cctl_stat_label">Ngày công</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-clock-o" title="Giờ làm"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_gio_lam" readonly="1" nolabel="1"/></div>
+                                        <div class="o_cctl_stat_label">Giờ làm</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--warning">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-moon-o" title="Tăng ca"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_gio_tang_ca" readonly="1" nolabel="1"/></div>
+                                        <div class="o_cctl_stat_label">Giờ tăng ca</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--danger">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-times-circle-o" title="Nghỉ"/></div>
+                                        <div class="o_cctl_stat_value"><field name="so_ngay_nghi" readonly="1" nolabel="1"/></div>
+                                        <div class="o_cctl_stat_label">Ngày nghỉ</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thu nhập & Khấu trừ -->
+                            <div class="row g-3 mt-1">
+                                <div class="col-12 col-lg-6">
+                                    <div class="o_cctl_section o_cctl_section_box h-100">
+                                        <div class="fw-bold text-primary mb-2">Thu nhập</div>
+                                        <table class="table table-sm table-borderless mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-muted">Lương cơ bản</td>
+                                                    <td class="text-end fw-semibold"><field name="luong_co_ban" readonly="1" nolabel="1"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted">Lương theo công</td>
+                                                    <td class="text-end"><field name="luong_theo_cong" readonly="1" nolabel="1"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted">Tiền tăng ca</td>
+                                                    <td class="text-end"><field name="tien_tang_ca" readonly="1" nolabel="1"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted">Tổng phụ cấp</td>
+                                                    <td class="text-end"><field name="tong_phu_cap" readonly="1" nolabel="1"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="o_cctl_section o_cctl_section_box h-100">
+                                        <div class="fw-bold text-primary mb-2">Khấu trừ</div>
+                                        <table class="table table-sm table-borderless mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-muted">Bảo hiểm xã hội</td>
+                                                    <td class="text-end"><field name="tien_bao_hiem" readonly="1" nolabel="1"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted">Thuế TNCN</td>
+                                                    <td class="text-end"><field name="thue_tncn" readonly="1" nolabel="1"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted">Khấu trừ khác</td>
+                                                    <td class="text-end"><field name="khau_tru_khac" readonly="1" nolabel="1"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tổng lương thực nhận -->
+                            <div class="o_cctl_salary_total_box mt-3">
+                                <div class="text-muted">Lương thực nhận</div>
+                                <div class="o_cctl_salary_total_value o_cctl_salary_total">
+                                    <field name="tong_luong" readonly="1" nolabel="1"/>
+                                </div>
+                            </div>
+
+                            <!-- Chi tiết chấm công -->
+                            <notebook class="mt-3">
+                                <page string="Chi tiết chấm công">
+                                    <field name="cham_cong_ids" readonly="1">
+                                        <tree decoration-success="trang_thai == 'di_lam'"
+                                              decoration-warning="trang_thai == 'di_muon'"
+                                              decoration-danger="trang_thai == 'nghi'"
+                                              decoration-info="trang_thai == 'tang_ca'">
+                                            <field name="ngay_cham_cong" string="Ngày"/>
+                                            <field name="ca_lam_viec" string="Ca"/>
+                                            <field name="gio_vao" string="Giờ vào"/>
+                                            <field name="gio_ra" string="Giờ ra"/>
+                                            <field name="so_gio_lam" string="Giờ làm"/>
+                                            <field name="so_gio_tang_ca" string="Tăng ca"/>
+                                            <field name="trang_thai" string="Trạng thái"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Ghi chú">
+                                    <field name="ghi_chu" readonly="1" nolabel="1"/>
+                                </page>
+                            </notebook>
+                        </div>
                     </sheet>
                 </form>
             </field>
@@ -316,6 +389,11 @@
             <field name="res_model">bang_luong</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_bang_luong_search"/>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {'sequence': 1, 'view_mode': 'tree', 'view_id': ref('view_bang_luong_tree')}),
+                (0, 0, {'sequence': 2, 'view_mode': 'form', 'view_id': ref('view_bang_luong_form')}),
+            ]"/>
             <field name="context">{'search_default_filter_month': 1}</field>
         </record>
     </data>
