@@ -6,7 +6,7 @@
             <field name="model">bang_luong</field>
             <field name="arch" type="xml">
                 <tree string="Bảng lương" decoration-muted="state == 'nhap' or state == 'draft'" decoration-info="state == 'da_tinh' or state == 'computed'" decoration-success="state == 'xac_nhan' or state == 'confirmed'" decoration-bf="state == 'da_thanh_toan'" decoration-danger="state == 'huy' or state == 'cancel'">
-                    <field name="nhan_vien_id"/>
+                    <field name="nhan_vien_id" string="Nhân viên" options="{'no_open': True}"/>
                     <field name="thang"/>
                     <field name="nam"/>
                     <field name="tong_ngay_cong"/>
@@ -156,6 +156,132 @@
             <field name="search_view_id" ref="view_bang_luong_search"/>
         </record>
 
+        <!-- Self-service tree: chỉ các cột cần thiết cho nhân viên -->
+        <record id="view_bang_luong_cua_toi_tree" model="ir.ui.view">
+            <field name="name">bang_luong.cua_toi.tree</field>
+            <field name="model">bang_luong</field>
+            <field name="arch" type="xml">
+                <tree string="Bảng lương của tôi" create="false" edit="false" delete="false"
+                      decoration-muted="state == 'nhap' or state == 'draft'"
+                      decoration-info="state == 'da_tinh' or state == 'computed'"
+                      decoration-success="state == 'xac_nhan' or state == 'confirmed'"
+                      decoration-bf="state == 'da_thanh_toan'"
+                      decoration-danger="state == 'huy' or state == 'cancel'">
+                    <field name="nhan_vien_id" string="Nhân viên" options="{'no_open': True}"/>
+                    <field name="thang" string="Tháng"/>
+                    <field name="nam" string="Năm"/>
+                    <field name="tong_ngay_cong" string="Ngày công"/>
+                    <field name="tong_gio_lam" string="Giờ làm"/>
+                    <field name="luong_co_ban" string="Lương cơ bản"/>
+                    <field name="tong_phu_cap" string="Phụ cấp"/>
+                    <field name="tong_luong" string="Lương thực nhận"/>
+                    <field name="state" string="Trạng thái"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Self-service form: read-only, nút in luôn hiển thị -->
+        <record id="view_bang_luong_cua_toi_form" model="ir.ui.view">
+            <field name="name">bang_luong.cua_toi.form</field>
+            <field name="model">bang_luong</field>
+            <field name="arch" type="xml">
+                <form string="Chi tiết bảng lương" create="false" edit="false" delete="false">
+                    <header>
+                        <button name="action_in_phieu_luong" type="object"
+                                string="In bảng lương" class="btn-primary"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="nhap,da_tinh,xac_nhan,da_thanh_toan"/>
+                    </header>
+                    <sheet>
+                        <!-- Tiêu đề -->
+                        <div style="text-align:center; padding: 20px 0 10px 0;">
+                            <h2 style="color: #0369A1; font-weight: 700; margin-bottom: 4px;">PHIẾU LƯƠNG</h2>
+                            <p style="color: #475569; font-size: 14px;">
+                                Tháng
+                                <field name="thang" readonly="1" nolabel="1" style="display:inline; font-weight:600;"/>
+                                /
+                                <field name="nam" readonly="1" nolabel="1" style="display:inline; font-weight:600;"/>
+                            </p>
+                        </div>
+
+                        <!-- Thông tin nhân viên -->
+                        <group string="Thông tin nhân viên" col="4">
+                            <field name="nhan_vien_id" readonly="1"/>
+                            <field name="ma_nhan_vien" readonly="1"/>
+                            <field name="phong_ban_id" readonly="1"/>
+                            <field name="chuc_vu_id" readonly="1"/>
+                            <field name="ngay_tao" readonly="1" string="Ngày lập"/>
+                        </group>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-6">
+                                <!-- Tổng hợp công -->
+                                <group string="Tổng hợp công" col="2">
+                                    <field name="tong_ngay_cong" readonly="1" string="Ngày công"/>
+                                    <field name="tong_gio_lam" readonly="1" string="Giờ làm"/>
+                                    <field name="tong_gio_tang_ca" readonly="1" string="Giờ tăng ca"/>
+                                    <field name="so_ngay_nghi" readonly="1" string="Ngày nghỉ"/>
+                                </group>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <!-- Thu nhập -->
+                                <group string="Thu nhập" col="2">
+                                    <field name="luong_co_ban" readonly="1" string="Lương cơ bản"/>
+                                    <field name="luong_theo_cong" readonly="1" string="Lương theo công"/>
+                                    <field name="don_gia_gio" readonly="1" string="Đơn giá giờ"/>
+                                    <field name="tien_tang_ca" readonly="1" string="Tiền tăng ca"/>
+                                    <field name="tong_phu_cap" readonly="1" string="Tổng phụ cấp"/>
+                                    <field name="he_so_tang_ca" readonly="1" string="Hệ số tăng ca"/>
+                                </group>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-6">
+                                <!-- Khấu trừ -->
+                                <group string="Khấu trừ" col="2">
+                                    <field name="tien_bao_hiem" readonly="1" string="Bảo hiểm"/>
+                                    <field name="thue_tncn" readonly="1" string="Thuế TNCN"/>
+                                    <field name="khau_tru_khac" readonly="1" string="Khấu trừ khác"/>
+                                </group>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div style="background: #E4F4FD; border: 2px solid #0369A1; border-radius: 12px; padding: 20px; margin-top: 16px; text-align: center;">
+                                    <div style="color: #475569; font-size: 13px; margin-bottom: 6px;">LƯƠNG THỰC NHẬN</div>
+                                    <div style="color: #0369A1; font-size: 24px; font-weight: 700;">
+                                        <field name="tong_luong" readonly="1" nolabel="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chi tiết chấm công -->
+                        <notebook>
+                            <page string="Chi tiết chấm công">
+                                <field name="cham_cong_ids" readonly="1">
+                                    <tree decoration-success="trang_thai == 'di_lam'"
+                                          decoration-warning="trang_thai == 'di_muon'"
+                                          decoration-danger="trang_thai == 'nghi'"
+                                          decoration-info="trang_thai == 'tang_ca'">
+                                        <field name="ngay_cham_cong" string="Ngày"/>
+                                        <field name="ca_lam_viec" string="Ca"/>
+                                        <field name="gio_vao" string="Giờ vào"/>
+                                        <field name="gio_ra" string="Giờ ra"/>
+                                        <field name="so_gio_lam" string="Giờ làm"/>
+                                        <field name="so_gio_tang_ca" string="Tăng ca"/>
+                                        <field name="trang_thai" string="Trạng thái"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Ghi chú">
+                                <field name="ghi_chu" readonly="1" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="action_bang_luong_cua_toi" model="ir.actions.act_window">
             <field name="name">Bảng lương của tôi</field>
             <field name="res_model">bang_luong</field>
@@ -163,6 +289,11 @@
             <field name="search_view_id" ref="view_bang_luong_search"/>
             <field name="domain">[('nhan_vien_id.user_id', '=', uid)]</field>
             <field name="context">{'search_default_filter_month': 1}</field>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {'sequence': 1, 'view_mode': 'tree', 'view_id': ref('view_bang_luong_cua_toi_tree')}),
+                (0, 0, {'sequence': 2, 'view_mode': 'form', 'view_id': ref('view_bang_luong_cua_toi_form')}),
+            ]"/>
         </record>
 
         <record id="action_in_phieu_luong_pdf" model="ir.actions.act_window">
