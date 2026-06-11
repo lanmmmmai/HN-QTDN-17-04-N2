@@ -6,6 +6,13 @@
             <field name="model">nhan_vien</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <button name="action_tao_tai_khoan_nguoi_dung"
+                                type="object"
+                                string="Tạo tài khoản người dùng"
+                                class="btn-primary"
+                                attrs="{'invisible': [('user_id', '!=', False)]}"/>
+                    </header>
                     <sheet>
                         <div class="oe_read_only" style="font-size:25px">Nhân viên</div>
                         <group col="4" string="Thông tin chung">
@@ -18,12 +25,12 @@
                             <field name="so_nguoi_bang_tuoi"/>
                             <field name="que_quan"/>
                             <field name="email"/>
-                            <field name="user_id"/>
                             <field name="anh" widget="image"/>
                         </group>
                         <group col="4" string="Thông tin công việc">
                             <field name="phong_ban_id" readonly="1"/>
                             <field name="chuc_vu_id" readonly="1"/>
+                            <field name="user_id" options="{'no_create': True, 'no_create_edit': True}"/>
                         </group>
                         <notebook>
                             <page string="Danh sách lịch sử công tác">
