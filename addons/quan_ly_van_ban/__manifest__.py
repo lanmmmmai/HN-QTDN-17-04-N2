@@ -15,6 +15,7 @@ Cho phép chọn đơn vị xử lý, nhân viên xử lý, đơn vị soạn th
         'views/loai_van_ban_views.xml',
         'views/van_ban_den_views.xml',
         'views/van_ban_di_views.xml',
+        'views/dashboard_van_ban_views.xml',
         'views/menu.xml',
     ],
     'installable': True,

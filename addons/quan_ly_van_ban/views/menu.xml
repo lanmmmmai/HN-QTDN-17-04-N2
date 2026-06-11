@@ -5,6 +5,13 @@
               name="Quản lý văn bản"
               sequence="30"/>
 
+    <!-- ── Dashboard ── -->
+    <menuitem id="menu_dashboard_van_ban"
+              name="Dashboard"
+              parent="menu_quan_ly_van_ban_root"
+              action="action_dashboard_van_ban_server"
+              sequence="1"/>
+
     <!-- ── Văn bản đến ── -->
     <menuitem id="menu_van_ban_den_root"
               name="Văn bản đến"

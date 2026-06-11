@@ -162,7 +162,6 @@
         <field name="name">Văn bản quá hạn</field>
         <field name="res_model">van_ban_den</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('han_xu_ly','&lt;', fields.Date.today()), ('trang_thai','not in',['da_xu_ly','luu_tru'])]</field>
         <field name="context">{'search_default_filter_qua_han': 1}</field>
         <field name="search_view_id" ref="view_van_ban_den_search"/>
     </record>

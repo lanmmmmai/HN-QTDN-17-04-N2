@@ -5,143 +5,148 @@
             <field name="name">dashboard.nhan.su.form</field>
             <field name="model">dashboard_nhan_su</field>
             <field name="arch" type="xml">
-                <form string="Dashboard nhân sự" class="o_cctl_form">
+                <form string="Dashboard nhân sự" class="o_cctl_form" create="false" edit="false" delete="false">
                     <header>
                         <button name="action_refresh" type="object"
                                 string="Làm mới số liệu" class="btn-primary"/>
+                        <button name="action_create_nhan_vien" type="object" string="Thêm nhân viên"/>
+                        <button name="action_open_nhan_vien" type="object" string="Danh sách nhân viên"/>
+                        <button name="action_open_don_vi" type="object" string="Đơn vị / Phòng ban"/>
+                        <button name="action_open_chuc_vu" type="object" string="Chức vụ"/>
                     </header>
                     <sheet>
-                        <!-- Hero -->
-                        <div style="background: linear-gradient(135deg,#714B67 0%,#017E84 100%);
-                                    color:#fff; border-radius:8px; padding:24px 28px; margin-bottom:20px;">
-                            <h2 style="margin:0 0 4px 0; font-size:22px;">
-                                <i class="fa fa-building" title="QLNS"/> Dashboard nhân sự
-                            </h2>
-                            <div style="opacity:.85; font-size:14px;">
-                                Tổng quan nhân lực, phòng ban, chức vụ và chứng chỉ bằng cấp
+                        <div class="o_cctl_dashboard">
+                            <div class="o_cctl_dashboard_hero">
+                                <div class="o_cctl_form_hero_title">
+                                    <i class="fa fa-building" title="QLNS"/> Dashboard nhân sự
+                                </div>
+                                <div class="o_cctl_form_hero_subtitle">
+                                    Tổng quan nhân lực, phòng ban, chức vụ và chứng chỉ bằng cấp
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Thống kê nhanh -->
-                        <div class="row g-3" style="margin-bottom:20px;">
-                            <div class="col-12 col-md-4 col-xl-2">
-                                <div style="background:#fff; border:1px solid #e0e0e0; border-radius:8px;
-                                            padding:18px 12px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,.07);">
-                                    <i class="fa fa-users" title="Tổng nhân viên"
-                                       style="font-size:28px; color:#714B67;"/>
-                                    <div style="font-size:28px; font-weight:700; color:#714B67; margin:6px 0;">
-                                        <field name="tong_nhan_vien" nolabel="1" readonly="1"/>
-                                    </div>
-                                    <div style="font-size:13px; color:#888;">Tổng nhân viên</div>
+                            <!-- Stats grid -->
+                            <div class="row g-3 o_cctl_stats_grid">
+                                <div class="col-12 col-md-6 col-xl-2">
+                                    <button type="object" name="action_open_nhan_vien" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-users" title="Tổng nhân viên"/></div>
+                                            <div class="o_cctl_stat_value"><field name="tong_nhan_vien" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Tổng nhân viên</div>
+                                            <div class="text-muted small">Tất cả nhân viên hiện có</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-2">
+                                    <button type="object" name="action_open_don_vi" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-sitemap" title="Đơn vị"/></div>
+                                            <div class="o_cctl_stat_value"><field name="tong_don_vi" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Đơn vị / Phòng ban</div>
+                                            <div class="text-muted small">Số đơn vị đang hoạt động</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-2">
+                                    <button type="object" name="action_open_chuc_vu" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--warning">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-id-badge" title="Chức vụ"/></div>
+                                            <div class="o_cctl_stat_value"><field name="tong_chuc_vu" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Chức vụ</div>
+                                            <div class="text-muted small">Số chức vụ đang có</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-2">
+                                    <button type="object" name="action_open_chung_chi" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--success">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-graduation-cap" title="Loại chứng chỉ"/></div>
+                                            <div class="o_cctl_stat_value"><field name="tong_loai_chung_chi" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Loại chứng chỉ/bằng cấp</div>
+                                            <div class="text-muted small">Số loại chứng chỉ</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-2">
+                                    <button type="object" name="action_open_danh_sach_chung_chi" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--success">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-certificate" title="NV có chứng chỉ"/></div>
+                                            <div class="o_cctl_stat_value"><field name="nhan_vien_co_chung_chi" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">NV có chứng chỉ</div>
+                                            <div class="text-muted small">Nhân viên đã có văn bằng</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-2">
+                                    <button type="object" name="action_open_lich_su" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-history" title="Lịch sử công tác"/></div>
+                                            <div class="o_cctl_stat_value"><field name="tong_lich_su_cong_tac" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Lịch sử công tác</div>
+                                            <div class="text-muted small">Tổng bản ghi công tác</div>
+                                        </div>
+                                    </button>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4 col-xl-2">
-                                <div style="background:#fff; border:1px solid #e0e0e0; border-radius:8px;
-                                            padding:18px 12px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,.07);">
-                                    <i class="fa fa-sitemap" title="Đơn vị / Phòng ban"
-                                       style="font-size:28px; color:#017E84;"/>
-                                    <div style="font-size:28px; font-weight:700; color:#017E84; margin:6px 0;">
-                                        <field name="tong_don_vi" nolabel="1" readonly="1"/>
-                                    </div>
-                                    <div style="font-size:13px; color:#888;">Đơn vị / Phòng ban</div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4 col-xl-2">
-                                <div style="background:#fff; border:1px solid #e0e0e0; border-radius:8px;
-                                            padding:18px 12px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,.07);">
-                                    <i class="fa fa-id-badge" title="Chức vụ"
-                                       style="font-size:28px; color:#e67e22;"/>
-                                    <div style="font-size:28px; font-weight:700; color:#e67e22; margin:6px 0;">
-                                        <field name="tong_chuc_vu" nolabel="1" readonly="1"/>
-                                    </div>
-                                    <div style="font-size:13px; color:#888;">Chức vụ</div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4 col-xl-2">
-                                <div style="background:#fff; border:1px solid #e0e0e0; border-radius:8px;
-                                            padding:18px 12px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,.07);">
-                                    <i class="fa fa-graduation-cap" title="Loại chứng chỉ bằng cấp"
-                                       style="font-size:28px; color:#27ae60;"/>
-                                    <div style="font-size:28px; font-weight:700; color:#27ae60; margin:6px 0;">
-                                        <field name="tong_loai_chung_chi" nolabel="1" readonly="1"/>
-                                    </div>
-                                    <div style="font-size:13px; color:#888;">Loại chứng chỉ/bằng cấp</div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4 col-xl-2">
-                                <div style="background:#fff; border:1px solid #e0e0e0; border-radius:8px;
-                                            padding:18px 12px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,.07);">
-                                    <i class="fa fa-certificate" title="Nhân viên có chứng chỉ"
-                                       style="font-size:28px; color:#2980b9;"/>
-                                    <div style="font-size:28px; font-weight:700; color:#2980b9; margin:6px 0;">
-                                        <field name="nhan_vien_co_chung_chi" nolabel="1" readonly="1"/>
-                                    </div>
-                                    <div style="font-size:13px; color:#888;">NV có chứng chỉ</div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4 col-xl-2">
-                                <div style="background:#fff; border:1px solid #e0e0e0; border-radius:8px;
-                                            padding:18px 12px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,.07);">
-                                    <i class="fa fa-history" title="Lịch sử công tác"
-                                       style="font-size:28px; color:#8e44ad;"/>
-                                    <div style="font-size:28px; font-weight:700; color:#8e44ad; margin:6px 0;">
-                                        <field name="tong_lich_su_cong_tac" nolabel="1" readonly="1"/>
-                                    </div>
-                                    <div style="font-size:13px; color:#888;">Lịch sử công tác</div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Thao tác nhanh -->
-                        <div style="background:#f8f9fa; border-radius:8px; padding:20px; margin-bottom:16px;">
-                            <h4 style="margin:0 0 14px 0; color:#444;">
-                                <i class="fa fa-bolt" title="Thao tác nhanh"/> Thao tác nhanh
-                            </h4>
-                            <div class="d-flex gap-2 flex-wrap">
-                                <button name="action_create_nhan_vien" type="object"
-                                        class="btn btn-primary">
-                                    <i class="fa fa-plus" title="Thêm nhân viên"/> Thêm nhân viên
+                            <!-- Summary badges -->
+                            <div class="o_cctl_dashboard_summary">
+                                <button type="object" name="action_open_nhan_vien" class="o_cctl_badge_info o_cctl_dashboard_badge_button">
+                                    Nhân viên <field name="tong_nhan_vien" nolabel="1" readonly="1"/>
                                 </button>
-                                <button name="action_open_nhan_vien" type="object"
-                                        class="btn btn-primary">
-                                    <i class="fa fa-users" title="Nhân viên"/> Danh sách nhân viên
+                                <button type="object" name="action_open_don_vi" class="o_cctl_badge_info o_cctl_dashboard_badge_button">
+                                    Đơn vị <field name="tong_don_vi" nolabel="1" readonly="1"/>
                                 </button>
-                                <button name="action_open_don_vi" type="object"
-                                        class="btn btn-outline-secondary">
-                                    <i class="fa fa-sitemap" title="Đơn vị"/> Đơn vị / Phòng ban
+                                <button type="object" name="action_open_chuc_vu" class="o_cctl_badge_warning o_cctl_dashboard_badge_button">
+                                    Chức vụ <field name="tong_chuc_vu" nolabel="1" readonly="1"/>
                                 </button>
-                                <button name="action_open_chuc_vu" type="object"
-                                        class="btn btn-outline-secondary">
-                                    <i class="fa fa-id-badge" title="Chức vụ"/> Chức vụ
-                                </button>
-                                <button name="action_open_chung_chi" type="object"
-                                        class="btn btn-outline-secondary">
-                                    <i class="fa fa-graduation-cap" title="Chứng chỉ"/> Chứng chỉ / Bằng cấp
-                                </button>
-                                <button name="action_open_danh_sach_chung_chi" type="object"
-                                        class="btn btn-outline-secondary">
-                                    <i class="fa fa-certificate" title="Danh sách chứng chỉ"/> Danh sách chứng chỉ NV
-                                </button>
-                                <button name="action_open_lich_su" type="object"
-                                        class="btn btn-outline-secondary">
-                                    <i class="fa fa-history" title="Lịch sử công tác"/> Lịch sử công tác
+                                <button type="object" name="action_open_danh_sach_chung_chi" class="o_cctl_badge_success o_cctl_dashboard_badge_button">
+                                    Có chứng chỉ <field name="nhan_vien_co_chung_chi" nolabel="1" readonly="1"/>
                                 </button>
                             </div>
-                        </div>
 
-                        <div style="background:#fff; border:1px solid #e0e0e0; border-radius:8px; padding:20px;">
-                            <h4 style="margin:0 0 12px 0; color:#444;">
-                                <i class="fa fa-clock-o" title="Nhân viên mới"/> Nhân viên mới thêm gần đây
-                            </h4>
-                            <field name="recent_nhan_vien_ids" nolabel="1" readonly="1">
-                                <tree>
-                                    <field name="ma_dinh_danh"/>
-                                    <field name="ho_va_ten"/>
-                                    <field name="ngay_sinh"/>
-                                    <field name="email"/>
-                                    <field name="user_id"/>
-                                </tree>
-                            </field>
+                            <!-- Thao tác nhanh -->
+                            <div class="o_cctl_section mt-3">
+                                <div class="fw-bold mb-2">Thao tác nhanh</div>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <button type="object" name="action_create_nhan_vien" class="btn btn-outline-primary btn-sm">
+                                        <i class="fa fa-plus" title="Thêm"/> Thêm nhân viên
+                                    </button>
+                                    <button type="object" name="action_open_nhan_vien" class="btn btn-outline-primary btn-sm">
+                                        <i class="fa fa-users" title="DS NV"/> Danh sách nhân viên
+                                    </button>
+                                    <button type="object" name="action_open_don_vi" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fa fa-sitemap" title="Đơn vị"/> Đơn vị / Phòng ban
+                                    </button>
+                                    <button type="object" name="action_open_chuc_vu" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fa fa-id-badge" title="Chức vụ"/> Chức vụ
+                                    </button>
+                                    <button type="object" name="action_open_chung_chi" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fa fa-graduation-cap" title="Chứng chỉ"/> Chứng chỉ / Bằng cấp
+                                    </button>
+                                    <button type="object" name="action_open_lich_su" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fa fa-history" title="Lịch sử"/> Lịch sử công tác
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Nhân viên mới -->
+                            <div class="o_cctl_section o_cctl_section_box mt-3">
+                                <div class="fw-bold mb-2">
+                                    <i class="fa fa-clock-o" title="Mới"/> Nhân viên mới thêm gần đây
+                                </div>
+                                <field name="recent_nhan_vien_ids" nolabel="1" readonly="1">
+                                    <tree>
+                                        <field name="ma_dinh_danh"/>
+                                        <field name="ho_va_ten"/>
+                                        <field name="ngay_sinh"/>
+                                        <field name="email"/>
+                                        <field name="phong_ban_id"/>
+                                        <field name="chuc_vu_id"/>
+                                        <field name="user_id"/>
+                                    </tree>
+                                </field>
+                            </div>
                         </div>
                     </sheet>
                 </form>
