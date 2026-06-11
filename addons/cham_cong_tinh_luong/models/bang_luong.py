@@ -271,6 +271,15 @@ class BangLuong(models.Model):
             values.pop('cham_cong_ids', None)
             record.write({**values, 'state': 'da_tinh'})
 
+    def action_tinh_lai_luong(self):
+        """Cập nhật/tính lại lương — hoạt động ở mọi trạng thái (trừ hủy)."""
+        for record in self:
+            if record.state == 'huy':
+                raise ValidationError('Không thể tính lại bảng lương đã hủy. Vui lòng đặt về Nháp trước.')
+            values = record._get_payroll_values(require_config=True)
+            values.pop('cham_cong_ids', None)
+            super(BangLuong, record).write({**values, 'state': 'da_tinh'})
+
     def action_xac_nhan(self):
         self.write({'state': 'xac_nhan'})
 

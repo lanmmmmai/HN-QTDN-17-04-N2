@@ -11,7 +11,9 @@ Cho phép chọn đơn vị xử lý, nhân viên xử lý, đơn vị soạn th
     'version': '15.0.1.0.0',
     'depends': ['base', 'nhan_su'],
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
+        'security/rules.xml',
         'views/loai_van_ban_views.xml',
         'views/van_ban_den_views.xml',
         'views/van_ban_di_views.xml',

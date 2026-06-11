@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_quan_ly_van_ban" model="ir.module.category">
+        <field name="name">Quản lý văn bản</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <!-- Nhân viên: chỉ xem văn bản được giao -->
+    <record id="group_van_ban_nhan_vien" model="res.groups">
+        <field name="name">Văn bản - Nhân viên</field>
+        <field name="category_id" ref="module_category_quan_ly_van_ban"/>
+    </record>
+
+    <!-- Văn thư: tạo/sửa văn bản đến và đi, gán đơn vị/người xử lý -->
+    <record id="group_van_ban_van_thu" model="res.groups">
+        <field name="name">Văn bản - Văn thư</field>
+        <field name="category_id" ref="module_category_quan_ly_van_ban"/>
+        <field name="implied_ids" eval="[(4, ref('group_van_ban_nhan_vien'))]"/>
+    </record>
+
+    <!-- Lãnh đạo: xem toàn bộ, ký/phê duyệt văn bản đi -->
+    <record id="group_van_ban_lanh_dao" model="res.groups">
+        <field name="name">Văn bản - Lãnh đạo</field>
+        <field name="category_id" ref="module_category_quan_ly_van_ban"/>
+        <field name="implied_ids" eval="[(4, ref('group_van_ban_nhan_vien'))]"/>
+    </record>
+
+    <!-- Quản trị: toàn quyền, implied van_thu + lanh_dao -->
+    <record id="group_van_ban_quan_tri" model="res.groups">
+        <field name="name">Văn bản - Quản trị</field>
+        <field name="category_id" ref="module_category_quan_ly_van_ban"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_van_ban_van_thu')),
+            (4, ref('group_van_ban_lanh_dao')),
+        ]"/>
+    </record>
+</odoo>
