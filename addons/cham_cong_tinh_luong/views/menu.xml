@@ -104,7 +104,7 @@
             parent="menu_tinh_luong_root"
             action="action_bang_luong"
             sequence="2"
-            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <!-- Bảng lương của tôi: CHỈ Self-service.
              Admin KHÔNG thấy vì không thuộc group_cham_cong_self_service -->
