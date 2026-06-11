@@ -327,6 +327,9 @@ class BangLuong(models.Model):
         return self.env.ref('cham_cong_tinh_luong.action_report_bang_luong').report_action(self)
 
     def write(self, vals):
+        # Admin/Kế toán được sửa tự do không bị chặn bởi state
+        if self._is_payroll_manager():
+            return super().write(vals)
         protected_fields = {
             'nhan_vien_id',
             'thang',
