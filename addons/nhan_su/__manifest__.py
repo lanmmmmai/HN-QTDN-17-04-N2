@@ -26,6 +26,7 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'wizards/tao_tai_khoan_nhan_vien_wizard_view.xml',
         'views/chuc_vu.xml',
         'views/don_vi.xml',
         'views/nhan_vien.xml',

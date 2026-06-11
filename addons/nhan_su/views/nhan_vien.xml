@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="action_tao_tai_khoan_nguoi_dung"
+                        <button name="action_mo_wizard_tao_tai_khoan"
                                 type="object"
                                 string="Tạo tài khoản người dùng"
                                 class="btn-primary"

@@ -122,46 +122,23 @@ class NhanVien(models.Model):
             if record.tuoi < 18:
                 raise ValidationError("Tuổi không được bé hơn 18")
 
-    def action_tao_tai_khoan_nguoi_dung(self):
-        for rec in self:
-            if not rec.email:
-                raise UserError("Nhân viên '%s' cần có email để tạo tài khoản người dùng." % (rec.ho_va_ten or rec.ma_dinh_danh))
-
-            existing_user = self.env['res.users'].sudo().search([
-                ('login', '=', rec.email)
-            ], limit=1)
-
-            if existing_user:
-                rec.user_id = existing_user.id
-                continue
-
-            group_user = self.env.ref('base.group_user')
-            group_self_service = self.env.ref(
-                'cham_cong_tinh_luong.group_cham_cong_self_service',
-                raise_if_not_found=False,
+    def action_mo_wizard_tao_tai_khoan(self):
+        self.ensure_one()
+        if not self.email:
+            raise UserError(
+                "Nhân viên '%s' chưa có email. Vui lòng nhập email trước khi tạo tài khoản."
+                % (self.ho_va_ten or self.ma_dinh_danh)
             )
-
-            groups = [group_user.id]
-            if group_self_service:
-                groups.append(group_self_service.id)
-
-            user = self.env['res.users'].sudo().create({
-                'name': rec.ho_va_ten or rec.email,
-                'login': rec.email,
-                'email': rec.email,
-                'password': '123456',
-                'groups_id': [(6, 0, groups)],
-            })
-            rec.user_id = user.id
-
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': 'Thành công',
-                'message': 'Đã tạo/gán tài khoản người dùng. Mật khẩu mặc định: 123456',
-                'type': 'success',
-                'sticky': False,
+            'type': 'ir.actions.act_window',
+            'name': 'Tạo tài khoản người dùng',
+            'res_model': 'tao_tai_khoan_nhan_vien_wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_nhan_vien_id': self.id,
+                'default_name': self.ho_va_ten or '',
+                'default_login': self.email or '',
             },
         }
 

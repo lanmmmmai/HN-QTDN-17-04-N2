@@ -19,3 +19,5 @@ access_danh_sach_chung_chi_bang_cap_nhan_su,danh_sach_chung_chi_bang_cap nhan su
 access_danh_sach_chung_chi_bang_cap_quan_tri,danh_sach_chung_chi_bang_cap quan tri,model_danh_sach_chung_chi_bang_cap,nhan_su.group_nhan_su_quan_tri,1,1,1,1
 access_dashboard_nhan_su,dashboard_nhan_su.dashboard_nhan_su,model_dashboard_nhan_su,nhan_su.group_nhan_su_nhan_su,1,1,1,0
 access_dashboard_nhan_su_quan_tri,dashboard_nhan_su quan tri,model_dashboard_nhan_su,nhan_su.group_nhan_su_quan_tri,1,1,1,1
+access_tao_tai_khoan_nhan_vien_wizard,tao tai khoan nhan vien wizard,model_tao_tai_khoan_nhan_vien_wizard,nhan_su.group_nhan_su_nhan_su,1,1,1,1
+access_tao_tai_khoan_nhan_vien_wizard_quan_tri,tao tai khoan nhan vien wizard quan tri,model_tao_tai_khoan_nhan_vien_wizard,nhan_su.group_nhan_su_quan_tri,1,1,1,1
