@@ -39,6 +39,31 @@ class NhanVien(models.Model):
                                         store=True
                                         )
 
+    # Phòng ban và chức vụ hiện tại — lấy từ lịch sử công tác mới nhất
+    phong_ban_id = fields.Many2one(
+        'don_vi',
+        string='Phòng ban / Đơn vị',
+        compute='_compute_phong_ban_chuc_vu',
+        store=True,
+    )
+    chuc_vu_id = fields.Many2one(
+        'chuc_vu',
+        string='Chức vụ',
+        compute='_compute_phong_ban_chuc_vu',
+        store=True,
+    )
+
+    @api.depends('lich_su_cong_tac_ids', 'lich_su_cong_tac_ids.don_vi_id', 'lich_su_cong_tac_ids.chuc_vu_id')
+    def _compute_phong_ban_chuc_vu(self):
+        for record in self:
+            if record.lich_su_cong_tac_ids:
+                latest = record.lich_su_cong_tac_ids.sorted('id', reverse=True)[0]
+                record.phong_ban_id = latest.don_vi_id
+                record.chuc_vu_id = latest.chuc_vu_id
+            else:
+                record.phong_ban_id = False
+                record.chuc_vu_id = False
+
     @api.depends("tuoi")
     def _compute_so_nguoi_bang_tuoi(self):
         for record in self:

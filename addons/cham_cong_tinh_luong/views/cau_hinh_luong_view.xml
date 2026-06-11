@@ -105,6 +105,7 @@
                                 <field name="nhan_vien_id"/>
                                 <field name="ma_nhan_vien" readonly="1"/>
                                 <field name="phong_ban_id" readonly="1"/>
+                                <field name="chuc_vu_id" readonly="1"/>
                             </group>
                             <div class="row">
                                 <div class="col-12 col-lg-6">

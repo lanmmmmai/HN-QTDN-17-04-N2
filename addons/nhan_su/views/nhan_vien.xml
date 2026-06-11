@@ -21,6 +21,10 @@
                             <field name="user_id"/>
                             <field name="anh" widget="image"/>
                         </group>
+                        <group col="4" string="Thông tin công việc">
+                            <field name="phong_ban_id" readonly="1"/>
+                            <field name="chuc_vu_id" readonly="1"/>
+                        </group>
                         <notebook>
                             <page string="Danh sách lịch sử công tác">
                                 <field name="lich_su_cong_tac_ids"/>
@@ -50,6 +54,8 @@
                     <field name="que_quan"/>
                     <field name="email"/>
                     <field name="user_id"/>
+                    <field name="phong_ban_id"/>
+                    <field name="chuc_vu_id"/>
                 </tree>
             </field>
         </record>

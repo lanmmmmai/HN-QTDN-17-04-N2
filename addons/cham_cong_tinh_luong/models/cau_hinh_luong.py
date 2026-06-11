@@ -29,6 +29,12 @@ class CauHinhLuong(models.Model):
         compute='_compute_thong_tin_nhan_vien',
         readonly=True,
     )
+    chuc_vu_id = fields.Many2one(
+        'chuc_vu',
+        string='Chức vụ',
+        compute='_compute_thong_tin_nhan_vien',
+        readonly=True,
+    )
     luong_co_ban = fields.Float(string='Lương cơ bản', required=True, default=0.0)
     so_ngay_cong_chuan = fields.Float(string='Số ngày công chuẩn', default=26.0, required=True)
     so_gio_cong_chuan = fields.Float(string='Số giờ công chuẩn/ngày', default=8.0, required=True)
@@ -76,6 +82,7 @@ class CauHinhLuong(models.Model):
         for record in self:
             history = latest_histories.get(record.nhan_vien_id.id)
             record.phong_ban_id = history.don_vi_id if history else False
+            record.chuc_vu_id = history.chuc_vu_id if history else False
 
     @api.depends(
         'phu_cap_an_trua',
