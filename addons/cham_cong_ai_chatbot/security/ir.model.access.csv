@@ -1,0 +1,19 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_chat_session_employee,ai.chat.session employee,model_ai_chat_session,cham_cong_ai_chatbot.group_ai_chatbot_employee_user,1,1,1,0
+access_ai_chat_session_manager,ai.chat.session manager,model_ai_chat_session,cham_cong_ai_chatbot.group_ai_chatbot_manager,1,1,1,1
+access_ai_chat_session_admin,ai.chat.session admin,model_ai_chat_session,cham_cong_ai_chatbot.group_ai_chatbot_admin,1,1,1,1
+access_ai_chat_session_nhan_su,ai.chat.session nhan su,model_ai_chat_session,cham_cong_tinh_luong.group_cham_cong_nhan_su,1,1,1,1
+access_ai_chat_session_quan_tri,ai.chat.session quan tri,model_ai_chat_session,cham_cong_tinh_luong.group_cham_cong_quan_tri,1,1,1,1
+access_ai_chat_message_employee,ai.chat.message employee,model_ai_chat_message,cham_cong_ai_chatbot.group_ai_chatbot_employee_user,1,0,1,0
+access_ai_chat_message_manager,ai.chat.message manager,model_ai_chat_message,cham_cong_ai_chatbot.group_ai_chatbot_manager,1,1,1,1
+access_ai_chat_message_admin,ai.chat.message admin,model_ai_chat_message,cham_cong_ai_chatbot.group_ai_chatbot_admin,1,1,1,1
+access_ai_chat_message_nhan_su,ai.chat.message nhan su,model_ai_chat_message,cham_cong_tinh_luong.group_cham_cong_nhan_su,1,1,1,1
+access_ai_chat_message_quan_tri,ai.chat.message quan tri,model_ai_chat_message,cham_cong_tinh_luong.group_cham_cong_quan_tri,1,1,1,1
+access_ai_chat_action_log_employee,ai.chat.action.log employee,model_ai_chat_action_log,cham_cong_ai_chatbot.group_ai_chatbot_employee_user,1,1,1,0
+access_ai_chat_action_log_manager,ai.chat.action.log manager,model_ai_chat_action_log,cham_cong_ai_chatbot.group_ai_chatbot_manager,1,1,1,1
+access_ai_chat_action_log_admin,ai.chat.action.log admin,model_ai_chat_action_log,cham_cong_ai_chatbot.group_ai_chatbot_admin,1,1,1,1
+access_ai_chat_action_log_nhan_su,ai.chat.action.log nhan su,model_ai_chat_action_log,cham_cong_tinh_luong.group_cham_cong_nhan_su,1,1,1,1
+access_ai_chat_action_log_quan_tri,ai.chat.action.log quan tri,model_ai_chat_action_log,cham_cong_tinh_luong.group_cham_cong_quan_tri,1,1,1,1
+access_ai_chatbot_settings,res.config.settings ai chatbot,model_res_config_settings,cham_cong_ai_chatbot.group_ai_chatbot_admin,1,1,1,1
+access_ai_chatbot_settings_nhan_su,res.config.settings ai chatbot nhan su,model_res_config_settings,cham_cong_tinh_luong.group_cham_cong_nhan_su,1,1,1,1
+access_ai_chatbot_settings_quan_tri,res.config.settings ai chatbot quan tri,model_res_config_settings,cham_cong_tinh_luong.group_cham_cong_quan_tri,1,1,1,1

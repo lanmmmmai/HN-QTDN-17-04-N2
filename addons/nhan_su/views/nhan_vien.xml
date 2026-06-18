@@ -32,12 +32,33 @@
                             <field name="chuc_vu_id" readonly="1"/>
                             <field name="user_id" options="{'no_create': True, 'no_create_edit': True}"/>
                         </group>
+                        <group col="1" string="Phòng ban &amp; chứng chỉ">
+                            <field name="phong_ban_id" readonly="1"/>
+                            <field name="danh_sach_chung_chi_bang_cap_ids" nolabel="1"/>
+                        </group>
                         <notebook>
                             <page string="Danh sách lịch sử công tác">
                                 <field name="lich_su_cong_tac_ids"/>
                             </page>
                             <page string="Danh sách chứng chỉ bằng cấp">
-                                <field name="danh_sach_chung_chi_bang_cap_ids"/>
+                                <field name="danh_sach_chung_chi_bang_cap_ids">
+                                    <tree editable="bottom">
+                                        <field name="nhan_vien_id" invisible="1"/>
+                                        <field name="ma_dinh_danh" invisible="1"/>
+                                        <field name="chung_chi_bang_cap_id"/>
+                                        <field name="ghi_chu"/>
+                                    </tree>
+                                    <form>
+                                        <sheet>
+                                            <group col="4" string="Chứng chỉ / bằng cấp">
+                                                <field name="nhan_vien_id" invisible="1"/>
+                                                <field name="ma_dinh_danh" readonly="1"/>
+                                                <field name="chung_chi_bang_cap_id"/>
+                                                <field name="ghi_chu"/>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>

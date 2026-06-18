@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AI Chatbot Nhân sự: chỉ staff thường -->
+    <menuitem id="menu_ai_chatbot_nhan_su"
+              name="AI Chatbot Nhân sự"
+              parent="cham_cong_tinh_luong.menu_cham_cong_root"
+              action="action_ai_chat_session_employee"
+              sequence="90"
+              groups="cham_cong_ai_chatbot.group_ai_chatbot_employee_user"/>
+
+    <!-- AI Chatbot Admin: dành cho Admin/HR manager -->
+    <menuitem id="menu_ai_chatbot_admin_root"
+              name="AI Chatbot Admin"
+              parent="cham_cong_tinh_luong.menu_cham_cong_root"
+              sequence="91"
+              groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_ai_chatbot.group_ai_chatbot_manager,cham_cong_ai_chatbot.group_ai_chatbot_admin"/>
+
+    <menuitem id="menu_ai_chatbot_overview"
+              name="Tổng quan Chatbot"
+              parent="menu_ai_chatbot_admin_root"
+              action="action_ai_chatbot_overview"
+              sequence="5"
+              groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_ai_chatbot.group_ai_chatbot_manager,cham_cong_ai_chatbot.group_ai_chatbot_admin"/>
+
+    <menuitem id="menu_ai_chatbot_sessions"
+              name="Phiên chat"
+              parent="menu_ai_chatbot_admin_root"
+              action="action_ai_chat_session"
+              sequence="10"
+              groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_ai_chatbot.group_ai_chatbot_manager,cham_cong_ai_chatbot.group_ai_chatbot_admin"/>
+
+    <menuitem id="menu_ai_chatbot_messages"
+              name="Tin nhắn Chatbot"
+              parent="menu_ai_chatbot_admin_root"
+              action="action_ai_chat_message"
+              sequence="20"
+              groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_ai_chatbot.group_ai_chatbot_manager,cham_cong_ai_chatbot.group_ai_chatbot_admin"/>
+
+    <menuitem id="menu_ai_chatbot_action_logs"
+              name="Log hành động AI"
+              parent="menu_ai_chatbot_admin_root"
+              action="action_ai_chat_action_log"
+              sequence="30"
+              groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_ai_chatbot.group_ai_chatbot_manager,cham_cong_ai_chatbot.group_ai_chatbot_admin"/>
+
+    <menuitem id="menu_ai_chatbot_config"
+              name="Cấu hình Chatbot"
+              parent="menu_ai_chatbot_admin_root"
+              action="action_ai_chatbot_config_settings"
+              sequence="40"
+              groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri,cham_cong_ai_chatbot.group_ai_chatbot_manager,cham_cong_ai_chatbot.group_ai_chatbot_admin"/>
+</odoo>
