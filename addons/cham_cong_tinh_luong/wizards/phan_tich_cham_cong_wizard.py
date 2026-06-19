@@ -1,6 +1,11 @@
-# -*- coding: utf-8 -*-
-
+from datetime import timedelta
 from odoo import fields, models
+from odoo.addons.cham_cong_tinh_luong.models.nhan_vien_thong_tin_mixin import get_month_range
+
+MAX_DAILY_WORK_HOURS = 10.0
+MIN_MONTHLY_WORK_DAYS = 20.0
+MAX_MONTHLY_OVERTIME_HOURS = 30.0
+MAX_LATE_COUNT_THRESHOLD = 3
 
 
 class PhanTichChamCongWizard(models.TransientModel):
@@ -35,17 +40,14 @@ class PhanTichChamCongWizard(models.TransientModel):
             for a in alerts_in_db:
                 existing_alerts.add((a.nhan_vien_id.id, a.loai_canh_bao))
 
+        start_date, end_date = get_month_range(self.thang, self.nam)
+
         for employee in employees:
-            start_date, end_date = Salary.new({
-                'nhan_vien_id': employee.id,
-                'thang': self.thang,
-                'nam': self.nam,
-            })._get_month_range()
             attendances = self.env['cham_cong'].search([
                 ('nhan_vien_id', '=', employee.id),
                 ('ngay_cham_cong', '>=', start_date),
                 ('ngay_cham_cong', '<', end_date),
-                ('state', 'in', ['xac_nhan', 'confirmed']),
+                ('state', '=', 'xac_nhan'),
             ])
             late_count = len(attendances.filtered(lambda line: line.trang_thai == 'di_muon'))
             day_count = round(sum(attendances.mapped('so_ngay_cong')), 2)
@@ -108,7 +110,7 @@ class PhanTichChamCongWizard(models.TransientModel):
                         })
 
                 # 4. Làm quá giờ
-                if att.so_gio_lam > 10.0:
+                if att.so_gio_lam > MAX_DAILY_WORK_HOURS:
                     alerts_to_create.append({
                         'nhan_vien_id': employee.id,
                         'thang': self.thang,
@@ -165,28 +167,28 @@ class PhanTichChamCongWizard(models.TransientModel):
 
             has_config = bool(self.env['cau_hinh_luong'].search([
                 ('nhan_vien_id', '=', employee.id),
-                ('trang_thai', 'in', ['dang_ap_dung', 'ap_dung'])
+                ('trang_thai', '=', 'dang_ap_dung')
             ], limit=1))
             invalid_attendance = bool(attendances.filtered(lambda line: line.trang_thai != 'nghi' and (not line.gio_vao or not line.gio_ra)))
-            salary_unconfirmed = bool(salary_sheet and salary_sheet.state not in ('xac_nhan', 'confirmed', 'da_thanh_toan'))
+            salary_unconfirmed = bool(salary_sheet and salary_sheet.state not in ('xac_nhan', 'da_thanh_toan'))
 
             rule_values = [
                 (
-                    late_count >= 3,
+                    late_count >= MAX_LATE_COUNT_THRESHOLD,
                     'di_muon_nhieu',
                     'Đi muộn %s lần trong tháng %s/%s.' % (late_count, self.thang, self.nam),
                     'Nhắc nhở nhân viên hoặc kiểm tra ca làm việc.',
                     'trung_binh',
                 ),
                 (
-                    day_count < 20,
+                    day_count < MIN_MONTHLY_WORK_DAYS,
                     'thieu_cong',
                     'Tổng ngày công chỉ đạt %s ngày trong tháng %s/%s.' % (day_count, self.thang, self.nam),
                     'Kiểm tra dữ liệu chấm công, lịch nghỉ hoặc tình trạng làm việc.',
                     'cao',
                 ),
                 (
-                    overtime_hours > 30,
+                    overtime_hours > MAX_MONTHLY_OVERTIME_HOURS,
                     'tang_ca_qua_nhieu',
                     'Tổng giờ tăng ca là %s giờ trong tháng %s/%s.' % (round(overtime_hours, 2), self.thang, self.nam),
                     'Kiểm tra phân bổ công việc và sức khỏe nhân viên.',

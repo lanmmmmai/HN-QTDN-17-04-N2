@@ -5,7 +5,7 @@
             <field name="name">bang_luong.tree</field>
             <field name="model">bang_luong</field>
             <field name="arch" type="xml">
-                <tree string="Bảng lương" decoration-muted="state == 'nhap' or state == 'draft'" decoration-info="state == 'da_tinh' or state == 'computed'" decoration-success="state == 'xac_nhan' or state == 'confirmed'" decoration-bf="state == 'da_thanh_toan'" decoration-danger="state == 'huy' or state == 'cancel'">
+                <tree string="Bảng lương" decoration-muted="state == 'nhap'" decoration-info="state == 'da_tinh'" decoration-success="state == 'xac_nhan'" decoration-bf="state == 'da_thanh_toan'" decoration-danger="state == 'huy'">
                     <field name="nhan_vien_id" string="Nhân viên" options="{'no_open': True}"/>
                     <field name="thang"/>
                     <field name="nam"/>
@@ -163,8 +163,8 @@
                     <field name="nam"/>
                     <field name="state"/>
                     <filter name="filter_month" string="Tháng này" date="ngay_tao" default_period="this_month"/>
-                    <filter name="filter_computed" string="Đã tính" domain="['|', ('state', '=', 'da_tinh'), ('state', '=', 'computed')]"/>
-                    <filter name="filter_confirmed" string="Đã xác nhận" domain="['|', ('state', '=', 'xac_nhan'), ('state', '=', 'confirmed')]"/>
+                    <filter name="filter_computed" string="Đã tính" domain="[('state', '=', 'da_tinh')]"/>
+                    <filter name="filter_confirmed" string="Đã xác nhận" domain="[('state', '=', 'xac_nhan')]"/>
                     <filter name="filter_paid" string="Đã thanh toán" domain="[('state', '=', 'da_thanh_toan')]"/>
                     <filter name="filter_high_salary" string="Lương cao" domain="[('tong_luong', '&gt;=', 10000000)]"/>
                     <filter name="filter_low_salary" string="Lương thấp bất thường" domain="[('tong_luong', '&lt;=', 5000000)]"/>
@@ -195,11 +195,11 @@
             <field name="model">bang_luong</field>
             <field name="arch" type="xml">
                 <tree string="Bảng lương của tôi" create="false" edit="false" delete="false"
-                      decoration-muted="state == 'nhap' or state == 'draft'"
-                      decoration-info="state == 'da_tinh' or state == 'computed'"
-                      decoration-success="state == 'xac_nhan' or state == 'confirmed'"
+                      decoration-muted="state == 'nhap'"
+                      decoration-info="state == 'da_tinh'"
+                      decoration-success="state == 'xac_nhan'"
                       decoration-bf="state == 'da_thanh_toan'"
-                      decoration-danger="state == 'huy' or state == 'cancel'">
+                      decoration-danger="state == 'huy'">
                     <field name="nhan_vien_id" string="Nhân viên" options="{'no_open': True}"/>
                     <field name="thang" string="Tháng"/>
                     <field name="nam" string="Năm"/>

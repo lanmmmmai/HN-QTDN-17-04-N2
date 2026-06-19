@@ -6,7 +6,7 @@
             <field name="model">cau_hinh_luong</field>
             <field name="arch" type="xml">
                 <tree string="Cấu hình lương"
-                      decoration-success="trang_thai == 'dang_ap_dung' or trang_thai == 'ap_dung'"
+                      decoration-success="trang_thai == 'dang_ap_dung'"
                       decoration-muted="trang_thai == 'ngung_ap_dung'"
                       decoration-warning="luong_co_ban &lt;= 0">
                     <field name="nhan_vien_id"/>
@@ -44,7 +44,7 @@
                                                 Mã NV: <field name="ma_nhan_vien"/>
                                             </div>
                                         </div>
-                                        <t t-if="record.trang_thai.raw_value === 'dang_ap_dung' || record.trang_thai.raw_value === 'ap_dung'">
+                                        <t t-if="record.trang_thai.raw_value === 'dang_ap_dung'">
                                             <span class="o_cctl_badge_success">Đang áp dụng</span>
                                         </t>
                                         <t t-else="">
@@ -153,7 +153,7 @@
                 <search string="Tìm kiếm cấu hình lương">
                     <field name="nhan_vien_id"/>
                     <field name="trang_thai"/>
-                    <filter name="filter_ap_dung" string="Đang áp dụng" domain="['|', ('trang_thai', '=', 'dang_ap_dung'), ('trang_thai', '=', 'ap_dung')]"/>
+                    <filter name="filter_ap_dung" string="Đang áp dụng" domain="[('trang_thai', '=', 'dang_ap_dung')]"/>
                     <filter name="filter_ngung" string="Ngừng áp dụng" domain="[('trang_thai', '=', 'ngung_ap_dung')]"/>
                     <separator/>
                     <filter name="group_employee" string="Nhân viên" context="{'group_by': 'nhan_vien_id'}"/>

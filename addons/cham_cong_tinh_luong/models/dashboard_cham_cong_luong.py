@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-
 from datetime import date
 
 from odoo import api, fields, models
+from .nhan_vien_thong_tin_mixin import get_month_range
 
 
 class DashboardChamCongLuong(models.Model):
@@ -95,38 +94,93 @@ class DashboardChamCongLuong(models.Model):
                 salary_domain.append(('nhan_vien_id', '=', current_employee.id))
                 warning_domain.append(('nhan_vien_id', '=', current_employee.id))
 
-            attendance_total = attendance_model.search_count(attendance_domain)
-            attendance_aggregates = attendance_model.read_group(
+            # optimized attendance calculation: group by trang_thai to fetch sums & counts
+            att_groups = attendance_model.read_group(
                 attendance_domain,
-                ['so_gio_lam:sum', 'so_gio_tang_ca:sum', 'so_ngay_cong:sum'],
-                [],
+                ['trang_thai', 'so_ngay_cong:sum', 'so_gio_lam:sum', 'so_gio_tang_ca:sum'],
+                ['trang_thai']
             )
-            attendance_totals = attendance_aggregates[0] if attendance_aggregates else {}
-            salary_total = salary_model.search_count(salary_domain)
-            salary_aggregates = salary_model.read_group(
+            so_luot_di_muon = 0
+            so_ngay_nghi = 0
+            tong_ngay_cong = 0.0
+            tong_gio_lam = 0.0
+            tong_gio_tang_ca = 0.0
+            tong_cham_cong = 0
+            for group in att_groups:
+                count = group.get('trang_thai_count', 0)
+                tong_cham_cong += count
+                tong_ngay_cong += group.get('so_ngay_cong', 0.0) or 0.0
+                tong_gio_lam += group.get('so_gio_lam', 0.0) or 0.0
+                tong_gio_tang_ca += group.get('so_gio_tang_ca', 0.0) or 0.0
+                status = group.get('trang_thai')
+                if status == 'di_muon':
+                    so_luot_di_muon = count
+                elif status in ('nghi', 'nghi_co_phep', 'nghi_khong_phep'):
+                    so_ngay_nghi += count
+
+            # optimized salary calculation: group by state
+            sal_groups = salary_model.read_group(
                 salary_domain,
-                ['tong_luong:sum', 'tien_bao_hiem:sum', 'tong_phu_cap:sum'],
-                [],
+                ['state', 'tong_luong:sum', 'tien_bao_hiem:sum', 'tong_phu_cap:sum'],
+                ['state']
             )
-            salary_totals = salary_aggregates[0] if salary_aggregates else {}
-            warnings_count = warning_model.search_count(warning_domain)
+            tong_quy_luong = 0.0
+            tong_bao_hiem = 0.0
+            tong_phu_cap = 0.0
+            so_bang_luong_thang = 0
+            bang_luong_da_tinh = 0
+            bang_luong_xac_nhan = 0
+            bang_luong_da_thanh_toan = 0
+            bang_luong_chua_xac_nhan = 0
+            for group in sal_groups:
+                count = group.get('state_count', 0)
+                so_bang_luong_thang += count
+                tong_quy_luong += group.get('tong_luong', 0.0) or 0.0
+                tong_bao_hiem += group.get('tien_bao_hiem', 0.0) or 0.0
+                tong_phu_cap += group.get('tong_phu_cap', 0.0) or 0.0
+                state = group.get('state')
+                if state == 'da_tinh':
+                    bang_luong_da_tinh = count
+                elif state == 'xac_nhan':
+                    bang_luong_xac_nhan = count
+                elif state == 'da_thanh_toan':
+                    bang_luong_da_thanh_toan = count
+                if state not in ('xac_nhan', 'da_thanh_toan'):
+                    bang_luong_chua_xac_nhan += count
+
+            # optimized warnings calculation: group by muc_do
+            warn_groups = warning_model.read_group(
+                warning_domain,
+                ['muc_do'],
+                ['muc_do']
+            )
+            tong_canh_bao = 0
+            so_canh_bao_cao = 0
+            for group in warn_groups:
+                count = group.get('muc_do_count', 0)
+                tong_canh_bao += count
+                if group.get('muc_do') == 'cao':
+                    so_canh_bao_cao = count
 
             today = fields.Date.context_today(self)
             if scope_mine and current_employee:
-                today_att = attendance_model.search([
+                today_att_count = attendance_model.search_count([
                     ('ngay_cham_cong', '=', today),
                     ('nhan_vien_id', '=', current_employee.id),
-                    ('state', 'in', ['xac_nhan', 'confirmed', 'nhap', 'draft'])
-                ], limit=1)
-                record.so_nhan_vien_da_cham_cong_hom_nay = 1 if today_att else 0
-                record.so_nhan_vien_chua_cham_cong_hom_nay = 0 if today_att else 1
-            else:
-                today_att = attendance_model.search([
-                    ('ngay_cham_cong', '=', today),
-                    ('state', 'in', ['xac_nhan', 'confirmed', 'nhap', 'draft'])
+                    ('state', 'in', ['xac_nhan', 'nhap'])
                 ])
-                today_employee_ids = today_att.mapped('nhan_vien_id').ids
-                record.so_nhan_vien_da_cham_cong_hom_nay = len(set(today_employee_ids))
+                record.so_nhan_vien_da_cham_cong_hom_nay = 1 if today_att_count else 0
+                record.so_nhan_vien_chua_cham_cong_hom_nay = 0 if today_att_count else 1
+            else:
+                today_att_groups = attendance_model.read_group(
+                    [
+                        ('ngay_cham_cong', '=', today),
+                        ('state', 'in', ['xac_nhan', 'nhap'])
+                    ],
+                    ['nhan_vien_id'],
+                    ['nhan_vien_id']
+                )
+                record.so_nhan_vien_da_cham_cong_hom_nay = len(today_att_groups)
                 total_emp = employee_model.search_count([])
                 record.so_nhan_vien_chua_cham_cong_hom_nay = max(0, total_emp - record.so_nhan_vien_da_cham_cong_hom_nay)
 
@@ -134,35 +188,30 @@ class DashboardChamCongLuong(models.Model):
                 record.tong_nhan_vien = 1
             else:
                 record.tong_nhan_vien = employee_model.search_count([])
+            
+            # Count distinct employees checked-in
             record.so_nhan_vien_da_cham_cong = len(attendance_model.read_group(attendance_domain, ['nhan_vien_id'], ['nhan_vien_id']))
-            record.tong_cham_cong = attendance_total
-            record.tong_ngay_cong = round(attendance_totals.get('so_ngay_cong', 0.0) or 0.0, 2)
-            record.tong_gio_lam = round(attendance_totals.get('so_gio_lam', 0.0) or 0.0, 2)
-            record.tong_gio_tang_ca = round(attendance_totals.get('so_gio_tang_ca', 0.0) or 0.0, 2)
+            record.tong_cham_cong = tong_cham_cong
+            record.tong_ngay_cong = round(tong_ngay_cong, 2)
+            record.tong_gio_lam = round(tong_gio_lam, 2)
+            record.tong_gio_tang_ca = round(tong_gio_tang_ca, 2)
             record.tong_tang_ca = attendance_model.search_count(attendance_domain + [('so_gio_tang_ca', '>', 0)])
-            record.so_luot_di_muon = attendance_model.search_count(attendance_domain + [('trang_thai', '=', 'di_muon')])
-            record.so_ngay_nghi = attendance_model.search_count(attendance_domain + [('trang_thai', 'in', ['nghi', 'nghi_co_phep', 'nghi_khong_phep'])])
-            record.so_bang_luong_thang = salary_total
-            record.tong_quy_luong = round(salary_totals.get('tong_luong', 0.0) or 0.0, 2)
-            record.tong_bao_hiem = round(salary_totals.get('tien_bao_hiem', 0.0) or 0.0, 2)
-            record.tong_phu_cap = round(salary_totals.get('tong_phu_cap', 0.0) or 0.0, 2)
-            record.bang_luong_da_tinh = salary_model.search_count(salary_domain + [('state', 'in', ['da_tinh', 'computed'])])
-            record.bang_luong_xac_nhan = salary_model.search_count(salary_domain + [('state', 'in', ['xac_nhan', 'confirmed'])])
-            record.bang_luong_da_thanh_toan = salary_model.search_count(salary_domain + [('state', '=', 'da_thanh_toan')])
-            record.bang_luong_chua_xac_nhan = salary_model.search_count(salary_domain + [('state', 'not in', ['xac_nhan', 'confirmed', 'da_thanh_toan'])])
-            record.tong_canh_bao = warnings_count
-            record.so_canh_bao_cao = warning_model.search_count(warning_domain + [('muc_do', '=', 'cao')])
+            record.so_luot_di_muon = so_luot_di_muon
+            record.so_ngay_nghi = so_ngay_nghi
+            record.so_bang_luong_thang = so_bang_luong_thang
+            record.tong_quy_luong = round(tong_quy_luong, 2)
+            record.tong_bao_hiem = round(tong_bao_hiem, 2)
+            record.tong_phu_cap = round(tong_phu_cap, 2)
+            record.bang_luong_da_tinh = bang_luong_da_tinh
+            record.bang_luong_xac_nhan = bang_luong_xac_nhan
+            record.bang_luong_da_thanh_toan = bang_luong_da_thanh_toan
+            record.bang_luong_chua_xac_nhan = bang_luong_chua_xac_nhan
+            record.tong_canh_bao = tong_canh_bao
+            record.so_canh_bao_cao = so_canh_bao_cao
 
     def _get_month_range(self):
         self.ensure_one()
-        month = int(self.thang)
-        year = self.nam
-        start_date = date(year, month, 1)
-        if month == 12:
-            end_date = date(year + 1, 1, 1)
-        else:
-            end_date = date(year, month + 1, 1)
-        return start_date, end_date
+        return get_month_range(self.thang, self.nam)
 
     def _build_action(self, xmlid, domain=None, context=None):
         self.ensure_one()

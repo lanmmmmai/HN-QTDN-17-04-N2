@@ -39,6 +39,7 @@ class PhieuLuongPreviewWizard(models.TransientModel):
         is_manager = (
             self.env.user.has_group('cham_cong_tinh_luong.group_cham_cong_quan_tri')
             or self.env.user.has_group('cham_cong_tinh_luong.group_cham_cong_ke_toan')
+            or self.env.user.has_group('cham_cong_tinh_luong.group_cham_cong_nhan_su')
         )
         is_owner = (
             bang_luong.nhan_vien_id.user_id

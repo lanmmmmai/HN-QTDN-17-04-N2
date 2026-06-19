@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import nhan_vien_thong_tin_mixin
 from . import cham_cong
 from . import cau_hinh_luong
 from . import bang_luong

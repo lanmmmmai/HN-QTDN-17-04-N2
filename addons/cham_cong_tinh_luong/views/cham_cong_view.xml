@@ -88,7 +88,7 @@
                     <filter name="filter_muon" string="Đi muộn" domain="[('trang_thai', '=', 'di_muon')]"/>
                     <filter name="filter_nghi" string="Nghỉ" domain="[('trang_thai', 'in', ('nghi', 'nghi_co_phep', 'nghi_khong_phep'))]"/>
                     <filter name="filter_tang_ca" string="Tăng ca" domain="[('trang_thai', '=', 'tang_ca')]"/>
-                    <filter name="filter_confirmed" string="Đã xác nhận" domain="['|', ('state', '=', 'xac_nhan'), ('state', '=', 'confirmed')]"/>
+                    <filter name="filter_confirmed" string="Đã xác nhận" domain="[('state', '=', 'xac_nhan')]"/>
                     <separator/>
                     <filter name="group_employee" string="Nhân viên" context="{'group_by': 'nhan_vien_id'}"/>
                     <filter name="group_status" string="Trạng thái" context="{'group_by': 'state'}"/>
@@ -163,7 +163,7 @@
                     <filter name="my_late" string="Đi muộn" domain="[('trang_thai', '=', 'di_muon')]"/>
                     <filter name="my_absent" string="Nghỉ" domain="[('trang_thai', 'in', ('nghi', 'nghi_co_phep', 'nghi_khong_phep'))]"/>
                     <filter name="my_overtime" string="Tăng ca" domain="[('trang_thai', '=', 'tang_ca')]"/>
-                    <filter name="my_confirmed" string="Đã xác nhận" domain="['|', ('state', '=', 'xac_nhan'), ('state', '=', 'confirmed')]"/>
+                    <filter name="my_confirmed" string="Đã xác nhận" domain="[('state', '=', 'xac_nhan')]"/>
                 </search>
             </field>
         </record>

@@ -8,8 +8,18 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
+DEFAULT_TIMEZONE = 'Asia/Ho_Chi_Minh'
+SHIFT_STANDARD_HOURS = {
+    'hanh_chinh': 8.0,
+    'sang': 4.0,
+    'chieu': 4.0,
+    'toi': 4.0,
+}
+
+
 class ChamCong(models.Model):
     _name = 'cham_cong'
+    _inherit = ['nhan_vien_thong_tin.mixin']
     _description = 'Chấm công'
     _order = 'ngay_cham_cong desc, gio_vao desc, id desc'
 
@@ -34,18 +44,6 @@ class ChamCong(models.Model):
         string='Mã nhân viên',
         related='nhan_vien_id.ma_dinh_danh',
         store=True,
-        readonly=True,
-    )
-    phong_ban_id = fields.Many2one(
-        'don_vi',
-        string='Phòng ban',
-        compute='_compute_thong_tin_nhan_vien',
-        readonly=True,
-    )
-    chuc_vu_id = fields.Many2one(
-        'chuc_vu',
-        string='Chức vụ',
-        compute='_compute_thong_tin_nhan_vien',
         readonly=True,
     )
     ngay_cham_cong = fields.Date(
@@ -115,32 +113,12 @@ class ChamCong(models.Model):
             ('nhap', 'Nháp'),
             ('xac_nhan', 'Đã xác nhận'),
             ('huy', 'Hủy'),
-            ('draft', 'Nháp'),
-            ('confirmed', 'Đã xác nhận'),
-            ('cancel', 'Hủy'),
         ],
         string='Trạng thái',
         required=True,
         default='nhap',
     )
     ghi_chu = fields.Text(string='Ghi chú')
-
-    @api.depends('nhan_vien_id')
-    def _compute_thong_tin_nhan_vien(self):
-        employee_ids = self.mapped('nhan_vien_id').ids
-        latest_histories = {}
-        if employee_ids:
-            histories = self.env['lich_su_cong_tac'].search(
-                [('nhan_vien_id', 'in', employee_ids)],
-                order='nhan_vien_id desc, id desc',
-            )
-            for history in histories:
-                latest_histories.setdefault(history.nhan_vien_id.id, history)
-
-        for record in self:
-            history = latest_histories.get(record.nhan_vien_id.id)
-            record.phong_ban_id = history.don_vi_id if history else False
-            record.chuc_vu_id = history.chuc_vu_id if history else False
 
     @api.depends('gio_vao', 'gio_ra', 'trang_thai')
     def _compute_so_gio_lam(self):
@@ -153,11 +131,12 @@ class ChamCong(models.Model):
             else:
                 record.so_gio_lam = 0.0
 
-    @api.depends('so_gio_lam')
+    @api.depends('so_gio_lam', 'ca_lam_viec')
     def _compute_so_gio_tang_ca(self):
         for record in self:
-            if record.so_gio_lam > 8.0:
-                record.so_gio_tang_ca = round(record.so_gio_lam - 8.0, 2)
+            std_hours = SHIFT_STANDARD_HOURS.get(record.ca_lam_viec, 8.0)
+            if record.so_gio_lam > std_hours:
+                record.so_gio_tang_ca = round(record.so_gio_lam - std_hours, 2)
             else:
                 record.so_gio_tang_ca = 0.0
 
@@ -212,11 +191,11 @@ class ChamCong(models.Model):
             local_dt = datetime(day_value.year, day_value.month, day_value.day, int(hh), int(mm))
         except (ValueError, TypeError):
             return False
-        tz_name = self.env.user.tz or self.env.context.get('tz') or 'Asia/Ho_Chi_Minh'
+        tz_name = self.env.user.tz or self.env.context.get('tz') or DEFAULT_TIMEZONE
         try:
             tz = pytz.timezone(tz_name)
         except Exception:  # noqa: BLE001
-            tz = pytz.timezone('Asia/Ho_Chi_Minh')
+            tz = pytz.timezone(DEFAULT_TIMEZONE)
         localized = tz.localize(local_dt, is_dst=None)
         return localized.astimezone(pytz.UTC).replace(tzinfo=None)
 
