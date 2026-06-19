@@ -17,6 +17,7 @@ class PhanTichChamCongWizard(models.TransientModel):
         Alert = self.env['canh_bao_cham_cong']
         employee_model = self.env['nhan_vien']
         Salary = self.env['bang_luong']
+        from datetime import timedelta
 
         old_domain = [('thang', '=', self.thang), ('nam', '=', self.nam)]
         if self.nhan_vien_id:
@@ -43,6 +44,110 @@ class PhanTichChamCongWizard(models.TransientModel):
             late_count = len(attendances.filtered(lambda line: line.trang_thai == 'di_muon'))
             day_count = round(sum(attendances.mapped('so_ngay_cong')), 2)
             overtime_hours = sum(attendances.mapped('so_gio_tang_ca'))
+
+            # Daily scans
+            for att in attendances:
+                # 1. Đi muộn
+                if att.trang_thai == 'di_muon':
+                    Alert.create({
+                        'nhan_vien_id': employee.id,
+                        'thang': self.thang,
+                        'nam': self.nam,
+                        'loai_canh_bao': 'di_muon',
+                        'muc_do': 'trung_binh',
+                        'noi_dung': 'Đi muộn ngày %s (vào lúc %s).' % (att.ngay_cham_cong.strftime('%d/%m/%Y'), (att.gio_vao + timedelta(hours=7)).strftime('%H:%M') if att.gio_vao else '?'),
+                        'goi_y_xu_ly': 'Nhắc nhở đi làm đúng giờ.',
+                    })
+                    created += 1
+
+                # 2. Về sớm
+                if att.gio_ra and att.trang_thai not in ('nghi', 'nghi_co_phep', 'nghi_khong_phep', 'nua_ngay'):
+                    local_ra = att.gio_ra + timedelta(hours=7)
+                    is_early = False
+                    limit_time_str = ""
+                    if att.ca_lam_viec == 'sang':
+                        if local_ra.hour < 12:
+                            is_early = True
+                            limit_time_str = "12:00"
+                    else:
+                        if local_ra.hour < 17:
+                            is_early = True
+                            limit_time_str = "17:00"
+                    if is_early:
+                        Alert.create({
+                            'nhan_vien_id': employee.id,
+                            'thang': self.thang,
+                            'nam': self.nam,
+                            'loai_canh_bao': 've_som',
+                            'muc_do': 'trung_binh',
+                            'noi_dung': 'Về sớm ngày %s (ra lúc %s, quy định %s).' % (att.ngay_cham_cong.strftime('%d/%m/%Y'), local_ra.strftime('%H:%M'), limit_time_str),
+                            'goi_y_xu_ly': 'Nhắc nhở tuân thủ giờ ra về.',
+                        })
+                        created += 1
+
+                # 3. Thiếu giờ ra
+                if att.gio_vao and not att.gio_ra:
+                    today = fields.Date.context_today(self)
+                    if att.ngay_cham_cong < today:
+                        Alert.create({
+                            'nhan_vien_id': employee.id,
+                            'thang': self.thang,
+                            'nam': self.nam,
+                            'loai_canh_bao': 'thieu_gio_ra',
+                            'muc_do': 'cao',
+                            'noi_dung': 'Thiếu giờ ra ngày %s (vào lúc %s).' % (att.ngay_cham_cong.strftime('%d/%m/%Y'), (att.gio_vao + timedelta(hours=7)).strftime('%H:%M')),
+                            'goi_y_xu_ly': 'Yêu cầu nhân viên bổ sung giờ ra.',
+                        })
+                        created += 1
+
+                # 4. Làm quá giờ
+                if att.so_gio_lam > 10.0:
+                    Alert.create({
+                        'nhan_vien_id': employee.id,
+                        'thang': self.thang,
+                        'nam': self.nam,
+                        'loai_canh_bao': 'lam_qua_gio',
+                        'muc_do': 'cao',
+                        'noi_dung': 'Làm quá giờ ngày %s (%s giờ).' % (att.ngay_cham_cong.strftime('%d/%m/%Y'), att.so_gio_lam),
+                        'goi_y_xu_ly': 'Kiểm tra lý do tăng ca quá quy định.',
+                    })
+                    created += 1
+
+            # 5. Chấm công trùng ngày
+            date_counts = {}
+            for att in attendances:
+                date_counts[att.ngay_cham_cong] = date_counts.get(att.ngay_cham_cong, 0) + 1
+            for att_date, count in date_counts.items():
+                if count > 1:
+                    Alert.create({
+                        'nhan_vien_id': employee.id,
+                        'thang': self.thang,
+                        'nam': self.nam,
+                        'loai_canh_bao': 'trung_ngay',
+                        'muc_do': 'cao',
+                        'noi_dung': 'Trùng ngày chấm công: %s (%s bản ghi).' % (att_date.strftime('%d/%m/%Y'), count),
+                        'goi_y_xu_ly': 'Xóa hoặc gộp bản ghi chấm công trùng lặp.',
+                    })
+                    created += 1
+
+            # 6. Chưa chấm công hôm nay
+            today = fields.Date.context_today(self)
+            if int(self.nam) == today.year and int(self.thang) == today.month:
+                today_att = self.env['cham_cong'].search([
+                    ('nhan_vien_id', '=', employee.id),
+                    ('ngay_cham_cong', '=', today),
+                ], limit=1)
+                if not today_att and today.weekday() < 5:
+                    Alert.create({
+                        'nhan_vien_id': employee.id,
+                        'thang': self.thang,
+                        'nam': self.nam,
+                        'loai_canh_bao': 'chua_cham_cong',
+                        'muc_do': 'cao',
+                        'noi_dung': 'Chưa chấm công hôm nay (%s).' % today.strftime('%d/%m/%Y'),
+                        'goi_y_xu_ly': 'Nhắc nhở nhân viên chấm công.',
+                    })
+                    created += 1
 
             salary_sheet = Salary.search([
                 ('nhan_vien_id', '=', employee.id),

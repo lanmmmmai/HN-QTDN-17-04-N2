@@ -7,6 +7,7 @@ export class AIChatbotClientAction extends Component {
     setup() {
         this.rpc = useService("rpc");
         this.notification = useService("notification");
+        this.actionService = useService("action");
         this.messagesRef = useRef("messagesContainer");
         this._localCounter = 0;
 
@@ -167,6 +168,9 @@ export class AIChatbotClientAction extends Component {
                     content: res.message || "Đã thực hiện hành động.",
                 });
                 this.notification.add(res.message || "Đã thực hiện", { type: "success" });
+                if (res.action) {
+                    this.actionService.doAction(res.action);
+                }
             } else {
                 const msg = (res && res.error) || "Không thực hiện được hành động.";
                 this.state.messages.push({

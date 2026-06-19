@@ -29,18 +29,34 @@
                             <div class="row g-3 o_cctl_stats_grid">
                                 <div class="col-12 col-md-6 col-xl-3">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--info">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-users" title="Nhân viên"/></div>
-                                        <div class="o_cctl_stat_value"><field name="so_nhan_vien_da_cham_cong" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Số nhân viên đã chấm công</div>
-                                        <div class="text-muted small">Số nhân viên có phát sinh chấm công trong kỳ.</div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-users" title="Tổng nhân viên"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_nhan_vien" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Tổng nhân viên</div>
+                                        <div class="text-muted small">Tổng số nhân sự có trong hệ thống.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--success">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-check-square-o" title="Đã chấm công hôm nay"/></div>
+                                        <div class="o_cctl_stat_value"><field name="so_nhan_vien_da_cham_cong_hom_nay" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Đã chấm công hôm nay</div>
+                                        <div class="text-muted small">Nhân viên đã ghi nhận giờ vào hôm nay.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--warning">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-minus-square-o" title="Chưa chấm công hôm nay"/></div>
+                                        <div class="o_cctl_stat_value"><field name="so_nhan_vien_chua_cham_cong_hom_nay" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Chưa chấm công hôm nay</div>
+                                        <div class="text-muted small">Nhân viên chưa chấm công trong ngày.</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--info">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-calendar-check-o" title="Bản ghi chấm công"/></div>
-                                        <div class="o_cctl_stat_value"><field name="tong_cham_cong" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Bản ghi chấm công</div>
-                                        <div class="text-muted small">Tổng số dòng chấm công trong tháng.</div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-calendar" title="Tổng ngày công tháng này"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_ngay_cong" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Tổng ngày công tháng này</div>
+                                        <div class="text-muted small">Tổng số ngày đi làm thực tế trong tháng.</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
@@ -48,7 +64,7 @@
                                         <div class="o_cctl_stat_icon"><i class="fa fa-clock-o" title="Tổng giờ làm"/></div>
                                         <div class="o_cctl_stat_value"><field name="tong_gio_lam" nolabel="1" readonly="1"/></div>
                                         <div class="o_cctl_stat_label">Tổng giờ làm</div>
-                                        <div class="text-muted small">Tổng thời gian làm việc của kỳ hiện tại.</div>
+                                        <div class="text-muted small">Tổng số giờ làm việc tích lũy trong tháng.</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
@@ -56,31 +72,23 @@
                                         <div class="o_cctl_stat_icon"><i class="fa fa-plus-circle" title="Tổng giờ tăng ca"/></div>
                                         <div class="o_cctl_stat_value"><field name="tong_gio_tang_ca" nolabel="1" readonly="1"/></div>
                                         <div class="o_cctl_stat_label">Tổng giờ tăng ca</div>
-                                        <div class="text-muted small">Số giờ làm thêm ngoài ca chuẩn.</div>
+                                        <div class="text-muted small">Tổng số giờ làm thêm ngoài ca chuẩn.</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
-                                    <div class="o_cctl_stat_card o_cctl_stat_card--warning">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-exclamation-circle" title="Đi muộn"/></div>
-                                        <div class="o_cctl_stat_value"><field name="so_luot_di_muon" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Số lượt đi muộn</div>
-                                        <div class="text-muted small">Các lần đi muộn đã được ghi nhận.</div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6 col-xl-3">
-                                    <div class="o_cctl_stat_card o_cctl_stat_card--danger">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-bed" title="Ngày nghỉ"/></div>
-                                        <div class="o_cctl_stat_value"><field name="so_ngay_nghi" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Số ngày nghỉ</div>
-                                        <div class="text-muted small">Các ngày nghỉ không có công.</div>
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--success">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-money" title="Tổng quỹ lương tháng"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_quy_luong" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Tổng quỹ lương tháng</div>
+                                        <div class="text-muted small">Tổng quỹ lương thực lĩnh dự kiến của tháng.</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--danger">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-bell" title="Cảnh báo bất thường"/></div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-bell" title="Cảnh báo chấm công"/></div>
                                         <div class="o_cctl_stat_value"><field name="tong_canh_bao" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Cảnh báo bất thường</div>
-                                        <div class="text-muted small">Tổng số cảnh báo trong kỳ.</div>
+                                        <div class="o_cctl_stat_label">Cảnh báo chấm công</div>
+                                        <div class="text-muted small">Các vi phạm chấm công thông minh trong tháng.</div>
                                     </div>
                                 </div>
                             </div>

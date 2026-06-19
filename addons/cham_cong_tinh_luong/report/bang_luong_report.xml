@@ -25,7 +25,7 @@
                                 Kỳ lương: Tháng <strong><span t-esc="o.thang"/></strong> / <strong><span t-esc="o.nam"/></strong>
                             </p>
                             <p style="color: #64748b; font-size: 12px; margin: 6px 0 0 0;">
-                                Công thức: (Lương cơ bản / 26) × Số ngày đi làm thực tế + Phụ cấp + Khen thưởng - Kỷ luật - Khấu trừ
+                                Công thức: Thực lĩnh = (Lương cơ bản / 26) × Số ngày đi làm thực tế + Phụ cấp + Khen thưởng - Kỷ luật
                             </p>
                         </div>
 

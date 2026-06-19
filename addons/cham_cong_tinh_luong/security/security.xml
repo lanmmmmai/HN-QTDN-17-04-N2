@@ -16,7 +16,7 @@
     <record id="group_cham_cong_self_service" model="res.groups">
         <field name="name">Chấm công/Lương - Self-service (Nhân viên)</field>
         <field name="category_id" ref="module_category_cham_cong_tinh_luong"/>
-        <field name="implied_ids" eval="[(4, ref('group_cham_cong_nhan_vien')), (4, ref('cham_cong_ai_chatbot.group_ai_chatbot_employee_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_cham_cong_nhan_vien'))]"/>
     </record>
 
     <record id="group_cham_cong_nhan_su" model="res.groups">

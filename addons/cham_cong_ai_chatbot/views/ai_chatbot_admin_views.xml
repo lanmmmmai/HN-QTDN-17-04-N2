@@ -164,6 +164,8 @@
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="employee_id"/>
+                <field name="intent"/>
+                <field name="function_name"/>
                 <field name="action_type"/>
                 <field name="state"/>
                 <field name="summary"/>
@@ -190,6 +192,8 @@
                         <group>
                             <field name="name"/>
                             <field name="action_type"/>
+                            <field name="intent"/>
+                            <field name="function_name"/>
                             <field name="user_id"/>
                             <field name="employee_id"/>
                             <field name="session_id"/>
@@ -209,8 +213,11 @@
                     <group string="Câu hỏi gốc">
                         <field name="original_text" nolabel="1"/>
                     </group>
-                    <group string="Dữ liệu trích xuất">
+                    <group string="Dữ liệu trích xuất (Input)">
                         <field name="extracted_data" nolabel="1"/>
+                    </group>
+                    <group string="Dữ liệu phản hồi (Output)">
+                        <field name="function_output" nolabel="1"/>
                     </group>
                     <group string="Lỗi" attrs="{'invisible': [('error_message', '=', False)]}">
                         <field name="error_message" nolabel="1"/>

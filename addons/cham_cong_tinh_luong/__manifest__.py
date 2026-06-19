@@ -37,7 +37,6 @@ Module chấm công và tính lương tích hợp với module Quản lý nhân 
         'views/cham_cong_view.xml',
         'views/cau_hinh_luong_view.xml',
         'views/canh_bao_cham_cong_view.xml',
-        'views/dashboard_views.xml',
         'views/nhan_vien_extend_view.xml',
 
         # 5. Wizard
@@ -53,6 +52,7 @@ Module chấm công và tính lương tích hợp với module Quản lý nhân 
         # 7. View dùng report/action nên nạp sau khi report đã có XML ID
         'views/bang_luong_view.xml',
         'views/khen_thuong_ky_luat_view.xml',
+        'views/dashboard_views.xml',
 
         # 8. Menu nên để cuối cùng
         'views/menu.xml',

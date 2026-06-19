@@ -49,6 +49,9 @@ class AiChatActionLog(models.Model):
     error_message = fields.Text(string='Lỗi')
     confirmed_at = fields.Datetime(string='Thời điểm xác nhận')
     done_at = fields.Datetime(string='Thời điểm thực hiện')
+    intent = fields.Char(string='Ý định')
+    function_name = fields.Char(string='Hàm AI gọi')
+    function_output = fields.Text(string='Dữ liệu phản hồi (Output)')
 
     @api.depends('action_type', 'create_date')
     def _compute_name(self):
@@ -147,6 +150,7 @@ class AiChatActionLog(models.Model):
         self.write({
             'target_model': 'cham_cong',
             'target_record_id': record.id,
+            'function_output': 'Đã tạo bản ghi chấm công ID: %s cho %s ngày %s' % (record.id, employee.ho_va_ten, date_val),
             'state': 'done',
             'done_at': fields.Datetime.now(),
         })
@@ -177,6 +181,7 @@ class AiChatActionLog(models.Model):
         self.write({
             'target_model': 'cham_cong',
             'target_record_id': record.id,
+            'function_output': 'Đã cập nhật bản ghi chấm công ID: %s cho %s' % (record.id, record.nhan_vien_id.ho_va_ten),
             'state': 'done',
             'done_at': fields.Datetime.now(),
         })
@@ -194,6 +199,7 @@ class AiChatActionLog(models.Model):
             self.write({
                 'state': 'done',
                 'done_at': fields.Datetime.now(),
+                'function_output': 'Đã ghi nhận yêu cầu nghỉ phép (chưa cài module nghỉ phép).',
                 'error_message': 'Module nghỉ phép chưa được cài đặt - đã ghi nhận yêu cầu.',
             })
             return False
@@ -221,6 +227,7 @@ class AiChatActionLog(models.Model):
             self.write({
                 'target_model': leave_model,
                 'target_record_id': record.id,
+                'function_output': 'Đã tạo yêu cầu nghỉ phép ID: %s cho %s' % (record.id, employee.ho_va_ten),
                 'state': 'done',
                 'done_at': fields.Datetime.now(),
             })
@@ -228,6 +235,7 @@ class AiChatActionLog(models.Model):
             self.write({
                 'state': 'done',
                 'done_at': fields.Datetime.now(),
+                'function_output': 'Lỗi khi tạo bản ghi nghỉ phép: %s' % exc,
                 'error_message': 'Không thể tạo bản ghi nghỉ phép tự động: %s' % exc,
             })
         return record
@@ -238,15 +246,10 @@ class AiChatActionLog(models.Model):
         self.write({
             'target_model': 'bang_luong',
             'target_record_id': record_id or 0,
+            'function_output': 'Đã xuất phiếu lương PDF cho bảng lương ID: %s' % record_id,
             'state': 'done',
             'done_at': fields.Datetime.now(),
         })
         if record_id:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'bang_luong',
-                'res_id': record_id,
-                'view_mode': 'form',
-                'target': 'current',
-            }
+            return self.env.ref('cham_cong_tinh_luong.action_report_bang_luong').report_action(record_id)
         return False

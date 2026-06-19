@@ -9,11 +9,12 @@
                     <group>
                         <field name="thang"/>
                         <field name="nam"/>
-                        <field name="nhan_vien_ids" widget="many2many_tags"/>
+                        <field name="phong_ban_id" options="{'no_create': True}"/>
+                        <field name="nhan_vien_ids" widget="many2many_tags" attrs="{'invisible': [('phong_ban_id', '!=', False)]}"/>
                     </group>
                     <group string="Ghi chú">
                         <div class="text-muted">
-                            Nếu không chọn nhân viên, hệ thống sẽ sinh bảng lương cho toàn bộ nhân viên có hồ sơ hợp lệ.
+                            Nếu chọn phòng ban, hệ thống sẽ sinh bảng lương cho toàn bộ nhân viên thuộc phòng ban đó. Nếu để trống cả hai, hệ thống sẽ sinh bảng lương cho toàn bộ nhân viên.
                         </div>
                     </group>
                 </sheet>

@@ -40,5 +40,10 @@
             <field name="category_id" ref="module_category_ai_chatbot"/>
             <field name="implied_ids" eval="[(4, ref('group_ai_chatbot_manager_legacy'))]"/>
         </record>
+
+        <!-- Extend group_cham_cong_self_service to imply chatbot group -->
+        <record id="cham_cong_tinh_luong.group_cham_cong_self_service" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('group_ai_chatbot_employee_user'))]"/>
+        </record>
     </data>
 </odoo>

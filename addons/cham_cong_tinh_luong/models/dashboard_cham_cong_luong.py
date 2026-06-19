@@ -23,6 +23,8 @@ class DashboardChamCongLuong(models.Model):
         default=lambda self: fields.Date.context_today(self).year,
     )
     tong_nhan_vien = fields.Integer(string='Tổng số nhân viên', compute='_compute_dashboard')
+    so_nhan_vien_da_cham_cong_hom_nay = fields.Integer(string='Đã chấm công hôm nay', compute='_compute_dashboard')
+    so_nhan_vien_chua_cham_cong_hom_nay = fields.Integer(string='Chưa chấm công hôm nay', compute='_compute_dashboard')
     so_nhan_vien_da_cham_cong = fields.Integer(string='Số nhân viên đã chấm công', compute='_compute_dashboard')
     tong_cham_cong = fields.Integer(string='Tổng bản ghi chấm công', compute='_compute_dashboard')
     tong_ngay_cong = fields.Float(string='Tổng ngày công', compute='_compute_dashboard')
@@ -67,6 +69,8 @@ class DashboardChamCongLuong(models.Model):
             ]
             if scope_mine and not current_employee:
                 record.tong_nhan_vien = 0
+                record.so_nhan_vien_da_cham_cong_hom_nay = 0
+                record.so_nhan_vien_chua_cham_cong_hom_nay = 0
                 record.so_nhan_vien_da_cham_cong = 0
                 record.tong_cham_cong = 0
                 record.tong_ngay_cong = 0.0
@@ -106,6 +110,25 @@ class DashboardChamCongLuong(models.Model):
             )
             salary_totals = salary_aggregates[0] if salary_aggregates else {}
             warnings_count = warning_model.search_count(warning_domain)
+
+            today = fields.Date.context_today(self)
+            if scope_mine and current_employee:
+                today_att = attendance_model.search([
+                    ('ngay_cham_cong', '=', today),
+                    ('nhan_vien_id', '=', current_employee.id),
+                    ('state', 'in', ['xac_nhan', 'confirmed', 'nhap', 'draft'])
+                ], limit=1)
+                record.so_nhan_vien_da_cham_cong_hom_nay = 1 if today_att else 0
+                record.so_nhan_vien_chua_cham_cong_hom_nay = 0 if today_att else 1
+            else:
+                today_att = attendance_model.search([
+                    ('ngay_cham_cong', '=', today),
+                    ('state', 'in', ['xac_nhan', 'confirmed', 'nhap', 'draft'])
+                ])
+                today_employee_ids = today_att.mapped('nhan_vien_id').ids
+                record.so_nhan_vien_da_cham_cong_hom_nay = len(set(today_employee_ids))
+                total_emp = employee_model.search_count([])
+                record.so_nhan_vien_chua_cham_cong_hom_nay = max(0, total_emp - record.so_nhan_vien_da_cham_cong_hom_nay)
 
             if scope_mine and current_employee:
                 record.tong_nhan_vien = 1

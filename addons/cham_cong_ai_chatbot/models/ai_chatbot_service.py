@@ -78,8 +78,8 @@ class AiChatbotService(models.AbstractModel):
                     'employee_scope': {'type': 'string', 'enum': ['self', 'specific_employee']},
                     'employee_name': {'type': ['string', 'null']},
                     'date_text': {'type': 'string', 'description': 'Ngày chấm công dạng tự nhiên: hôm nay, hôm qua, ngày mai, DD/MM, DD/MM/YYYY.'},
-                    'check_in': {'type': 'string', 'description': 'Giờ vào dạng HH:MM.'},
-                    'check_out': {'type': 'string', 'description': 'Giờ ra dạng HH:MM.'},
+                    'check_in': {'type': ['string', 'null'], 'description': 'Giờ vào dạng HH:MM.'},
+                    'check_out': {'type': ['string', 'null'], 'description': 'Giờ ra dạng HH:MM.'},
                     'reason': {'type': ['string', 'null'], 'description': 'Ghi chú/lý do.'},
                 },
                 'required': ['employee_scope', 'employee_name', 'date_text', 'check_in', 'check_out', 'reason'],
@@ -141,6 +141,13 @@ class AiChatbotService(models.AbstractModel):
                 'required': ['employee_scope', 'employee_name', 'period', 'month', 'year'],
                 'additionalProperties': False,
             },
+        },
+        {
+            'type': 'function',
+            'name': 'get_attendance_alerts',
+            'description': 'Tra cứu các cảnh báo chấm công (đi muộn, về sớm, thiếu giờ ra,...) của nhân viên trong một kỳ.',
+            'strict': True,
+            'parameters': _QUERY_PARAMS,
         },
     ]
 
@@ -353,9 +360,12 @@ class AiChatbotService(models.AbstractModel):
             "Khi người dùng hỏi về dữ liệu chấm công/lương, hãy gọi function phù hợp. "
             "Nếu người dùng không phải quản lý, chỉ được dùng employee_scope='self'. "
             "Khi giải thích cách tính lương, hãy dùng công thức: "
-            "(Lương cơ bản / 26) × Số ngày đi làm thực tế + Phụ cấp + Khen thưởng - Kỷ luật - Khấu trừ. "
+            "(Lương cơ bản / 26) × Số ngày đi làm thực tế + Phụ cấp + Khen thưởng - Kỷ luật. "
             "Khi người dùng muốn tạo/sửa chấm công, tạo nghỉ phép hoặc in bảng lương, "
-            "hãy gọi function tương ứng - hệ thống sẽ yêu cầu xác nhận trước khi thực hiện."
+            "hãy gọi function tương ứng - hệ thống sẽ yêu cầu xác nhận trước khi thực hiện. "
+            "Nếu người dùng muốn tạo hoặc sửa chấm công mà thiếu giờ vào hoặc giờ ra, bạn phải hỏi lại để họ cung cấp đầy đủ cả hai. "
+            "Khi gọi hàm tạo hoặc sửa chấm công thành công và trả về trạng thái chờ xác nhận (pending: true), hãy trả lời người dùng chính xác theo mẫu: "
+            "'Tôi hiểu bạn muốn tạo/cập nhật chấm công ngày DD/MM/YYYY từ HH:MM đến HH:MM. Bạn có muốn xác nhận không?'"
             % (today, emp_name, role)
         )
 
@@ -410,7 +420,7 @@ class AiChatbotService(models.AbstractModel):
         _logger.info('AI_CHATBOT_TOOL: function=%s arguments=%s', func_name, func_args)
 
         tool_result, action_log = self._dispatch_tool(
-            func_name, func_args, session, current_employee, management_user)
+            func_name, func_args, session, current_employee, management_user, question)
         tool_result_str = json.dumps(tool_result, ensure_ascii=False, default=str)
         _logger.info('AI_CHATBOT_TOOL_RESULT: result=%s', tool_result_str[:500])
 
@@ -430,14 +440,15 @@ class AiChatbotService(models.AbstractModel):
     # ------------------------------------------------------------------
     # Tool dispatcher
     # ------------------------------------------------------------------
-    def _dispatch_tool(self, func_name, func_args, session, current_employee, management_user):
+    def _dispatch_tool(self, func_name, func_args, session, current_employee, management_user, question=None):
         """Return (tool_result_dict, action_log_or_None)."""
         scope = func_args.get('employee_scope', 'self')
         emp_name = func_args.get('employee_name')
 
         # Query tools execute immediately.
         if func_name in ('get_attendance_days', 'get_overtime_hours',
-                         'get_salary_monthly', 'get_hourly_salary_and_allowance'):
+                         'get_salary_monthly', 'get_hourly_salary_and_allowance',
+                         'get_attendance_alerts'):
             employee, err = self._resolve_employee(scope, emp_name, current_employee, management_user)
             if err:
                 return ({'success': False, 'message': err}, None)
@@ -447,6 +458,8 @@ class AiChatbotService(models.AbstractModel):
                 return (self._exec_get_overtime_hours(func_args, employee), None)
             if func_name == 'get_salary_monthly':
                 return (self._exec_get_salary_monthly(func_args, employee), None)
+            if func_name == 'get_attendance_alerts':
+                return (self._exec_get_attendance_alerts(func_args, employee), None)
             return (self._exec_get_hourly_salary_and_allowance(func_args, employee), None)
 
         # Action tools create a pending confirmation log.
@@ -454,22 +467,22 @@ class AiChatbotService(models.AbstractModel):
             employee, err = self._resolve_employee(scope, emp_name, current_employee, management_user)
             if err:
                 return ({'success': False, 'message': err}, None)
-            return self._create_attendance_pending(func_args, employee, session)
+            return self._create_attendance_pending(func_args, employee, session, question)
         if func_name == 'update_attendance_request':
             employee, err = self._resolve_employee(scope, emp_name, current_employee, management_user)
             if err:
                 return ({'success': False, 'message': err}, None)
-            return self._create_update_attendance_pending(func_args, employee, session)
+            return self._create_update_attendance_pending(func_args, employee, session, question)
         if func_name == 'create_leave_request':
             employee, err = self._resolve_employee(scope, emp_name, current_employee, management_user)
             if err:
                 return ({'success': False, 'message': err}, None)
-            return self._create_leave_pending(func_args, employee, session)
+            return self._create_leave_pending(func_args, employee, session, question)
         if func_name == 'print_payroll':
             employee, err = self._resolve_employee(scope, emp_name, current_employee, management_user)
             if err:
                 return ({'success': False, 'message': err}, None)
-            return self._create_print_payroll_pending(func_args, employee, session)
+            return self._create_print_payroll_pending(func_args, employee, session, question)
 
         return ({'success': False, 'message': 'Chức năng không được hỗ trợ.'}, None)
 
@@ -579,16 +592,70 @@ class AiChatbotService(models.AbstractModel):
                           '{:,.0f}'.format(payroll.phu_cap_khac)),
         }
 
+    def _exec_get_attendance_alerts(self, args, employee):
+        month, year, _start, _end = self._resolve_period(
+            args.get('period', 'current_month'), args.get('month'), args.get('year'))
+        alerts = self.env['canh_bao_cham_cong'].sudo().search([
+            ('nhan_vien_id', '=', employee.id),
+            ('thang', '=', str(month)),
+            ('nam', '=', year),
+        ], order='ngay_tao desc')
+        if not alerts:
+            return {
+                'success': True,
+                'employee': employee.ho_va_ten,
+                'month': month, 'year': year,
+                'message': 'Tháng này %s không có cảnh báo chấm công nào bất thường.' % employee.ho_va_ten,
+            }
+        alert_types = {
+            'di_muon_nhieu': 'Đi muộn nhiều',
+            'thieu_cong': 'Thiếu công',
+            'tang_ca_qua_nhieu': 'Tăng ca quá nhiều',
+            'luong_thap_bat_thuong': 'Lương thấp bất thường',
+            'thieu_du_lieu_cham_cong': 'Thiếu dữ liệu chấm công',
+            'bang_luong_chua_xac_nhan': 'Bảng lương chưa xác nhận',
+            'du_lieu_cong_khong_hop_le': 'Dữ liệu công không hợp lệ',
+            'di_muon': 'Đi muộn',
+            've_som': 'Về sớm',
+            'thieu_gio_ra': 'Thiếu giờ ra',
+            'lam_qua_gio': 'Làm quá giờ',
+            'trung_ngay': 'Chấm công trùng ngày',
+            'chua_cham_cong': 'Chưa chấm công hôm nay',
+        }
+        lines = []
+        for idx, alert in enumerate(alerts, 1):
+            type_label = alert_types.get(alert.loai_canh_bao, alert.loai_canh_bao)
+            lines.append('%s. %s: %s' % (idx, type_label, alert.noi_dung))
+        message = 'Danh sách cảnh báo chấm công tháng %s/%s của %s:\n%s' % (month, year, employee.ho_va_ten, '\n'.join(lines))
+        return {
+            'success': True,
+            'employee': employee.ho_va_ten,
+            'month': month, 'year': year,
+            'alerts_count': len(alerts),
+            'message': message,
+        }
+
     # ------------------------------------------------------------------
     # Action creators (produce a pending confirmation log; no execution)
     # ------------------------------------------------------------------
     def _create_log(self, vals):
         return self.env['ai.chat.action.log'].sudo().create(vals)
 
-    def _create_attendance_pending(self, args, employee, session):
-        the_date = self._parse_date_text(args.get('date_text'))
+    def _create_attendance_pending(self, args, employee, session, question=None):
         check_in = args.get('check_in')
         check_out = args.get('check_out')
+        if not check_in or not check_out:
+            missing = []
+            if not check_in:
+                missing.append("giờ vào")
+            if not check_out:
+                missing.append("giờ ra")
+            return ({
+                'success': False,
+                'message': 'Thiếu thông tin: %s. Vui lòng cung cấp giờ vào và giờ ra cụ thể để tôi có thể tạo yêu cầu chấm công.' % (' và '.join(missing)),
+            }, None)
+
+        the_date = self._parse_date_text(args.get('date_text'))
         # Duplicate check.
         existing = self.env['cham_cong'].sudo().search([
             ('nhan_vien_id', '=', employee.id),
@@ -617,15 +684,25 @@ class AiChatbotService(models.AbstractModel):
             'user_id': self.env.user.id,
             'employee_id': employee.id,
             'action_type': 'create_attendance',
-            'original_text': json.dumps(args, ensure_ascii=False),
+            'original_text': question or json.dumps(args, ensure_ascii=False),
             'extracted_data': json.dumps(data, ensure_ascii=False),
             'summary': summary,
             'state': 'pending_confirm',
             'target_model': 'cham_cong',
+            'intent': 'Tạo chấm công',
+            'function_name': 'create_attendance_request',
         })
         return ({'success': True, 'pending': True, 'summary': summary, 'message': summary}, log)
 
-    def _create_update_attendance_pending(self, args, employee, session):
+    def _create_update_attendance_pending(self, args, employee, session, question=None):
+        check_in = args.get('check_in')
+        check_out = args.get('check_out')
+        if not check_in and not check_out:
+            return ({
+                'success': False,
+                'message': 'Thiếu thông tin: giờ vào hoặc giờ ra mới. Vui lòng cung cấp giờ vào hoặc giờ ra mới để tôi có thể tạo yêu cầu cập nhật chấm công.',
+            }, None)
+
         the_date = self._parse_date_text(args.get('date_text'))
         record = self.env['cham_cong'].sudo().search([
             ('nhan_vien_id', '=', employee.id),
@@ -641,15 +718,15 @@ class AiChatbotService(models.AbstractModel):
             'employee_id': employee.id,
             'target_record_id': record.id,
             'date': str(the_date),
-            'check_in': args.get('check_in'),
-            'check_out': args.get('check_out'),
+            'check_in': check_in,
+            'check_out': check_out,
             'reason': args.get('reason'),
         }
         changes = []
-        if args.get('check_in'):
-            changes.append('giờ vào -> %s' % args['check_in'])
-        if args.get('check_out'):
-            changes.append('giờ ra -> %s' % args['check_out'])
+        if check_in:
+            changes.append('giờ vào -> %s' % check_in)
+        if check_out:
+            changes.append('giờ ra -> %s' % check_out)
         if args.get('reason'):
             changes.append('ghi chú -> %s' % args['reason'])
         summary = ('Cập nhật chấm công của %s ngày %s: %s.'
@@ -660,16 +737,18 @@ class AiChatbotService(models.AbstractModel):
             'user_id': self.env.user.id,
             'employee_id': employee.id,
             'action_type': 'update_attendance',
-            'original_text': json.dumps(args, ensure_ascii=False),
+            'original_text': question or json.dumps(args, ensure_ascii=False),
             'extracted_data': json.dumps(data, ensure_ascii=False),
             'summary': summary,
             'state': 'pending_confirm',
             'target_model': 'cham_cong',
             'target_record_id': record.id,
+            'intent': 'Cập nhật chấm công',
+            'function_name': 'update_attendance_request',
         })
         return ({'success': True, 'pending': True, 'summary': summary, 'message': summary}, log)
 
-    def _create_leave_pending(self, args, employee, session):
+    def _create_leave_pending(self, args, employee, session, question=None):
         date_from = self._parse_date_text(args.get('date_from_text'))
         date_to = self._parse_date_text(args.get('date_to_text'))
         data = {
@@ -688,14 +767,16 @@ class AiChatbotService(models.AbstractModel):
             'user_id': self.env.user.id,
             'employee_id': employee.id,
             'action_type': 'create_leave',
-            'original_text': json.dumps(args, ensure_ascii=False),
+            'original_text': question or json.dumps(args, ensure_ascii=False),
             'extracted_data': json.dumps(data, ensure_ascii=False),
             'summary': summary,
             'state': 'pending_confirm',
+            'intent': 'Tạo nghỉ phép',
+            'function_name': 'create_leave_request',
         })
         return ({'success': True, 'pending': True, 'summary': summary, 'message': summary}, log)
 
-    def _create_print_payroll_pending(self, args, employee, session):
+    def _create_print_payroll_pending(self, args, employee, session, question=None):
         month, year, _start, _end = self._resolve_period(
             args.get('period', 'current_month'), args.get('month'), args.get('year'))
         payroll = self._find_payroll(employee, month, year)
@@ -717,11 +798,13 @@ class AiChatbotService(models.AbstractModel):
             'user_id': self.env.user.id,
             'employee_id': employee.id,
             'action_type': 'print_payroll',
-            'original_text': json.dumps(args, ensure_ascii=False),
+            'original_text': question or json.dumps(args, ensure_ascii=False),
             'extracted_data': json.dumps(data, ensure_ascii=False),
             'summary': summary,
             'state': 'pending_confirm',
             'target_model': 'bang_luong',
             'target_record_id': payroll.id,
+            'intent': 'In phiếu lương',
+            'function_name': 'print_payroll',
         })
         return ({'success': True, 'pending': True, 'summary': summary, 'message': summary}, log)

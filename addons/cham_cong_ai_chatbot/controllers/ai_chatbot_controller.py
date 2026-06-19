@@ -37,7 +37,7 @@ class AiChatbotController(http.Controller):
 
     def _can_use_employee_chatbot(self):
         user = request.env.user
-        return user.has_group(EMPLOYEE_GROUP) and not user.has_group(SYSTEM_GROUP)
+        return user.has_group(EMPLOYEE_GROUP) or user.has_group(SYSTEM_GROUP) or self._is_manager()
 
     def _owns_session(self, session):
         return session and (session.user_id.id == request.env.user.id or self._is_manager())
@@ -141,14 +141,17 @@ class AiChatbotController(http.Controller):
                 return {'success': False, 'error': 'Không tìm thấy hành động.'}
             if log.user_id.id != request.env.user.id and not self._is_manager():
                 return {'success': False, 'error': 'Bạn không có quyền xác nhận hành động này.'}
-            log.action_confirm()
+            action_dict = log.action_confirm()
             if log.state == 'error':
                 return {'success': False, 'error': log.error_message or 'Lỗi khi thực hiện.'}
-            return {
+            res = {
                 'success': True,
                 'message': 'Đã thực hiện: %s' % (log.summary or log.name),
                 'error': None,
             }
+            if isinstance(action_dict, dict):
+                res['action'] = action_dict
+            return res
         except Exception as exc:  # noqa: BLE001
             _logger.exception('AI_CHATBOT_CONTROLLER: confirm_action failed')
             return {'success': False, 'error': str(exc)}

@@ -71,7 +71,7 @@ class BangLuong(models.Model):
     tong_gio_tang_ca = fields.Float(string='Tổng giờ tăng ca', compute='_compute_bang_luong', store=True, digits=(16, 2))
     so_ngay_nghi = fields.Float(string='Số ngày nghỉ', compute='_compute_bang_luong', store=True, digits=(16, 2))
     luong_co_ban = fields.Float(string='Lương cơ bản', compute='_compute_bang_luong', store=True)
-    luong_theo_cong = fields.Float(string='Lương theo công', compute='_compute_bang_luong', store=True)
+    luong_theo_cong = fields.Float(string='Lương theo ngày công', compute='_compute_bang_luong', store=True)
     luong_theo_ngay_cong = fields.Float(string='Lương theo ngày công', related='luong_theo_cong', store=True, readonly=True)
     don_gia_gio = fields.Float(string='Đơn giá giờ', compute='_compute_bang_luong', store=True)
     he_so_tang_ca = fields.Float(string='Hệ số tăng ca', default=1.5)
@@ -276,15 +276,12 @@ class BangLuong(models.Model):
             values['luong_theo_cong']
             + values['tong_phu_cap']
             + values['tong_khen_thuong']
-            - values['tong_ky_luat']
-            - values['tong_khau_tru'],
+            - values['tong_ky_luat'],
             2,
         )
         values['cong_thuc_tinh_luong'] = (
             'Lương theo ngày công = Lương cơ bản / 26 * Số ngày đi làm thực tế\n'
-            'Tổng phụ cấp = Phụ cấp ăn trưa + Phụ cấp xăng xe + Phụ cấp trách nhiệm + Phụ cấp khác\n'
-            'Tổng khấu trừ = Tiền bảo hiểm + Thuế TNCN + Khấu trừ khác\n'
-            'Thực lĩnh = Lương theo ngày công + Tổng phụ cấp + Khen thưởng - Kỷ luật - Tổng khấu trừ'
+            'Thực lĩnh = Lương theo ngày công + Tổng phụ cấp + Khen thưởng - Kỷ luật'
         )
         return values
 
