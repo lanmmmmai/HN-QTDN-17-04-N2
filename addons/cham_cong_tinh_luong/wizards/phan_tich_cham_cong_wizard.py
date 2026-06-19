@@ -41,7 +41,7 @@ class PhanTichChamCongWizard(models.TransientModel):
                 ('state', 'in', ['xac_nhan', 'confirmed']),
             ])
             late_count = len(attendances.filtered(lambda line: line.trang_thai == 'di_muon'))
-            day_count = len(attendances.filtered(lambda line: line.trang_thai != 'nghi'))
+            day_count = round(sum(attendances.mapped('so_ngay_cong')), 2)
             overtime_hours = sum(attendances.mapped('so_gio_tang_ca'))
 
             salary_sheet = Salary.search([

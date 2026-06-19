@@ -21,6 +21,11 @@ class NhanVien(models.Model):
         inverse_name='nhan_vien_id',
         string='Danh sách bảng lương',
     )
+    khen_thuong_ky_luat_ids = fields.One2many(
+        'khen_thuong_ky_luat',
+        inverse_name='nhan_vien_id',
+        string='Khen thưởng / Kỷ luật',
+    )
     canh_bao_cham_cong_ids = fields.One2many(
         'canh_bao_cham_cong',
         inverse_name='nhan_vien_id',

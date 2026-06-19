@@ -2,6 +2,8 @@
 import re
 import unicodedata
 
+from markupsafe import Markup, escape
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -49,6 +51,34 @@ class AiChatSession(models.Model):
         [('active', 'Đang dùng'), ('archived', 'Lưu trữ')],
         string='Trạng thái', default='active',
     )
+    messages_html = fields.Html(
+        string='Tin nhắn HTML', compute='_compute_messages_html', sanitize=False,
+    )
+
+    @api.depends('message_ids', 'message_ids.content', 'message_ids.role', 'message_ids.create_date')
+    def _compute_messages_html(self):
+        for rec in self:
+            msgs = rec.message_ids.sorted(key=lambda m: (m.create_date or fields.Datetime.now(), m.id))
+            if not msgs:
+                rec.messages_html = Markup(
+                    '<div class="o_ai_no_msg">Chưa có tin nhắn. Hãy nhập câu hỏi bên dưới.</div>'
+                )
+                continue
+            parts = []
+            for msg in msgs:
+                role_class = 'user' if msg.role == 'user' else 'ai'
+                avatar = 'Bạn' if msg.role == 'user' else 'AI'
+                content = escape(msg.content or '')
+                time_str = msg.create_date.strftime('%H:%M') if msg.create_date else ''
+                parts.append(Markup(
+                    f'<div class="o_ai_msg_row o_ai_msg_{role_class}">'
+                    f'<div class="o_ai_msg_avatar">{avatar}</div>'
+                    f'<div class="o_ai_msg_body">'
+                    f'<div class="o_ai_msg_bubble">{content}</div>'
+                    f'<small class="o_ai_msg_time">{time_str}</small>'
+                    f'</div></div>'
+                ))
+            rec.messages_html = Markup('').join(parts)
 
     @api.depends('user_id')
     def _compute_employee_id(self):

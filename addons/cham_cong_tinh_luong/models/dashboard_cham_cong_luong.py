@@ -94,7 +94,7 @@ class DashboardChamCongLuong(models.Model):
             attendance_total = attendance_model.search_count(attendance_domain)
             attendance_aggregates = attendance_model.read_group(
                 attendance_domain,
-                ['so_gio_lam:sum', 'so_gio_tang_ca:sum'],
+                ['so_gio_lam:sum', 'so_gio_tang_ca:sum', 'so_ngay_cong:sum'],
                 [],
             )
             attendance_totals = attendance_aggregates[0] if attendance_aggregates else {}
@@ -113,16 +113,16 @@ class DashboardChamCongLuong(models.Model):
                 record.tong_nhan_vien = employee_model.search_count([])
             record.so_nhan_vien_da_cham_cong = len(attendance_model.read_group(attendance_domain, ['nhan_vien_id'], ['nhan_vien_id']))
             record.tong_cham_cong = attendance_total
-            record.tong_ngay_cong = float(attendance_model.search_count(attendance_domain + [('trang_thai', '!=', 'nghi')]))
-            record.tong_gio_lam = round(attendance_totals.get('so_gio_lam_sum', 0.0), 2)
-            record.tong_gio_tang_ca = round(attendance_totals.get('so_gio_tang_ca_sum', 0.0), 2)
+            record.tong_ngay_cong = round(attendance_totals.get('so_ngay_cong', 0.0) or 0.0, 2)
+            record.tong_gio_lam = round(attendance_totals.get('so_gio_lam', 0.0) or 0.0, 2)
+            record.tong_gio_tang_ca = round(attendance_totals.get('so_gio_tang_ca', 0.0) or 0.0, 2)
             record.tong_tang_ca = attendance_model.search_count(attendance_domain + [('so_gio_tang_ca', '>', 0)])
             record.so_luot_di_muon = attendance_model.search_count(attendance_domain + [('trang_thai', '=', 'di_muon')])
-            record.so_ngay_nghi = attendance_model.search_count(attendance_domain + [('trang_thai', '=', 'nghi')])
+            record.so_ngay_nghi = attendance_model.search_count(attendance_domain + [('trang_thai', 'in', ['nghi', 'nghi_co_phep', 'nghi_khong_phep'])])
             record.so_bang_luong_thang = salary_total
-            record.tong_quy_luong = round(salary_totals.get('tong_luong_sum', 0.0), 2)
-            record.tong_bao_hiem = round(salary_totals.get('tien_bao_hiem_sum', 0.0), 2)
-            record.tong_phu_cap = round(salary_totals.get('tong_phu_cap_sum', 0.0), 2)
+            record.tong_quy_luong = round(salary_totals.get('tong_luong', 0.0) or 0.0, 2)
+            record.tong_bao_hiem = round(salary_totals.get('tien_bao_hiem', 0.0) or 0.0, 2)
+            record.tong_phu_cap = round(salary_totals.get('tong_phu_cap', 0.0) or 0.0, 2)
             record.bang_luong_da_tinh = salary_model.search_count(salary_domain + [('state', 'in', ['da_tinh', 'computed'])])
             record.bang_luong_xac_nhan = salary_model.search_count(salary_domain + [('state', 'in', ['xac_nhan', 'confirmed'])])
             record.bang_luong_da_thanh_toan = salary_model.search_count(salary_domain + [('state', '=', 'da_thanh_toan')])
@@ -147,7 +147,12 @@ class DashboardChamCongLuong(models.Model):
         if domain is not None:
             action['domain'] = domain
         if context:
-            action['context'] = dict(self.env.context, **context)
+            merged_context = dict(self.env.context, **context)
+            # Không kế thừa các cờ UI từ dashboard/form hiện tại sang action mới.
+            # Nếu không, các action danh sách sẽ bị ẩn nút Create/Add dù ACL vẫn cho phép.
+            for key in ('create', 'edit', 'delete'):
+                merged_context.pop(key, None)
+            action['context'] = merged_context
         return action
 
     def _open_payroll_list(self, extra_domain=None, action_xmlid='cham_cong_tinh_luong.action_bang_luong'):
@@ -242,6 +247,10 @@ class DashboardChamCongLuong(models.Model):
     def action_open_xuat_bang_luong(self):
         self.ensure_one()
         return self.env.ref('cham_cong_tinh_luong.action_xuat_bang_luong_wizard').read()[0]
+
+    def action_open_sinh_bang_luong(self):
+        self.ensure_one()
+        return self.env.ref('cham_cong_tinh_luong.action_sinh_bang_luong_wizard').read()[0]
 
     def action_open_my_dashboard(self):
         self.ensure_one()

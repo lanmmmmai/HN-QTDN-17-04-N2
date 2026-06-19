@@ -99,4 +99,5 @@
               action="action_loai_van_ban"
               sequence="10"
               groups="quan_ly_van_ban.group_van_ban_van_thu,quan_ly_van_ban.group_van_ban_quan_tri"/>
+
 </odoo>

@@ -1,9 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Client action (giữ lại để không mất external ID trong DB) -->
     <record id="action_ai_chat_session_employee" model="ir.actions.client">
         <field name="name">AI Chatbot Nhân sự</field>
         <field name="tag">ai_chatbot_client_action</field>
         <field name="target">current</field>
-        <field name="groups_id" eval="[(4, ref('cham_cong_ai_chatbot.group_ai_chatbot_employee_user'))]"/>
+    </record>
+
+    <!-- Act_window cho nhân viên – dùng external ID mới tránh conflict -->
+    <!-- Odoo tự chọn view theo priority (views nhân viên có priority=20, admin có priority=16) -->
+    <record id="action_ai_chatbot_employee_window" model="ir.actions.act_window">
+        <field name="name">AI Chatbot Nhân sự</field>
+        <field name="res_model">ai.chat.session</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="context">{'default_user_id': uid}</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- ============================================================
+         TREE VIEW cho nhân viên
+         Priority 20 → nhường ưu tiên cho admin view (priority 16)
+         Không có groups_id → hiển thị cho mọi user không thuộc admin
+    ============================================================ -->
+    <record id="view_ai_chat_session_tree_employee" model="ir.ui.view">
+        <field name="name">ai.chat.session.tree.employee</field>
+        <field name="model">ai.chat.session</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Cuộc trò chuyện" create="true" edit="false" delete="false">
+                <field name="name" string="Đoạn chat"/>
+                <field name="last_message" string="Tin nhắn gần nhất"/>
+                <field name="write_date" string="Cập nhật gần nhất" widget="datetime"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         FORM VIEW cho nhân viên – bố cục giống ChatGPT
+         Priority 20 → nhường ưu tiên cho admin view (priority 16)
+    ============================================================ -->
+    <record id="view_ai_chat_session_form_employee" model="ir.ui.view">
+        <field name="name">ai.chat.session.form.employee</field>
+        <field name="model">ai.chat.session</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="AI Chatbot Nhân sự" create="true" edit="true">
+                <header>
+                    <button name="action_new_session"
+                            string="+ Đoạn chat mới"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button name="action_confirm_pending_action"
+                            string="✓ Xác nhận hành động"
+                            type="object"
+                            class="btn-success"
+                            attrs="{'invisible': [('pending_action_id', '=', False)]}"/>
+                    <button name="action_cancel_pending_action"
+                            string="✕ Hủy hành động"
+                            type="object"
+                            attrs="{'invisible': [('pending_action_id', '=', False)]}"/>
+                </header>
+
+                <sheet>
+                    <!-- Các field kỹ thuật cần để attrs hoạt động – ẩn khỏi UI -->
+                    <field name="pending_action_id" invisible="1"/>
+                    <field name="pending_action_count" invisible="1"/>
+
+                    <div class="o_ai_chat_page">
+
+                        <!-- Header khu vực chat -->
+                        <div class="o_ai_chat_hdr">
+                            <h2 class="o_ai_chat_title">AI Chatbot Nhân sự</h2>
+                            <p class="o_ai_chat_sub">
+                                Hỏi đáp chấm công, lương, tăng ca và tạo chấm công bằng câu chat.
+                            </p>
+                        </div>
+
+                        <!-- Khu vực tin nhắn -->
+                        <div class="o_ai_chat_msgs_wrap">
+                            <field name="messages_html" nolabel="1" widget="html" readonly="1"
+                                   class="o_ai_messages_html_field"/>
+                        </div>
+
+                        <!-- Card xác nhận hành động chờ (chỉ hiện khi có pending) -->
+                        <div class="o_ai_chat_pending"
+                             attrs="{'invisible': [('pending_action_count', '=', 0)]}">
+                            <div class="o_ai_pending_title">⚠ Xác nhận hành động chấm công</div>
+                            <div class="o_ai_pending_body">
+                                <field name="pending_action_summary" nolabel="1" readonly="1"/>
+                            </div>
+                            <div class="o_ai_pending_btns">
+                                <button name="action_confirm_pending_action"
+                                        string="✓ Xác nhận"
+                                        type="object"
+                                        class="btn btn-success btn-sm"/>
+                                <button name="action_cancel_pending_action"
+                                        string="✕ Hủy"
+                                        type="object"
+                                        class="btn btn-secondary btn-sm"/>
+                            </div>
+                        </div>
+
+                        <!-- Ô nhập tin nhắn -->
+                        <div class="o_ai_chat_input_area">
+                            <field name="new_message"
+                                   nolabel="1"
+                                   placeholder="Nhập câu hỏi, ví dụ: Tôi muốn chấm công hôm nay từ 7h đến 17h30..."/>
+                            <button name="action_send_message"
+                                    string="Gửi"
+                                    type="object"
+                                    class="btn btn-primary o_ai_send_btn"/>
+                        </div>
+
+                    </div>
+                </sheet>
+            </form>
+        </field>
     </record>
 </odoo>

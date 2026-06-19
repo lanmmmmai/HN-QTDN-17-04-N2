@@ -118,6 +118,7 @@
                         <button name="action_open_bang_luong_list" type="object" string="Xem bảng lương"/>
                         <button name="action_open_in_phieu_luong_pdf" type="object" string="In phiếu lương PDF"/>
                         <button name="action_open_cau_hinh_luong" type="object" string="Cấu hình lương"/>
+                        <button name="action_open_sinh_bang_luong" type="object" string="Sinh bảng lương"/>
                         <button name="action_open_xuat_bang_luong" type="object" string="Xuất Excel"/>
                         <button name="action_open_thong_ke_luong" type="object" string="Báo cáo lương"/>
                     </header>
@@ -225,6 +226,7 @@
                                 <div class="fw-bold mb-2">Thao tác nhanh</div>
                                 <div class="d-flex gap-2 flex-wrap">
                                     <button type="object" name="action_open_bang_luong_list" class="btn btn-outline-primary btn-sm">Xem bảng lương</button>
+                                    <button type="object" name="action_open_sinh_bang_luong" class="btn btn-outline-success btn-sm">Sinh bảng lương</button>
                                     <button type="object" name="action_open_in_phieu_luong_pdf" class="btn btn-outline-secondary btn-sm">In phiếu lương PDF</button>
                                     <button type="object" name="action_open_cau_hinh_luong" class="btn btn-outline-secondary btn-sm">Cấu hình lương</button>
                                     <button type="object" name="action_open_xuat_bang_luong" class="btn btn-outline-secondary btn-sm">Xuất Excel</button>
@@ -345,6 +347,12 @@
             <field name="res_model">bang_luong</field>
             <field name="view_mode">tree,graph,pivot</field>
             <field name="search_view_id" ref="view_bang_luong_search"/>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {'sequence': 1, 'view_mode': 'tree', 'view_id': ref('view_bang_luong_tree')}),
+                (0, 0, {'sequence': 2, 'view_mode': 'graph', 'view_id': ref('view_bang_luong_graph')}),
+                (0, 0, {'sequence': 3, 'view_mode': 'pivot', 'view_id': ref('view_bang_luong_pivot')}),
+            ]"/>
         </record>
 
     </data>

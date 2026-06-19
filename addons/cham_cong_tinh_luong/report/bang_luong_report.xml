@@ -24,6 +24,9 @@
                             <p style="color: #475569; font-size: 13px; margin: 6px 0 0 0;">
                                 Kỳ lương: Tháng <strong><span t-esc="o.thang"/></strong> / <strong><span t-esc="o.nam"/></strong>
                             </p>
+                            <p style="color: #64748b; font-size: 12px; margin: 6px 0 0 0;">
+                                Công thức: (Lương cơ bản / 26) × Số ngày đi làm thực tế + Phụ cấp + Khen thưởng - Kỷ luật - Khấu trừ
+                            </p>
                         </div>
 
                         <!-- THÔNG TIN NHÂN VIÊN -->
@@ -73,6 +76,10 @@
                                                 <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; text-align: right; font-weight: 600;"><span t-field="o.tong_ngay_cong"/></td>
                                             </tr>
                                             <tr style="background: #f8fbfd;">
+                                                <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; color: #475569;">Số ngày đi làm thực tế</td>
+                                                <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; text-align: right; font-weight: 600;"><span t-field="o.so_ngay_di_lam"/></td>
+                                            </tr>
+                                            <tr style="background: #fff;">
                                                 <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; color: #475569;">Tổng giờ làm</td>
                                                 <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; text-align: right; font-weight: 600;"><span t-field="o.tong_gio_lam"/></td>
                                             </tr>
@@ -109,6 +116,10 @@
                                                 <td style="padding: 7px 12px; color: #475569;">Khấu trừ khác</td>
                                                 <td style="padding: 7px 12px; text-align: right; color: #dc2626;"><span t-field="o.khau_tru_khac"/></td>
                                             </tr>
+                                            <tr style="background: #f8fbfd;">
+                                                <td style="padding: 7px 12px; color: #475569;">Tổng khấu trừ</td>
+                                                <td style="padding: 7px 12px; text-align: right; color: #dc2626;"><span t-field="o.tong_khau_tru"/></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </td>
@@ -129,7 +140,7 @@
                                                 <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; text-align: right; font-weight: 600;"><span t-field="o.luong_co_ban"/></td>
                                             </tr>
                                             <tr style="background: #f8fbfd;">
-                                                <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; color: #475569;">Lương theo công</td>
+                                                <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; color: #475569;">Lương theo ngày công</td>
                                                 <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; text-align: right;"><span t-field="o.luong_theo_cong"/></td>
                                             </tr>
                                             <tr style="background: #fff;">
@@ -143,6 +154,14 @@
                                             <tr style="background: #fff;">
                                                 <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; color: #475569;">Tổng phụ cấp</td>
                                                 <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; text-align: right; font-weight: 600;"><span t-field="o.tong_phu_cap"/></td>
+                                            </tr>
+                                            <tr style="background: #f8fbfd;">
+                                                <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; color: #475569;">Khen thưởng</td>
+                                                <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; text-align: right; font-weight: 600;"><span t-field="o.tong_khen_thuong"/></td>
+                                            </tr>
+                                            <tr style="background: #fff;">
+                                                <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; color: #475569;">Kỷ luật</td>
+                                                <td style="padding: 7px 12px; border-bottom: 1px solid #f0f4f8; text-align: right; font-weight: 600;"><span t-field="o.tong_ky_luat"/></td>
                                             </tr>
                                             <tr style="background: #f8fbfd;">
                                                 <td style="padding: 7px 12px; color: #475569;">Hệ số tăng ca</td>
@@ -160,7 +179,7 @@
                                 Lương thực nhận
                             </div>
                             <div style="color: #fff; font-size: 26px; font-weight: 700;">
-                                <span t-esc="'{:,.0f}'.format(o.tong_luong)"/> VNĐ
+                                <span t-esc="'{:,.0f}'.format(o.thuc_linh)"/> VNĐ
                             </div>
                         </div>
 

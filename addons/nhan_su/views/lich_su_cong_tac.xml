@@ -13,6 +13,8 @@
                             <field name="chuc_vu_id"/>
                             <field name="don_vi_id"/>
                             <field name="loai_chuc_vu"/>
+                            <field name="ngay_bat_dau"/>
+                            <field name="ngay_ket_thuc"/>
                         </group>
                     </sheet>
                 </form>
@@ -28,6 +30,8 @@
                     <field name="chuc_vu_id"/>
                     <field name="don_vi_id"/>
                     <field name="loai_chuc_vu"/>
+                    <field name="ngay_bat_dau"/>
+                    <field name="ngay_ket_thuc"/>
                 </tree>
             </field>
         </record>

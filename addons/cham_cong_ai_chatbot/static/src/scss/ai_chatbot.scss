@@ -478,3 +478,288 @@ $aicb-card: #FFFFFF;
         flex-direction: column;
     }
 }
+
+// ================================================================
+// EMPLOYEE CHAT FORM VIEW – bố cục ChatGPT (act_window + form)
+// Không dùng màu cứng, inherit từ Odoo theme
+// ================================================================
+
+.o_ai_chat_page {
+    display: flex;
+    flex-direction: column;
+    min-height: 580px;
+    max-height: calc(100vh - 210px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--o-view-background-color, #fff);
+}
+
+// Header khu vực chat (title + mô tả)
+.o_ai_chat_hdr {
+    flex: 0 0 auto;
+    padding: 16px 22px 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.o_ai_chat_title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.o_ai_chat_sub {
+    margin: 4px 0 0;
+    font-size: 13px;
+    opacity: 0.65;
+}
+
+// Khu vực cuộn tin nhắn
+.o_ai_chat_msgs_wrap {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+// Kanban trong form – ép thành danh sách dọc, một cột
+.o_ai_msg_kanban {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+
+    .o_kanban_renderer {
+        display: flex !important;
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        width: 100% !important;
+    }
+
+    // Mỗi kanban card = một tin nhắn, chiếm full width
+    .o_kanban_record {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        cursor: default !important;
+
+        &:hover {
+            box-shadow: none !important;
+        }
+    }
+}
+
+// Hàng tin nhắn
+.o_ai_msg_row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+// Tin nhắn người dùng – bên phải
+.o_ai_msg_user {
+    flex-direction: row-reverse;
+
+    .o_ai_msg_body {
+        align-items: flex-end;
+    }
+
+    .o_ai_msg_bubble {
+        border-radius: 16px 16px 4px 16px;
+        background: rgba(0, 0, 0, 0.07);
+    }
+
+    .o_ai_msg_time {
+        text-align: right;
+    }
+}
+
+// Tin nhắn AI – bên trái
+.o_ai_msg_ai {
+    .o_ai_msg_bubble {
+        border-radius: 16px 16px 16px 4px;
+        background: rgba(0, 0, 0, 0.04);
+    }
+}
+
+// Avatar tròn Bạn / AI
+.o_ai_msg_avatar {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+// Phần thân tin nhắn (bubble + timestamp)
+.o_ai_msg_body {
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100% - 48px);
+
+    .o_field_widget {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}
+
+// Bubble nội dung tin nhắn
+.o_ai_msg_bubble {
+    padding: 10px 14px;
+    line-height: 1.55;
+    word-break: break-word;
+    white-space: pre-wrap;
+    font-size: 14px;
+
+    .o_field_widget {
+        margin: 0 !important;
+    }
+
+    // Field text trong bubble
+    .o_field_char,
+    .o_field_text {
+        white-space: pre-wrap;
+        word-break: break-word;
+        line-height: 1.55;
+    }
+}
+
+// Timestamp nhỏ dưới bubble
+.o_ai_msg_time {
+    font-size: 10px;
+    opacity: 0.5;
+    margin-top: 4px;
+    padding: 0 2px;
+
+    .o_field_widget {
+        display: inline !important;
+        margin: 0 !important;
+    }
+}
+
+// Card xác nhận hành động chờ
+.o_ai_chat_pending {
+    flex: 0 0 auto;
+    margin: 0 20px 10px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.o_ai_pending_title {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.o_ai_pending_body {
+    font-size: 14px;
+    line-height: 1.5;
+
+    .o_field_widget {
+        margin: 0 !important;
+    }
+}
+
+.o_ai_pending_btns {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+// Khu vực nhập tin nhắn (cố định dưới cùng)
+.o_ai_chat_input_area {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 12px 20px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    background: var(--o-view-background-color, #fff);
+
+    > .o_field_widget {
+        flex: 1;
+        margin: 0 !important;
+    }
+
+    textarea {
+        min-height: 56px;
+        max-height: 150px;
+        border-radius: 12px;
+        resize: vertical;
+        width: 100%;
+    }
+}
+
+.o_ai_send_btn {
+    min-width: 80px;
+    height: 40px;
+    border-radius: 10px;
+    flex: 0 0 auto;
+}
+
+// Html field trong khu vực tin nhắn – ẩn toolbar editor, remove padding/margin thừa
+.o_ai_messages_html_field {
+    .o_field_html {
+        padding: 0 !important;
+
+        .odoo-editor-editable {
+            padding: 0 !important;
+            min-height: unset !important;
+            outline: none !important;
+            border: none !important;
+        }
+    }
+}
+
+// Thông báo khi chưa có tin nhắn
+.o_ai_no_msg {
+    text-align: center;
+    opacity: 0.45;
+    font-size: 14px;
+    padding: 40px 20px;
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .o_ai_chat_page {
+        max-height: calc(100vh - 160px);
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .o_ai_msg_user .o_ai_msg_body,
+    .o_ai_msg_ai .o_ai_msg_body {
+        max-width: calc(100% - 42px);
+    }
+
+    .o_ai_chat_input_area {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px 14px 12px;
+
+        .o_ai_send_btn {
+            width: 100%;
+        }
+    }
+}

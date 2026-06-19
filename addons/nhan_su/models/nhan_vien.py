@@ -64,11 +64,16 @@ class NhanVien(models.Model):
         store=True,
     )
 
-    @api.depends('lich_su_cong_tac_ids', 'lich_su_cong_tac_ids.don_vi_id', 'lich_su_cong_tac_ids.chuc_vu_id')
+    @api.depends('lich_su_cong_tac_ids', 'lich_su_cong_tac_ids.don_vi_id',
+                 'lich_su_cong_tac_ids.chuc_vu_id', 'lich_su_cong_tac_ids.ngay_bat_dau')
     def _compute_phong_ban_chuc_vu(self):
         for record in self:
             if record.lich_su_cong_tac_ids:
-                latest = record.lich_su_cong_tac_ids.sorted('id', reverse=True)[0]
+                from datetime import date as _date
+                latest = record.lich_su_cong_tac_ids.sorted(
+                    key=lambda r: (r.ngay_bat_dau or _date.min, r.id),
+                    reverse=True,
+                )[0]
                 record.phong_ban_id = latest.don_vi_id
                 record.chuc_vu_id = latest.chuc_vu_id
             else:
@@ -98,6 +103,8 @@ class NhanVien(models.Model):
         for record in self:
             if record.ho_ten_dem and record.ten:
                 record.ho_va_ten = record.ho_ten_dem + ' ' + record.ten
+            else:
+                record.ho_va_ten = (record.ho_ten_dem or '') + (record.ten or '')
     
     
     
@@ -119,7 +126,7 @@ class NhanVien(models.Model):
     @api.constrains('tuoi')
     def _check_tuoi(self):
         for record in self:
-            if record.tuoi < 18:
+            if record.tuoi and record.tuoi < 18:
                 raise ValidationError("Tuổi không được bé hơn 18")
 
     def action_mo_wizard_tao_tai_khoan(self):

@@ -9,7 +9,7 @@
             <field name="domain_force">[('nhan_vien_id.user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('group_cham_cong_self_service'))]"/>
             <field name="perm_read" eval="1"/>
-            <field name="perm_write" eval="0"/>
+            <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="0"/>
         </record>
@@ -17,6 +17,17 @@
         <record id="rule_bang_luong_nhan_vien_own" model="ir.rule">
             <field name="name">Bảng lương - Nhân viên chỉ xem lương của mình</field>
             <field name="model_id" ref="model_bang_luong"/>
+            <field name="domain_force">[('nhan_vien_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_cham_cong_self_service'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <record id="rule_khen_thuong_ky_luat_nhan_vien_own" model="ir.rule">
+            <field name="name">Khen thưởng/kỷ luật - Nhân viên chỉ xem của mình</field>
+            <field name="model_id" ref="model_khen_thuong_ky_luat"/>
             <field name="domain_force">[('nhan_vien_id.user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('group_cham_cong_self_service'))]"/>
             <field name="perm_read" eval="1"/>
@@ -59,6 +70,17 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
+        <record id="rule_khen_thuong_ky_luat_quan_tri_all" model="ir.rule">
+            <field name="name">Khen thưởng/kỷ luật - Quản trị xem tất cả</field>
+            <field name="model_id" ref="model_khen_thuong_ky_luat"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_cham_cong_quan_tri'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
         <record id="rule_canh_bao_quan_tri_all" model="ir.rule">
             <field name="name">Cảnh báo - Quản trị xem tất cả</field>
             <field name="model_id" ref="model_canh_bao_cham_cong"/>
@@ -85,6 +107,17 @@
         <record id="rule_bang_luong_nhan_su_all" model="ir.rule">
             <field name="name">Bảng lương - Nhân sự xem tất cả</field>
             <field name="model_id" ref="model_bang_luong"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_cham_cong_nhan_su'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <record id="rule_khen_thuong_ky_luat_nhan_su_all" model="ir.rule">
+            <field name="name">Khen thưởng/kỷ luật - Nhân sự xem tất cả</field>
+            <field name="model_id" ref="model_khen_thuong_ky_luat"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_cham_cong_nhan_su'))]"/>
             <field name="perm_read" eval="1"/>
@@ -127,6 +160,17 @@
             <field name="perm_unlink" eval="0"/>
         </record>
 
+        <record id="rule_khen_thuong_ky_luat_ke_toan_all" model="ir.rule">
+            <field name="name">Khen thưởng/kỷ luật - Kế toán xem tất cả</field>
+            <field name="model_id" ref="model_khen_thuong_ky_luat"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_cham_cong_ke_toan'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
         <record id="rule_canh_bao_ke_toan_all" model="ir.rule">
             <field name="name">Cảnh báo - Kế toán xem tất cả</field>
             <field name="model_id" ref="model_canh_bao_cham_cong"/>
@@ -137,5 +181,6 @@
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="0"/>
         </record>
+
     </data>
 </odoo>

@@ -9,7 +9,7 @@
             id="menu_cham_cong_root"
             name="Chấm công"
             sequence="20"
-            groups="cham_cong_tinh_luong.group_cham_cong_self_service,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+            groups="base.group_user,cham_cong_tinh_luong.group_cham_cong_self_service,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <!-- Dashboard: chỉ Nhân sự, Kế toán, Quản trị -->
         <menuitem
@@ -99,11 +99,27 @@
             groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
+            id="menu_sinh_bang_luong"
+            name="Sinh bảng lương"
+            parent="menu_tinh_luong_root"
+            action="action_sinh_bang_luong_wizard"
+            sequence="2"
+            groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
+        <menuitem
+            id="menu_khen_thuong_ky_luat"
+            name="Khen thưởng / Kỷ luật"
+            parent="menu_tinh_luong_root"
+            action="action_khen_thuong_ky_luat"
+            sequence="3"
+            groups="cham_cong_tinh_luong.group_cham_cong_nhan_su,cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+
+        <menuitem
             id="menu_bang_luong"
             name="Bảng lương"
             parent="menu_tinh_luong_root"
             action="action_bang_luong"
-            sequence="2"
+            sequence="4"
             groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <!-- Bảng lương của tôi: CHỈ Self-service.
@@ -113,7 +129,7 @@
             name="Bảng lương của tôi"
             parent="menu_tinh_luong_root"
             action="action_bang_luong_cua_toi"
-            sequence="3"
+            sequence="5"
             groups="cham_cong_tinh_luong.group_cham_cong_self_service"/>
 
         <menuitem
@@ -121,7 +137,7 @@
             name="Xuất bảng lương Excel"
             parent="menu_tinh_luong_root"
             action="action_xuat_bang_luong_wizard"
-            sequence="4"
+            sequence="6"
             groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
@@ -129,7 +145,7 @@
             name="In phiếu lương PDF"
             parent="menu_tinh_luong_root"
             action="action_in_phieu_luong_pdf"
-            sequence="5"
+            sequence="7"
             groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
 
         <menuitem
@@ -137,7 +153,7 @@
             name="Báo cáo &amp; Thống kê lương"
             parent="menu_tinh_luong_root"
             action="action_thong_ke_bang_luong"
-            sequence="6"
+            sequence="8"
             groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
     </data>
 </odoo>

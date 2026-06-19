@@ -21,11 +21,9 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'cham_cong_ai_chatbot/static/src/js/ai_chatbot_client_action.js',
             'cham_cong_ai_chatbot/static/src/scss/ai_chatbot.scss',
-        ],
-        'web.assets_qweb': [
             'cham_cong_ai_chatbot/static/src/xml/ai_chatbot_client_action.xml',
+            'cham_cong_ai_chatbot/static/src/js/ai_chatbot_client_action.js',
         ],
     },
     'installable': True,

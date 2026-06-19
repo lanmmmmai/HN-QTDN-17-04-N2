@@ -4,7 +4,7 @@
     <menuitem id="menu_ai_chatbot_nhan_su"
               name="AI Chatbot Nhân sự"
               parent="cham_cong_tinh_luong.menu_cham_cong_root"
-              action="action_ai_chat_session_employee"
+              action="action_ai_chatbot_employee_window"
               sequence="90"
               groups="cham_cong_ai_chatbot.group_ai_chatbot_employee_user"/>
 

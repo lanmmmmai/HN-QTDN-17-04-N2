@@ -27,8 +27,6 @@
                 <header>
                     <button name="action_new_session" type="object" string="Phiên mới"
                             class="btn-secondary"/>
-                    <button name="action_send_message" type="object" string="Gửi"
-                            class="btn-primary" attrs="{'invisible': [('state', '=', 'archived')]}"/>
                     <button name="action_confirm_pending_action" type="object"
                             string="Xác nhận hành động" class="btn-primary"
                             attrs="{'invisible': [('pending_action_id', '=', False)]}"/>
@@ -72,11 +70,17 @@
                                     <field name="function_name"/>
                                 </tree>
                             </field>
-                            <group col="1">
+                            <div class="o_ai_chat_input_area"
+                                 style="display:flex;gap:10px;align-items:flex-end;margin-top:8px;">
                                 <field name="new_message" nolabel="1"
                                        placeholder="Nhập tin nhắn rồi bấm Gửi..."
                                        attrs="{'readonly': [('state', '=', 'archived')]}"/>
-                            </group>
+                                <button name="action_send_message"
+                                        string="Gửi"
+                                        type="object"
+                                        class="btn btn-primary o_ai_send_btn"
+                                        attrs="{'invisible': [('state', '=', 'archived')]}"/>
+                            </div>
                         </page>
                         <page string="Hành động">
                             <field name="action_log_ids" readonly="1" nolabel="1">

@@ -28,6 +28,12 @@ class TaoTaiKhoanNhanVienWizard(models.TransientModel):
     def action_tao_tai_khoan(self):
         self.ensure_one()
 
+        if not (
+            self.env.user.has_group('cham_cong_tinh_luong.group_cham_cong_nhan_su')
+            or self.env.user.has_group('cham_cong_tinh_luong.group_cham_cong_quan_tri')
+        ):
+            raise UserError('Bạn không có quyền tạo tài khoản hệ thống.')
+
         if self.password != self.confirm_password:
             raise UserError("Mật khẩu và xác nhận mật khẩu không khớp nhau.")
 
@@ -71,13 +77,19 @@ class TaoTaiKhoanNhanVienWizard(models.TransientModel):
         if group_self_service:
             groups.append(group_self_service.id)
 
-        user = self.env['res.users'].sudo().create({
-            'name': self.name,
-            'login': self.login,
-            'email': self.login,
-            'password': self.password,
-            'groups_id': [(6, 0, groups)],
-        })
+        try:
+            with self.env.cr.savepoint():
+                user = self.env['res.users'].sudo().create({
+                    'name': self.name,
+                    'login': self.login,
+                    'email': self.login,
+                    'password': self.password,
+                    'groups_id': [(6, 0, groups)],
+                })
+        except Exception:
+            raise UserError(
+                'Email "%s" đã tồn tại trong hệ thống. Vui lòng dùng email khác.' % self.login
+            )
 
         self.nhan_vien_id.sudo().write({'user_id': user.id})
 
