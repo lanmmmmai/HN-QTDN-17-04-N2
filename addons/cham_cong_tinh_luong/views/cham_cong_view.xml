@@ -84,7 +84,7 @@
                     <field name="ngay_cham_cong"/>
                     <field name="trang_thai"/>
                     <filter name="filter_today" string="Hôm nay" domain="[('ngay_cham_cong', '=', context_today())]"/>
-                    <filter name="filter_month" string="Tháng này" domain="[('ngay_cham_cong', '&gt;=', context_today().replace(day=1)), ('ngay_cham_cong', '&lt;', context_today().replace(day=1) + relativedelta(months=1))]"/>
+                    <filter name="filter_month" string="Tháng này" date="ngay_cham_cong" default_period="this_month"/>
                     <filter name="filter_muon" string="Đi muộn" domain="[('trang_thai', '=', 'di_muon')]"/>
                     <filter name="filter_nghi" string="Nghỉ" domain="[('trang_thai', 'in', ('nghi', 'nghi_co_phep', 'nghi_khong_phep'))]"/>
                     <filter name="filter_tang_ca" string="Tăng ca" domain="[('trang_thai', '=', 'tang_ca')]"/>
@@ -159,7 +159,7 @@
                     <field name="ngay_cham_cong"/>
                     <field name="trang_thai"/>
                     <filter name="my_today" string="Hôm nay" domain="[('ngay_cham_cong', '=', context_today())]"/>
-                    <filter name="my_month" string="Tháng này" domain="[('ngay_cham_cong', '&gt;=', context_today().replace(day=1)), ('ngay_cham_cong', '&lt;', context_today().replace(day=1) + relativedelta(months=1))]"/>
+                    <filter name="my_month" string="Tháng này" date="ngay_cham_cong" default_period="this_month"/>
                     <filter name="my_late" string="Đi muộn" domain="[('trang_thai', '=', 'di_muon')]"/>
                     <filter name="my_absent" string="Nghỉ" domain="[('trang_thai', 'in', ('nghi', 'nghi_co_phep', 'nghi_khong_phep'))]"/>
                     <filter name="my_overtime" string="Tăng ca" domain="[('trang_thai', '=', 'tang_ca')]"/>

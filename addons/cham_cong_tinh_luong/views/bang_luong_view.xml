@@ -162,7 +162,7 @@
                     <field name="thang"/>
                     <field name="nam"/>
                     <field name="state"/>
-                    <filter name="filter_month" string="Tháng này" domain="[('thang_so', '=', context_today().month), ('nam', '=', context_today().year)]"/>
+                    <filter name="filter_month" string="Tháng này" date="ngay_tao" default_period="this_month"/>
                     <filter name="filter_computed" string="Đã tính" domain="['|', ('state', '=', 'da_tinh'), ('state', '=', 'computed')]"/>
                     <filter name="filter_confirmed" string="Đã xác nhận" domain="['|', ('state', '=', 'xac_nhan'), ('state', '=', 'confirmed')]"/>
                     <filter name="filter_paid" string="Đã thanh toán" domain="[('state', '=', 'da_thanh_toan')]"/>
