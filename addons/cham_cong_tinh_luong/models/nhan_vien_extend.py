@@ -34,7 +34,7 @@ class NhanVien(models.Model):
 
     def _open_related_action(self, xmlid, domain=None, context=None):
         self.ensure_one()
-        action = self.env.ref(xmlid).read()[0]
+        action = self.env.ref(xmlid).sudo().read()[0]
         if domain is not None:
             action['domain'] = domain
         if context:

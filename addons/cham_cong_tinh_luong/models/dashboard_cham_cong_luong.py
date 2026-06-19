@@ -166,7 +166,7 @@ class DashboardChamCongLuong(models.Model):
 
     def _build_action(self, xmlid, domain=None, context=None):
         self.ensure_one()
-        action = self.env.ref(xmlid).read()[0]
+        action = self.env.ref(xmlid).sudo().read()[0]
         if domain is not None:
             action['domain'] = domain
         if context:
@@ -208,7 +208,7 @@ class DashboardChamCongLuong(models.Model):
 
     def action_create_cham_cong(self):
         self.ensure_one()
-        action = self.env.ref('cham_cong_tinh_luong.action_cham_cong').read()[0]
+        action = self.env.ref('cham_cong_tinh_luong.action_cham_cong').sudo().read()[0]
         action['view_mode'] = 'form'
         action['views'] = [(self.env.ref('cham_cong_tinh_luong.view_cham_cong_form').id, 'form')]
         action['target'] = 'current'
@@ -217,11 +217,11 @@ class DashboardChamCongLuong(models.Model):
 
     def action_open_import_cham_cong(self):
         self.ensure_one()
-        return self.env.ref('cham_cong_tinh_luong.action_import_cham_cong_wizard').read()[0]
+        return self.env.ref('cham_cong_tinh_luong.action_import_cham_cong_wizard').sudo().read()[0]
 
     def action_open_phan_tich_canh_bao(self):
         self.ensure_one()
-        return self.env.ref('cham_cong_tinh_luong.action_phan_tich_canh_bao_wizard').read()[0]
+        return self.env.ref('cham_cong_tinh_luong.action_phan_tich_canh_bao_wizard').sudo().read()[0]
 
     def action_open_bang_luong(self):
         return self._open_payroll_list()
@@ -269,11 +269,11 @@ class DashboardChamCongLuong(models.Model):
 
     def action_open_xuat_bang_luong(self):
         self.ensure_one()
-        return self.env.ref('cham_cong_tinh_luong.action_xuat_bang_luong_wizard').read()[0]
+        return self.env.ref('cham_cong_tinh_luong.action_xuat_bang_luong_wizard').sudo().read()[0]
 
     def action_open_sinh_bang_luong(self):
         self.ensure_one()
-        return self.env.ref('cham_cong_tinh_luong.action_sinh_bang_luong_wizard').read()[0]
+        return self.env.ref('cham_cong_tinh_luong.action_sinh_bang_luong_wizard').sudo().read()[0]
 
     def action_open_my_dashboard(self):
         self.ensure_one()
