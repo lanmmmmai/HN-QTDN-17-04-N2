@@ -479,14 +479,23 @@ button.btn-primary {
 // ───────────────────────────────────────────────────────────────
 .o_notification_manager {
   .o_notification {
-    border-radius: 10px !important;
-    border-left: 4px solid $theme-primary !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(3, 105, 161, 0.16) !important;
     background: $theme-white !important;
     box-shadow: 0 8px 24px $theme-shadow !important;
 
-    &.o_notification_danger { border-left-color: #dc2626 !important; }
-    &.o_notification_warning { border-left-color: #d97706 !important; }
-    &.o_notification_success { border-left-color: #16a34a !important; }
+    &.o_notification_danger { 
+      border-color: rgba(220, 38, 38, 0.24) !important; 
+      background: #fef2f2 !important; 
+    }
+    &.o_notification_warning { 
+      border-color: rgba(217, 119, 6, 0.24) !important; 
+      background: #fff7ed !important; 
+    }
+    &.o_notification_success { 
+      border-color: rgba(22, 163, 74, 0.24) !important; 
+      background: #ecfdf5 !important; 
+    }
 
     .o_notification_title { color: $theme-text !important; font-weight: 600 !important; }
     .o_notification_content { color: $theme-text-muted !important; }
@@ -669,5 +678,17 @@ aside.o_side_panel,
       background: transparent !important;
       font-weight: 600 !important;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
   }
 }

@@ -189,7 +189,7 @@ class BangLuong(models.Model):
         tong_ky_luat = sum(Result.search(discipline_domain).mapped('so_tien'))
         return round(tong_khen_thuong, 2), round(tong_ky_luat, 2)
 
-    def _get_payroll_values(self, require_config=False):
+    def _get_payroll_values(self, require_config=False, prefetched_data=None):
         self.ensure_one()
         values = {
             'so_ngay_di_lam': 0.0,
@@ -221,20 +221,39 @@ class BangLuong(models.Model):
         if not self.nhan_vien_id or not self.thang or not self.nam:
             return values
 
-        config = self._get_active_salary_config()
+        start_date, end_date = self._get_month_range()
+        payroll_date = self.ngay_tao or start_date
+
+        config = self.env['cau_hinh_luong']
+        if prefetched_data and 'configs' in prefetched_data:
+            emp_configs = prefetched_data['configs'].filtered(lambda c: c.nhan_vien_id.id == self.nhan_vien_id.id)
+            for c in emp_configs:
+                s_date = c.ngay_bat_dau or date(1900, 1, 1)
+                e_date = c.ngay_ket_thuc or date(2999, 12, 31)
+                if s_date <= payroll_date <= e_date:
+                    config = c
+                    break
+        else:
+            config = self._get_active_salary_config()
+
         if not config:
             if require_config:
                 raise ValidationError('Chưa có cấu hình lương đang áp dụng cho nhân viên này.')
             values['canh_bao'] = 'Chưa có cấu hình lương đang áp dụng cho nhân viên này.'
             return values
 
-        start_date, end_date = self._get_month_range()
-        cham_cong_records = self.env['cham_cong'].search([
-            ('nhan_vien_id', '=', self.nhan_vien_id.id),
-            ('ngay_cham_cong', '>=', start_date),
-            ('ngay_cham_cong', '<', end_date),
-            ('state', 'in', ['xac_nhan', 'confirmed']),
-        ], order='ngay_cham_cong, gio_vao, id')
+        if prefetched_data and 'cham_cong' in prefetched_data:
+            cham_cong_records = prefetched_data['cham_cong'].filtered(
+                lambda att: att.nhan_vien_id.id == self.nhan_vien_id.id 
+                and start_date <= att.ngay_cham_cong < end_date
+            )
+        else:
+            cham_cong_records = self.env['cham_cong'].search([
+                ('nhan_vien_id', '=', self.nhan_vien_id.id),
+                ('ngay_cham_cong', '>=', start_date),
+                ('ngay_cham_cong', '<', end_date),
+                ('state', 'in', ['xac_nhan', 'confirmed']),
+            ], order='ngay_cham_cong, gio_vao, id')
 
         values['cham_cong_ids'] = [(6, 0, cham_cong_records.ids)]
         if not cham_cong_records:
@@ -269,7 +288,17 @@ class BangLuong(models.Model):
             2,
         )
 
-        tong_khen_thuong, tong_ky_luat = self._get_reward_discipline_totals(start_date, end_date)
+        if prefetched_data and 'rewards_disciplines' in prefetched_data:
+            emp_rewards_disciplines = prefetched_data['rewards_disciplines'].filtered(
+                lambda r: r.nhan_vien_id.id == self.nhan_vien_id.id
+                and start_date <= r.ngay_ap_dung < end_date
+            )
+            tong_khen_thuong = sum(emp_rewards_disciplines.filtered(lambda r: r.loai_quyet_dinh == 'khen_thuong').mapped('so_tien'))
+            tong_ky_luat = sum(emp_rewards_disciplines.filtered(lambda r: r.loai_quyet_dinh == 'ky_luat').mapped('so_tien'))
+            tong_khen_thuong, tong_ky_luat = round(tong_khen_thuong, 2), round(tong_ky_luat, 2)
+        else:
+            tong_khen_thuong, tong_ky_luat = self._get_reward_discipline_totals(start_date, end_date)
+
         values['tong_khen_thuong'] = tong_khen_thuong
         values['tong_ky_luat'] = tong_ky_luat
         values['tong_luong'] = round(
@@ -300,8 +329,48 @@ class BangLuong(models.Model):
 
     @api.depends('nhan_vien_id', 'thang', 'nam', 'ngay_tao', 'he_so_tang_ca')
     def _compute_bang_luong(self):
+        employee_ids = self.mapped('nhan_vien_id').ids
+        prefetched = {}
+
+        if len(self) > 1 and employee_ids:
+            configs = self.env['cau_hinh_luong'].search([
+                ('nhan_vien_id', 'in', employee_ids),
+                ('trang_thai', 'in', ['dang_ap_dung', 'ap_dung']),
+            ], order='ngay_bat_dau desc, id desc')
+
+            start_dates = []
+            end_dates = []
+            for record in self:
+                if record.thang and record.nam:
+                    s, e = record._get_month_range()
+                    start_dates.append(s)
+                    end_dates.append(e)
+
+            if start_dates and end_dates:
+                min_start = min(start_dates)
+                max_end = max(end_dates)
+
+                cham_cong = self.env['cham_cong'].search([
+                    ('nhan_vien_id', 'in', employee_ids),
+                    ('ngay_cham_cong', '>=', min_start),
+                    ('ngay_cham_cong', '<', max_end),
+                    ('state', 'in', ['xac_nhan', 'confirmed']),
+                ], order='ngay_cham_cong, gio_vao, id')
+
+                rewards_disciplines = self.env['khen_thuong_ky_luat'].search([
+                    ('nhan_vien_id', 'in', employee_ids),
+                    ('ngay_ap_dung', '>=', min_start),
+                    ('ngay_ap_dung', '<', max_end),
+                ])
+
+                prefetched = {
+                    'configs': configs,
+                    'cham_cong': cham_cong,
+                    'rewards_disciplines': rewards_disciplines,
+                }
+
         for record in self:
-            values = record._get_payroll_values()
+            values = record._get_payroll_values(prefetched_data=prefetched)
             record.so_ngay_di_lam = values['so_ngay_di_lam']
             record.tong_ngay_cong = values['tong_ngay_cong']
             record.tong_gio_lam = values['tong_gio_lam']
@@ -342,20 +411,24 @@ class BangLuong(models.Model):
 
     @api.model
     def action_sinh_bang_luong_thang(self, thang, nam, nhan_vien_ids=None):
+        self._check_payroll_manager_rights()
         employees = self.env['nhan_vien'].search([])
         if nhan_vien_ids:
             employees = employees.filtered(lambda emp: emp.id in nhan_vien_ids)
+
+        existing_payrolls = self.search([
+            ('nhan_vien_id', 'in', employees.ids),
+            ('thang', '=', str(thang)),
+            ('nam', '=', int(nam)),
+        ])
+        payroll_map = {p.nhan_vien_id.id: p for p in existing_payrolls}
 
         created = 0
         updated = 0
         skipped = 0
         messages = []
         for employee in employees:
-            draft = self.search([
-                ('nhan_vien_id', '=', employee.id),
-                ('thang', '=', str(thang)),
-                ('nam', '=', int(nam)),
-            ], limit=1)
+            draft = payroll_map.get(employee.id)
             payroll = draft or self.new({
                 'nhan_vien_id': employee.id,
                 'thang': str(thang),

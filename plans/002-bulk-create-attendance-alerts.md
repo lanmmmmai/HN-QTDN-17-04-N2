@@ -1,17 +1,81 @@
-# -*- coding: utf-8 -*-
+# Plan 002: Tối ưu hiệu năng bằng cách gộp tạo cảnh báo (Bulk Create) trong Wizard phân tích chấm công
 
-from odoo import fields, models
+> **Executor instructions**: Follow this plan step by step. Run every
+> verification command and confirm the expected result before moving to the
+> next step. If anything in the "STOP conditions" section occurs, stop and
+> report — do not improvise.
+>
+> **Drift check (run first)**: `git diff --stat 1f284728..HEAD -- addons/cham_cong_tinh_luong/wizards/phan_tich_cham_cong_wizard.py`
+> If any in-scope file changed since this plan was written, compare the
+> "Current state" excerpts against the live code before proceeding; on a
+> mismatch, treat it as a STOP condition.
 
+## Status
 
-class PhanTichChamCongWizard(models.TransientModel):
-    _name = 'phan_tich_cham_cong_wizard'
-    _description = 'Phân tích cảnh báo chấm công'
+- **Priority**: P2
+- **Effort**: M (3-4 hours)
+- **Risk**: MED (Requires careful aggregation of list values and ensuring constraints)
+- **Depends on**: plans/001-*.md
+- **Category**: perf
+- **Planned at**: commit `1f284728`, 2026-06-19
 
-    thang = fields.Selection([(str(i), 'Tháng %s' % i) for i in range(1, 13)], required=True, default=lambda self: str(fields.Date.context_today(self).month))
-    nam = fields.Integer(required=True, default=lambda self: fields.Date.context_today(self).year)
-    nhan_vien_id = fields.Many2one('nhan_vien', string='Nhân viên')
-    xoa_canh_bao_cu = fields.Boolean(string='Xóa cảnh báo cũ', default=True)
+## Why this matters
 
+Trong Wizard phân tích chấm công (`phan_tich_cham_cong_wizard`), hệ thống duyệt qua từng bản ghi chấm công của từng nhân viên để tìm lỗi và tạo cảnh báo (`canh_bao_cham_cong`).
+
+Hiện tại, việc gọi `Alert.create({...})` đang được thực hiện ngay lập tức trong các vòng lặp `for att in attendances:` và `for condition, ... in rule_values:`.
+*   **Hậu quả**: Nếu một tháng có 100 nhân viên và phát sinh trung bình 3-5 lỗi/nhân viên, Odoo sẽ phải thực hiện hơn 500 câu lệnh `INSERT INTO` riêng lẻ tới PostgreSQL. Việc này gây nghẽn nghiêm trọng (database bottleneck) và làm chậm đáng kể thời gian phản hồi của wizard.
+*   **Giải pháp**: Tận dụng tính năng tạo hàng loạt của Odoo (`@api.model_create_multi` trên hàm `create`) bằng cách gom tất cả các từ điển dữ liệu (`vals`) vào một danh sách lớn và chỉ gọi `Alert.create(alerts_to_create)` đúng 1 lần duy nhất ở cuối hàm xử lý.
+
+## Current state
+
+- File liên quan:
+  - `addons/cham_cong_tinh_luong/wizards/phan_tich_cham_cong_wizard.py` — Chứa hàm `action_phan_tich_canh_bao`.
+
+Ví dụ về cách viết cũ tạo bản ghi đơn lẻ trong vòng lặp (dòng 52-60):
+```python
+                # 1. Đi muộn
+                if att.trang_thai == 'di_muon':
+                    Alert.create({
+                        'nhan_vien_id': employee.id,
+                        'thang': self.thang,
+                        'nam': self.nam,
+                        'loai_canh_bao': 'di_muon',
+                        'muc_do': 'trung_binh',
+                        'noi_dung': 'Đi muộn ngày %s (vào lúc %s).' % (att.ngay_cham_cong.strftime('%d/%m/%Y'), (att.gio_vao + timedelta(hours=7)).strftime('%H:%M') if att.gio_vao else '?'),
+                        'goi_y_xu_ly': 'Nhắc nhở đi làm đúng giờ.',
+                    })
+                    created += 1
+```
+
+## Commands you will need
+
+| Purpose   | Command                                                                            | Expected on success |
+|-----------|------------------------------------------------------------------------------------|---------------------|
+| Upgrade   | `docker exec -u 0 odoo15 odoo -d MaiLan -u cham_cong_tinh_luong --stop-after-init` | exit 0              |
+| Restart   | `docker restart odoo15`                                                            | Container restarts  |
+
+## Scope
+
+**In scope**:
+- `addons/cham_cong_tinh_luong/wizards/phan_tich_cham_cong_wizard.py`
+
+**Out of scope**:
+- Các file khác trong module.
+
+## Steps
+
+### Step 1: Thay thế logic `create` đơn lẻ bằng cách gom danh sách `alerts_to_create`
+
+Cấu trúc lại phương thức `action_phan_tich_canh_bao` trong `addons/cham_cong_tinh_luong/wizards/phan_tich_cham_cong_wizard.py` theo mẫu sau:
+
+1.  Khai báo mảng chứa `alerts_to_create = []` ở đầu hàm.
+2.  Thay thế mọi lời gọi `Alert.create({ ... })` bằng `alerts_to_create.append({ ... })`.
+3.  Thay vì bỏ qua điều kiện trùng lặp bằng cách tìm trực tiếp (`Alert.search(...)`) giữa chừng (gây N+1 query), hãy lấy ra tập hợp cảnh báo đã tồn tại trước (nếu không xóa cảnh báo cũ) hoặc lọc trong bộ nhớ tạm để tránh trùng lặp.
+4.  Gọi `Alert.create(alerts_to_create)` ở cuối hàm.
+
+Đoạn mã đề xuất tái cấu trúc:
+```python
     def action_phan_tich_canh_bao(self):
         self.ensure_one()
         Alert = self.env['canh_bao_cham_cong']
@@ -139,8 +203,8 @@ class PhanTichChamCongWizard(models.TransientModel):
             today = fields.Date.context_today(self)
             if int(self.nam) == today.year and int(self.thang) == today.month:
                 today_att = self.env['cham_cong'].search([
-                    ('nhan_vien_id', '=', employee.id),
                     ('ngay_cham_cong', '=', today),
+                    ('nhan_vien_id', '=', employee.id),
                 ], limit=1)
                 if not today_att and today.weekday() < 5:
                     alerts_to_create.append({
@@ -223,6 +287,7 @@ class PhanTichChamCongWizard(models.TransientModel):
             ]
             for condition, code, content, advice, level in rule_values:
                 if condition:
+                    # Kiểm tra bộ nhớ tạm thay vì gọi search DB
                     if (employee.id, code) in existing_alerts:
                         continue
                     alerts_to_create.append({
@@ -235,6 +300,7 @@ class PhanTichChamCongWizard(models.TransientModel):
                         'goi_y_xu_ly': advice,
                     })
 
+        # Thực hiện bulk create một lần duy nhất
         if alerts_to_create:
             Alert.create(alerts_to_create)
 
@@ -247,3 +313,13 @@ class PhanTichChamCongWizard(models.TransientModel):
                 'sticky': False,
             }
         }
+```
+
+**Verify**: Chạy nâng cấp module và khởi động lại Odoo. Chạy thử wizard và xác nhận tốc độ thực thi nhanh hơn đáng kể.
+
+---
+
+## Done criteria
+
+- [ ] Toàn bộ hàm `action_phan_tich_canh_bao` không còn chứa lệnh `Alert.create` trong vòng lặp nhân viên.
+- [ ] Odoo nâng cấp module và chạy thành công mà không báo lỗi.

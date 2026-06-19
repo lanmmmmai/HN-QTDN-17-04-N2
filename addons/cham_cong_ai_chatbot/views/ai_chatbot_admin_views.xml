@@ -70,8 +70,7 @@
                                     <field name="function_name"/>
                                 </tree>
                             </field>
-                            <div class="o_ai_chat_input_area"
-                                 style="display:flex;gap:10px;align-items:flex-end;margin-top:8px;">
+                            <div class="o_ai_chat_input_area mt-2">
                                 <field name="new_message" nolabel="1"
                                        placeholder="Nhập tin nhắn rồi bấm Gửi..."
                                        attrs="{'readonly': [('state', '=', 'archived')]}"/>
