@@ -1,0 +1,764 @@
+$aicb-bg: #E4F4FD;
+$aicb-primary: #0369A1;
+$aicb-card: #FFFFFF;
+
+.o_aicb_wrap {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 110px);
+    background: $aicb-bg;
+    overflow: hidden;
+
+    .o_aicb_sidebar {
+        width: 210px;
+        flex: 0 0 210px;
+        background: $aicb-card;
+        border-right: 1px solid #D4E6F1;
+        display: flex;
+        flex-direction: column;
+
+        &.collapsed {
+            width: 0;
+            flex-basis: 0;
+            overflow: hidden;
+        }
+
+        .o_aicb_sidebar_header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 14px 16px;
+            font-weight: 600;
+            color: $aicb-primary;
+            border-bottom: 1px solid #D4E6F1;
+            white-space: nowrap;
+        }
+
+        .o_aicb_sidebar_header_actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .o_aicb_session_list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .o_aicb_session_item {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 4px;
+
+            &:hover {
+                background: $aicb-bg;
+            }
+
+            &.active {
+                background: #bde4f7;
+            }
+
+            .o_aicb_session_name {
+                font-weight: 500;
+                color: #0b3a52;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    .o_aicb_main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    .o_aicb_main_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 16px 8px;
+        background: transparent;
+    }
+
+    .o_aicb_main_title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .o_aicb_main_subtitle {
+        margin-top: 4px;
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .o_aicb_new_session_btn {
+        white-space: nowrap;
+        border-radius: 999px;
+        padding-inline: 14px;
+    }
+
+    .o_aicb_main_header_actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .o_aicb_messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .o_aicb_msg {
+        display: flex;
+        max-width: 75%;
+
+        .o_aicb_bubble {
+            padding: 10px 14px;
+            font-size: 14px;
+            line-height: 1.45;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        }
+    }
+
+    .o_aicb_msg_user {
+        align-self: flex-end;
+
+        .o_aicb_bubble {
+            background: $aicb-primary;
+            color: #fff;
+            border-radius: 18px 18px 4px 18px;
+        }
+    }
+
+    .o_aicb_msg_ai {
+        align-self: flex-start;
+
+        .o_aicb_bubble {
+            background: $aicb-card;
+            border: 1px solid #D4E6F1;
+            color: #1f2d35;
+            border-radius: 18px 18px 18px 4px;
+        }
+    }
+
+    .o_aicb_typing {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: $aicb-primary;
+            opacity: 0.6;
+            animation: o_aicb_wave 1.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+
+            &:nth-child(2) { animation-delay: 0.2s; }
+            &:nth-child(3) { animation-delay: 0.4s; }
+        }
+    }
+
+    .o_aicb_action_card {
+        align-self: stretch;
+        background: $aicb-card;
+        border: 2px solid $aicb-primary;
+        border-radius: 12px;
+        padding: 16px;
+        margin: 8px 0;
+
+        .o_aicb_action_summary {
+            font-weight: 500;
+            color: #0b3a52;
+        }
+
+        .o_aicb_action_buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+    }
+
+    .o_aicb_composer {
+        display: flex;
+        padding: 10px 12px 12px;
+        gap: 8px;
+        border-top: 1px solid #D4E6F1;
+        background: $aicb-card;
+        align-items: flex-end;
+
+    .o_aicb_input {
+            flex: 1;
+            border: 1px solid #cdd9e0;
+            border-radius: 999px;
+            padding: 12px 16px;
+            resize: none;
+            font-size: 14px;
+
+            &:focus {
+                outline: none;
+                border-color: $aicb-primary;
+            }
+        }
+
+        .o_aicb_send_btn {
+            border-radius: 999px;
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+    }
+
+    .o_aicb_error {
+        margin: 0 12px 12px;
+    }
+
+    .o_aicb_sidebar.collapsed {
+        width: 0;
+        flex-basis: 0;
+        overflow: hidden;
+        border-right: 0;
+    }
+
+    .o_aicb_sidebar_toggle_btn {
+        border-radius: 999px;
+    }
+}
+
+@keyframes o_aicb_wave {
+    0%, 100% { transform: translateY(0); opacity: 0.3; }
+    50% { transform: translateY(-4px); opacity: 1; }
+}
+
+.ai-chat-form-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfe 100%);
+    border: 1px solid #d9e8f2;
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+.ai-chat-header {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #dbeafe;
+
+    .ai-chat-header-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .ai-chat-header-copy {
+        min-width: 0;
+        flex: 1 1 420px;
+    }
+
+    .ai-chat-page-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex: 0 0 auto;
+        flex-wrap: wrap;
+    }
+
+    h2 {
+        margin: 0;
+        color: #075985;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    p {
+        margin: 6px 0 0;
+        color: #475569;
+    }
+}
+
+.ai-chat-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+
+    .ai-chat-summary-item {
+        background: #fff;
+        border: 1px solid #e2eef6;
+        border-radius: 14px;
+        padding: 12px 14px;
+        min-width: 0;
+    }
+
+    .ai-chat-summary-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #64748b;
+        margin-bottom: 4px;
+    }
+
+    .o_field_widget {
+        width: 100%;
+    }
+}
+
+.ai-chat-message-area {
+    min-height: 420px;
+    max-height: 62vh;
+    overflow-y: auto;
+    padding: 18px;
+    background: #f8fcff;
+    border: 1px solid #e4f4fd;
+    border-radius: 18px;
+}
+
+.ai-chat-kanban {
+    padding: 0;
+    background: transparent;
+    border: 0;
+}
+
+.ai-chat-message-area .o_kanban_view {
+    background: transparent;
+}
+
+.ai-chat-message-area .o_kanban_ungrouped {
+    gap: 12px;
+}
+
+.ai-chat-bubble-wrapper {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.ai-chat-user {
+    justify-content: flex-end;
+}
+
+.ai-chat-assistant {
+    justify-content: flex-start;
+}
+
+.ai-chat-bubble {
+    width: 100%;
+    max-width: 720px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    color: #0f172a;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+
+.ai-chat-user .ai-chat-bubble {
+    background: linear-gradient(135deg, #0369a1 0%, #0f8fd1 100%);
+    color: #ffffff;
+    border-color: transparent;
+}
+
+.ai-chat-role {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.72;
+    margin-bottom: 6px;
+}
+
+.ai-chat-content {
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+.ai-chat-pending-action-area {
+    display: block;
+}
+
+.ai-chat-pending-card {
+    padding: 16px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);
+    border: 1px solid #fdba74;
+    box-shadow: 0 10px 24px rgba(251, 146, 60, 0.08);
+}
+
+.ai-chat-pending-title {
+    font-weight: 700;
+    color: #9a3412;
+    margin-bottom: 8px;
+}
+
+.ai-chat-pending-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.ai-chat-input-area {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    padding-top: 6px;
+
+    .o_field_widget {
+        flex: 1;
+        min-width: 0;
+    }
+
+    textarea {
+        min-height: 84px;
+        border-radius: 14px;
+        border: 1px solid #cbd5e1;
+        padding: 12px 14px;
+        resize: vertical;
+        box-shadow: none;
+    }
+
+    .btn {
+        min-height: 48px;
+        border-radius: 14px;
+        padding-inline: 20px;
+    }
+
+    .btn-primary {
+        min-width: 110px;
+    }
+}
+
+@media (max-width: 992px) {
+    .ai-chat-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-chat-bubble {
+        max-width: 92%;
+    }
+
+    .ai-chat-input-area {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ai-chat-page-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .o_aicb_main_header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+// ================================================================
+// EMPLOYEE CHAT FORM VIEW – bố cục ChatGPT (act_window + form)
+// Không dùng màu cứng, inherit từ Odoo theme
+// ================================================================
+
+.o_ai_chat_page {
+    display: flex;
+    flex-direction: column;
+    min-height: 580px;
+    max-height: calc(100vh - 210px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--o-view-background-color, #fff);
+}
+
+// Header khu vực chat (title + mô tả)
+.o_ai_chat_hdr {
+    flex: 0 0 auto;
+    padding: 16px 22px 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.o_ai_chat_title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.o_ai_chat_sub {
+    margin: 4px 0 0;
+    font-size: 13px;
+    opacity: 0.65;
+}
+
+// Khu vực cuộn tin nhắn
+.o_ai_chat_msgs_wrap {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+// Kanban trong form – ép thành danh sách dọc, một cột
+.o_ai_msg_kanban {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+
+    .o_kanban_renderer {
+        display: flex !important;
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        width: 100% !important;
+    }
+
+    // Mỗi kanban card = một tin nhắn, chiếm full width
+    .o_kanban_record {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        cursor: default !important;
+
+        &:hover {
+            box-shadow: none !important;
+        }
+    }
+}
+
+// Hàng tin nhắn
+.o_ai_msg_row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+// Tin nhắn người dùng – bên phải
+.o_ai_msg_user {
+    flex-direction: row-reverse;
+
+    .o_ai_msg_body {
+        align-items: flex-end;
+    }
+
+    .o_ai_msg_bubble {
+        border-radius: 16px 16px 4px 16px;
+        background: rgba(0, 0, 0, 0.07);
+    }
+
+    .o_ai_msg_time {
+        text-align: right;
+    }
+}
+
+// Tin nhắn AI – bên trái
+.o_ai_msg_ai {
+    .o_ai_msg_bubble {
+        border-radius: 16px 16px 16px 4px;
+        background: rgba(0, 0, 0, 0.04);
+    }
+}
+
+// Avatar tròn Bạn / AI
+.o_ai_msg_avatar {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+// Phần thân tin nhắn (bubble + timestamp)
+.o_ai_msg_body {
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100% - 48px);
+
+    .o_field_widget {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}
+
+// Bubble nội dung tin nhắn
+.o_ai_msg_bubble {
+    padding: 10px 14px;
+    line-height: 1.55;
+    word-break: break-word;
+    white-space: pre-wrap;
+    font-size: 14px;
+
+    .o_field_widget {
+        margin: 0 !important;
+    }
+
+    // Field text trong bubble
+    .o_field_char,
+    .o_field_text {
+        white-space: pre-wrap;
+        word-break: break-word;
+        line-height: 1.55;
+    }
+}
+
+// Timestamp nhỏ dưới bubble
+.o_ai_msg_time {
+    font-size: 10px;
+    opacity: 0.5;
+    margin-top: 4px;
+    padding: 0 2px;
+
+    .o_field_widget {
+        display: inline !important;
+        margin: 0 !important;
+    }
+}
+
+// Card xác nhận hành động chờ
+.o_ai_chat_pending {
+    flex: 0 0 auto;
+    margin: 0 20px 10px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.o_ai_pending_title {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.o_ai_pending_body {
+    font-size: 14px;
+    line-height: 1.5;
+
+    .o_field_widget {
+        margin: 0 !important;
+    }
+}
+
+.o_ai_pending_btns {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+// Khu vực nhập tin nhắn (cố định dưới cùng)
+.o_ai_chat_input_area {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 12px 20px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    background: var(--o-view-background-color, #fff);
+
+    > .o_field_widget {
+        flex: 1;
+        margin: 0 !important;
+    }
+
+    textarea {
+        min-height: 56px;
+        max-height: 150px;
+        border-radius: 12px;
+        resize: vertical;
+        width: 100%;
+    }
+}
+
+.o_ai_send_btn {
+    min-width: 80px;
+    height: 40px;
+    border-radius: 10px;
+    flex: 0 0 auto;
+}
+
+// Html field trong khu vực tin nhắn – ẩn toolbar editor, remove padding/margin thừa
+.o_ai_messages_html_field {
+    .o_field_html {
+        padding: 0 !important;
+
+        .odoo-editor-editable {
+            padding: 0 !important;
+            min-height: unset !important;
+            outline: none !important;
+            border: none !important;
+        }
+    }
+}
+
+// Thông báo khi chưa có tin nhắn
+.o_ai_no_msg {
+    text-align: center;
+    opacity: 0.45;
+    font-size: 14px;
+    padding: 40px 20px;
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .o_ai_chat_page {
+        max-height: calc(100vh - 160px);
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .o_ai_msg_user .o_ai_msg_body,
+    .o_ai_msg_ai .o_ai_msg_body {
+        max-width: calc(100% - 42px);
+    }
+
+    .o_ai_chat_input_area {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px 14px 12px;
+
+        .o_ai_send_btn {
+            width: 100%;
+        }
+    }
+}

@@ -30,7 +30,6 @@
                         </button>
                     </div>
                 </xpath>
-                <xpath expr="//notebook" position="replace"/>
             </field>
         </record>
     </data>

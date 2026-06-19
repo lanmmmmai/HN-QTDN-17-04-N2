@@ -1,13 +1,38 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
+
+import pytz
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
+DEFAULT_TIMEZONE = 'Asia/Ho_Chi_Minh'
+SHIFT_STANDARD_HOURS = {
+    'hanh_chinh': 8.0,
+    'sang': 4.0,
+    'chieu': 4.0,
+    'toi': 4.0,
+}
+
+
 class ChamCong(models.Model):
     _name = 'cham_cong'
+    _inherit = ['nhan_vien_thong_tin.mixin']
     _description = 'Chấm công'
     _order = 'ngay_cham_cong desc, gio_vao desc, id desc'
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'nhan_vien_id' in fields_list and not res.get('nhan_vien_id'):
+            employee = self.env['nhan_vien'].search(
+                [('user_id', '=', self.env.user.id)], limit=1
+            )
+            if employee:
+                res['nhan_vien_id'] = employee.id
+        return res
 
     nhan_vien_id = fields.Many2one(
         'nhan_vien',
@@ -19,18 +44,6 @@ class ChamCong(models.Model):
         string='Mã nhân viên',
         related='nhan_vien_id.ma_dinh_danh',
         store=True,
-        readonly=True,
-    )
-    phong_ban_id = fields.Many2one(
-        'don_vi',
-        string='Phòng ban',
-        compute='_compute_thong_tin_nhan_vien',
-        readonly=True,
-    )
-    chuc_vu_id = fields.Many2one(
-        'chuc_vu',
-        string='Chức vụ',
-        compute='_compute_thong_tin_nhan_vien',
         readonly=True,
     )
     ngay_cham_cong = fields.Date(
@@ -78,6 +91,9 @@ class ChamCong(models.Model):
     trang_thai = fields.Selection(
         [
             ('di_lam', 'Đi làm'),
+            ('nua_ngay', 'Nửa ngày'),
+            ('nghi_co_phep', 'Nghỉ có phép'),
+            ('nghi_khong_phep', 'Nghỉ không phép'),
             ('di_muon', 'Đi muộn'),
             ('nghi', 'Nghỉ'),
             ('tang_ca', 'Tăng ca'),
@@ -86,14 +102,17 @@ class ChamCong(models.Model):
         required=True,
         default='di_lam',
     )
+    so_ngay_cong = fields.Float(
+        string='Số ngày công quy đổi',
+        compute='_compute_so_ngay_cong',
+        store=True,
+        digits=(16, 2),
+    )
     state = fields.Selection(
         [
             ('nhap', 'Nháp'),
             ('xac_nhan', 'Đã xác nhận'),
             ('huy', 'Hủy'),
-            ('draft', 'Nháp'),
-            ('confirmed', 'Đã xác nhận'),
-            ('cancel', 'Hủy'),
         ],
         string='Trạng thái',
         required=True,
@@ -101,27 +120,10 @@ class ChamCong(models.Model):
     )
     ghi_chu = fields.Text(string='Ghi chú')
 
-    @api.depends('nhan_vien_id')
-    def _compute_thong_tin_nhan_vien(self):
-        employee_ids = self.mapped('nhan_vien_id').ids
-        latest_histories = {}
-        if employee_ids:
-            histories = self.env['lich_su_cong_tac'].search(
-                [('nhan_vien_id', 'in', employee_ids)],
-                order='nhan_vien_id desc, id desc',
-            )
-            for history in histories:
-                latest_histories.setdefault(history.nhan_vien_id.id, history)
-
-        for record in self:
-            history = latest_histories.get(record.nhan_vien_id.id)
-            record.phong_ban_id = history.don_vi_id if history else False
-            record.chuc_vu_id = history.chuc_vu_id if history else False
-
     @api.depends('gio_vao', 'gio_ra', 'trang_thai')
     def _compute_so_gio_lam(self):
         for record in self:
-            if record.trang_thai == 'nghi':
+            if record.trang_thai in ('nghi', 'nghi_co_phep', 'nghi_khong_phep'):
                 record.so_gio_lam = 0.0
             elif record.gio_vao and record.gio_ra and record.gio_ra >= record.gio_vao:
                 delta = record.gio_ra - record.gio_vao
@@ -129,13 +131,24 @@ class ChamCong(models.Model):
             else:
                 record.so_gio_lam = 0.0
 
-    @api.depends('so_gio_lam')
+    @api.depends('so_gio_lam', 'ca_lam_viec')
     def _compute_so_gio_tang_ca(self):
         for record in self:
-            if record.so_gio_lam > 8.0:
-                record.so_gio_tang_ca = round(record.so_gio_lam - 8.0, 2)
+            std_hours = SHIFT_STANDARD_HOURS.get(record.ca_lam_viec, 8.0)
+            if record.so_gio_lam > std_hours:
+                record.so_gio_tang_ca = round(record.so_gio_lam - std_hours, 2)
             else:
                 record.so_gio_tang_ca = 0.0
+
+    @api.depends('trang_thai')
+    def _compute_so_ngay_cong(self):
+        for record in self:
+            if record.trang_thai == 'nua_ngay':
+                record.so_ngay_cong = 0.5
+            elif record.trang_thai in ('nghi', 'nghi_co_phep', 'nghi_khong_phep'):
+                record.so_ngay_cong = 0.0
+            else:
+                record.so_ngay_cong = 1.0
 
     def action_xac_nhan(self):
         self.write({'state': 'xac_nhan'})
@@ -165,6 +178,26 @@ class ChamCong(models.Model):
         for record in self:
             if record.trang_thai == 'di_muon' and not record.ly_do_di_muon:
                 raise ValidationError('Nếu đi muộn thì phải nhập lý do đi muộn.')
+
+    @api.model
+    def _local_datetime_to_utc_naive(self, day_value, hour_value):
+        """Convert a local date + time string into a UTC-naive datetime for storage."""
+        if not day_value or not hour_value:
+            return False
+        if isinstance(day_value, str):
+            day_value = fields.Date.from_string(day_value)
+        try:
+            hh, mm = (hour_value.strip().split(':') + ['0'])[:2]
+            local_dt = datetime(day_value.year, day_value.month, day_value.day, int(hh), int(mm))
+        except (ValueError, TypeError):
+            return False
+        tz_name = self.env.user.tz or self.env.context.get('tz') or DEFAULT_TIMEZONE
+        try:
+            tz = pytz.timezone(tz_name)
+        except Exception:  # noqa: BLE001
+            tz = pytz.timezone(DEFAULT_TIMEZONE)
+        localized = tz.localize(local_dt, is_dst=None)
+        return localized.astimezone(pytz.UTC).replace(tzinfo=None)
 
     @api.constrains('gio_vao', 'gio_ra')
     def _check_gio_ra_sau_gio_vao(self):

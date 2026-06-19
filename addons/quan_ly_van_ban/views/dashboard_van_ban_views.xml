@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_dashboard_van_ban_form" model="ir.ui.view">
+            <field name="name">dashboard.van.ban.form</field>
+            <field name="model">dashboard_van_ban</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard văn bản" class="o_cctl_form" create="false" edit="false" delete="false">
+                    <header>
+                        <button name="action_refresh" type="object"
+                                string="Làm mới số liệu" class="btn-primary"/>
+                        <button name="action_tao_van_ban_den" type="object" string="Thêm văn bản đến"/>
+                        <button name="action_open_van_ban_den" type="object" string="Văn bản đến"/>
+                        <button name="action_tao_van_ban_di" type="object" string="Thêm văn bản đi"/>
+                        <button name="action_open_van_ban_di" type="object" string="Văn bản đi"/>
+                    </header>
+                    <sheet>
+                        <div class="o_cctl_dashboard">
+                            <div class="o_cctl_dashboard_hero">
+                                <div class="o_cctl_form_hero_title">
+                                    <i class="fa fa-file-text" title="QLVB"/> Dashboard quản lý văn bản
+                                </div>
+                                <div class="o_cctl_form_hero_subtitle">
+                                    Tổng quan văn bản đến, văn bản đi theo trạng thái xử lý
+                                </div>
+                            </div>
+
+                            <!-- Stats: Văn bản đến -->
+                            <div class="fw-bold text-primary mt-2">Văn bản đến</div>
+                            <div class="row g-3 o_cctl_stats_grid">
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_van_ban_den" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-inbox" title="Văn bản đến"/></div>
+                                            <div class="o_cctl_stat_value"><field name="tong_van_ban_den" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Tổng văn bản đến</div>
+                                            <div class="text-muted small">Tất cả văn bản đã nhận</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_dang_xu_ly" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--warning">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-spinner" title="Đang xử lý"/></div>
+                                            <div class="o_cctl_stat_value"><field name="den_dang_xu_ly" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Đang xử lý</div>
+                                            <div class="text-muted small">Mới / Vào sổ / Đang xử lý</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_van_ban_den" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--success">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-check-circle" title="Đã xử lý"/></div>
+                                            <div class="o_cctl_stat_value"><field name="den_da_xu_ly" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Đã xử lý</div>
+                                            <div class="text-muted small">Văn bản hoàn thành xử lý</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_qua_han" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--danger">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-exclamation-triangle" title="Quá hạn"/></div>
+                                            <div class="o_cctl_stat_value"><field name="den_qua_han" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Quá hạn xử lý</div>
+                                            <div class="text-muted small">Chưa xử lý và đã quá hạn</div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Stats: Văn bản đi -->
+                            <div class="fw-bold text-primary mt-3">Văn bản đi</div>
+                            <div class="row g-3 o_cctl_stats_grid">
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_van_ban_di" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-paper-plane" title="Văn bản đi"/></div>
+                                            <div class="o_cctl_stat_value"><field name="tong_van_ban_di" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Tổng văn bản đi</div>
+                                            <div class="text-muted small">Tất cả văn bản đã soạn</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_van_ban_di" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-pencil" title="Dự thảo"/></div>
+                                            <div class="o_cctl_stat_value"><field name="di_du_thao" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Dự thảo</div>
+                                            <div class="text-muted small">Đang soạn thảo</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_cho_ky" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--warning">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-edit" title="Chờ ký"/></div>
+                                            <div class="o_cctl_stat_value"><field name="di_cho_ky" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Chờ ký</div>
+                                            <div class="text-muted small">Đang chờ lãnh đạo ký</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_da_phat_hanh" class="btn o_cctl_card_button">
+                                        <div class="o_cctl_stat_card o_cctl_stat_card--success">
+                                            <div class="o_cctl_stat_icon"><i class="fa fa-send" title="Đã phát hành"/></div>
+                                            <div class="o_cctl_stat_value"><field name="di_da_phat_hanh" nolabel="1" readonly="1"/></div>
+                                            <div class="o_cctl_stat_label">Đã phát hành</div>
+                                            <div class="text-muted small">Văn bản đã ban hành</div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Summary badges -->
+                            <div class="o_cctl_dashboard_summary mt-3">
+                                <button type="object" name="action_open_van_ban_den" class="o_cctl_badge_info o_cctl_dashboard_badge_button">
+                                    VB Đến <field name="tong_van_ban_den" nolabel="1" readonly="1"/>
+                                </button>
+                                <button type="object" name="action_open_dang_xu_ly" class="o_cctl_badge_warning o_cctl_dashboard_badge_button">
+                                    Đang XL <field name="den_dang_xu_ly" nolabel="1" readonly="1"/>
+                                </button>
+                                <button type="object" name="action_open_qua_han" class="o_cctl_badge_danger o_cctl_dashboard_badge_button">
+                                    Quá hạn <field name="den_qua_han" nolabel="1" readonly="1"/>
+                                </button>
+                                <button type="object" name="action_open_van_ban_di" class="o_cctl_badge_info o_cctl_dashboard_badge_button">
+                                    VB Đi <field name="tong_van_ban_di" nolabel="1" readonly="1"/>
+                                </button>
+                                <button type="object" name="action_open_cho_ky" class="o_cctl_badge_warning o_cctl_dashboard_badge_button">
+                                    Chờ ký <field name="di_cho_ky" nolabel="1" readonly="1"/>
+                                </button>
+                                <button type="object" name="action_open_da_phat_hanh" class="o_cctl_badge_success o_cctl_dashboard_badge_button">
+                                    Đã PH <field name="di_da_phat_hanh" nolabel="1" readonly="1"/>
+                                </button>
+                            </div>
+
+                            <!-- Thao tác nhanh -->
+                            <div class="o_cctl_section mt-3">
+                                <div class="fw-bold mb-2">Thao tác nhanh</div>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <button type="object" name="action_tao_van_ban_den" class="btn btn-outline-primary btn-sm">
+                                        <i class="fa fa-plus" title="Thêm"/> Thêm văn bản đến
+                                    </button>
+                                    <button type="object" name="action_open_van_ban_den" class="btn btn-outline-primary btn-sm">
+                                        <i class="fa fa-inbox" title="VBĐ"/> Danh sách văn bản đến
+                                    </button>
+                                    <button type="object" name="action_tao_van_ban_di" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fa fa-plus" title="Thêm"/> Thêm văn bản đi
+                                    </button>
+                                    <button type="object" name="action_open_van_ban_di" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fa fa-paper-plane" title="VBDi"/> Danh sách văn bản đi
+                                    </button>
+                                    <button type="object" name="action_open_loai_van_ban" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fa fa-tags" title="Loại"/> Loại văn bản
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_dashboard_van_ban_server" model="ir.actions.server">
+            <field name="name">Dashboard văn bản</field>
+            <field name="model_id" ref="quan_ly_van_ban.model_dashboard_van_ban"/>
+            <field name="state">code</field>
+            <field name="code">action = model.open_dashboard()</field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="dashboard_van_ban_record" model="dashboard_van_ban">
+            <field name="name">Dashboard văn bản</field>
+        </record>
+    </data>
+</odoo>

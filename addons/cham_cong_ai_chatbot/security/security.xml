@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="module_category_ai_chatbot" model="ir.module.category">
+            <field name="name">AI Chatbot Nhân sự</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="group_ai_chatbot_employee_user" model="res.groups">
+            <field name="name">AI Chatbot Employee User</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+        </record>
+
+        <record id="group_ai_chatbot_manager" model="res.groups">
+            <field name="name">AI Chatbot Manager</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+        </record>
+
+        <record id="group_ai_chatbot_admin" model="res.groups">
+            <field name="name">AI Chatbot Admin</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="implied_ids" eval="[(4, ref('group_ai_chatbot_manager'))]"/>
+            <field name="users" eval="[(6, 0, [ref('base.user_admin')])]"/>
+        </record>
+
+        <!-- Backward-compatible aliases for existing references -->
+        <record id="group_ai_chatbot_user" model="res.groups">
+            <field name="name">Người dùng Chatbot</field>
+            <field name="category_id" ref="module_category_ai_chatbot"/>
+        </record>
+
+        <record id="group_ai_chatbot_manager_legacy" model="res.groups">
+            <field name="name">Quản lý Chatbot</field>
+            <field name="category_id" ref="module_category_ai_chatbot"/>
+            <field name="implied_ids" eval="[(4, ref('group_ai_chatbot_user'))]"/>
+        </record>
+
+        <record id="group_ai_chatbot_admin_legacy" model="res.groups">
+            <field name="name">Admin Chatbot</field>
+            <field name="category_id" ref="module_category_ai_chatbot"/>
+            <field name="implied_ids" eval="[(4, ref('group_ai_chatbot_manager_legacy'))]"/>
+        </record>
+
+        <!-- Extend group_cham_cong_self_service to imply chatbot group -->
+        <record id="cham_cong_tinh_luong.group_cham_cong_self_service" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('group_ai_chatbot_employee_user'))]"/>
+        </record>
+    </data>
+</odoo>

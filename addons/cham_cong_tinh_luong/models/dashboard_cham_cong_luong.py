@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-
 from datetime import date
 
 from odoo import api, fields, models
+from .nhan_vien_thong_tin_mixin import get_month_range
 
 
 class DashboardChamCongLuong(models.Model):
@@ -23,6 +22,8 @@ class DashboardChamCongLuong(models.Model):
         default=lambda self: fields.Date.context_today(self).year,
     )
     tong_nhan_vien = fields.Integer(string='Tổng số nhân viên', compute='_compute_dashboard')
+    so_nhan_vien_da_cham_cong_hom_nay = fields.Integer(string='Đã chấm công hôm nay', compute='_compute_dashboard')
+    so_nhan_vien_chua_cham_cong_hom_nay = fields.Integer(string='Chưa chấm công hôm nay', compute='_compute_dashboard')
     so_nhan_vien_da_cham_cong = fields.Integer(string='Số nhân viên đã chấm công', compute='_compute_dashboard')
     tong_cham_cong = fields.Integer(string='Tổng bản ghi chấm công', compute='_compute_dashboard')
     tong_ngay_cong = fields.Float(string='Tổng ngày công', compute='_compute_dashboard')
@@ -67,6 +68,8 @@ class DashboardChamCongLuong(models.Model):
             ]
             if scope_mine and not current_employee:
                 record.tong_nhan_vien = 0
+                record.so_nhan_vien_da_cham_cong_hom_nay = 0
+                record.so_nhan_vien_chua_cham_cong_hom_nay = 0
                 record.so_nhan_vien_da_cham_cong = 0
                 record.tong_cham_cong = 0
                 record.tong_ngay_cong = 0.0
@@ -91,64 +94,149 @@ class DashboardChamCongLuong(models.Model):
                 salary_domain.append(('nhan_vien_id', '=', current_employee.id))
                 warning_domain.append(('nhan_vien_id', '=', current_employee.id))
 
-            attendance_total = attendance_model.search_count(attendance_domain)
-            attendance_aggregates = attendance_model.read_group(
+            # optimized attendance calculation: group by trang_thai to fetch sums & counts
+            att_groups = attendance_model.read_group(
                 attendance_domain,
-                ['so_gio_lam:sum', 'so_gio_tang_ca:sum'],
-                [],
+                ['trang_thai', 'so_ngay_cong:sum', 'so_gio_lam:sum', 'so_gio_tang_ca:sum'],
+                ['trang_thai']
             )
-            attendance_totals = attendance_aggregates[0] if attendance_aggregates else {}
-            salary_total = salary_model.search_count(salary_domain)
-            salary_aggregates = salary_model.read_group(
+            so_luot_di_muon = 0
+            so_ngay_nghi = 0
+            tong_ngay_cong = 0.0
+            tong_gio_lam = 0.0
+            tong_gio_tang_ca = 0.0
+            tong_cham_cong = 0
+            for group in att_groups:
+                count = group.get('trang_thai_count', 0)
+                tong_cham_cong += count
+                tong_ngay_cong += group.get('so_ngay_cong', 0.0) or 0.0
+                tong_gio_lam += group.get('so_gio_lam', 0.0) or 0.0
+                tong_gio_tang_ca += group.get('so_gio_tang_ca', 0.0) or 0.0
+                status = group.get('trang_thai')
+                if status == 'di_muon':
+                    so_luot_di_muon = count
+                elif status in ('nghi', 'nghi_co_phep', 'nghi_khong_phep'):
+                    so_ngay_nghi += count
+
+            # optimized salary calculation: group by state
+            sal_groups = salary_model.read_group(
                 salary_domain,
-                ['tong_luong:sum', 'tien_bao_hiem:sum', 'tong_phu_cap:sum'],
-                [],
+                ['state', 'tong_luong:sum', 'tien_bao_hiem:sum', 'tong_phu_cap:sum'],
+                ['state']
             )
-            salary_totals = salary_aggregates[0] if salary_aggregates else {}
-            warnings_count = warning_model.search_count(warning_domain)
+            tong_quy_luong = 0.0
+            tong_bao_hiem = 0.0
+            tong_phu_cap = 0.0
+            so_bang_luong_thang = 0
+            bang_luong_da_tinh = 0
+            bang_luong_xac_nhan = 0
+            bang_luong_da_thanh_toan = 0
+            bang_luong_chua_xac_nhan = 0
+            for group in sal_groups:
+                count = group.get('state_count', 0)
+                so_bang_luong_thang += count
+                tong_quy_luong += group.get('tong_luong', 0.0) or 0.0
+                tong_bao_hiem += group.get('tien_bao_hiem', 0.0) or 0.0
+                tong_phu_cap += group.get('tong_phu_cap', 0.0) or 0.0
+                state = group.get('state')
+                if state == 'da_tinh':
+                    bang_luong_da_tinh = count
+                elif state == 'xac_nhan':
+                    bang_luong_xac_nhan = count
+                elif state == 'da_thanh_toan':
+                    bang_luong_da_thanh_toan = count
+                if state not in ('xac_nhan', 'da_thanh_toan'):
+                    bang_luong_chua_xac_nhan += count
+
+            # optimized warnings calculation: group by muc_do
+            warn_groups = warning_model.read_group(
+                warning_domain,
+                ['muc_do'],
+                ['muc_do']
+            )
+            tong_canh_bao = 0
+            so_canh_bao_cao = 0
+            for group in warn_groups:
+                count = group.get('muc_do_count', 0)
+                tong_canh_bao += count
+                if group.get('muc_do') == 'cao':
+                    so_canh_bao_cao = count
+
+            today = fields.Date.context_today(self)
+            if scope_mine and current_employee:
+                today_att_count = attendance_model.search_count([
+                    ('ngay_cham_cong', '=', today),
+                    ('nhan_vien_id', '=', current_employee.id),
+                    ('state', 'in', ['xac_nhan', 'nhap'])
+                ])
+                record.so_nhan_vien_da_cham_cong_hom_nay = 1 if today_att_count else 0
+                record.so_nhan_vien_chua_cham_cong_hom_nay = 0 if today_att_count else 1
+            else:
+                today_att_groups = attendance_model.read_group(
+                    [
+                        ('ngay_cham_cong', '=', today),
+                        ('state', 'in', ['xac_nhan', 'nhap'])
+                    ],
+                    ['nhan_vien_id'],
+                    ['nhan_vien_id']
+                )
+                record.so_nhan_vien_da_cham_cong_hom_nay = len(today_att_groups)
+                total_emp = employee_model.search_count([])
+                record.so_nhan_vien_chua_cham_cong_hom_nay = max(0, total_emp - record.so_nhan_vien_da_cham_cong_hom_nay)
 
             if scope_mine and current_employee:
                 record.tong_nhan_vien = 1
             else:
                 record.tong_nhan_vien = employee_model.search_count([])
+            
+            # Count distinct employees checked-in
             record.so_nhan_vien_da_cham_cong = len(attendance_model.read_group(attendance_domain, ['nhan_vien_id'], ['nhan_vien_id']))
-            record.tong_cham_cong = attendance_total
-            record.tong_ngay_cong = float(attendance_model.search_count(attendance_domain + [('trang_thai', '!=', 'nghi')]))
-            record.tong_gio_lam = round(attendance_totals.get('so_gio_lam_sum', 0.0), 2)
-            record.tong_gio_tang_ca = round(attendance_totals.get('so_gio_tang_ca_sum', 0.0), 2)
+            record.tong_cham_cong = tong_cham_cong
+            record.tong_ngay_cong = round(tong_ngay_cong, 2)
+            record.tong_gio_lam = round(tong_gio_lam, 2)
+            record.tong_gio_tang_ca = round(tong_gio_tang_ca, 2)
             record.tong_tang_ca = attendance_model.search_count(attendance_domain + [('so_gio_tang_ca', '>', 0)])
-            record.so_luot_di_muon = attendance_model.search_count(attendance_domain + [('trang_thai', '=', 'di_muon')])
-            record.so_ngay_nghi = attendance_model.search_count(attendance_domain + [('trang_thai', '=', 'nghi')])
-            record.so_bang_luong_thang = salary_total
-            record.tong_quy_luong = round(salary_totals.get('tong_luong_sum', 0.0), 2)
-            record.tong_bao_hiem = round(salary_totals.get('tien_bao_hiem_sum', 0.0), 2)
-            record.tong_phu_cap = round(salary_totals.get('tong_phu_cap_sum', 0.0), 2)
-            record.bang_luong_da_tinh = salary_model.search_count(salary_domain + [('state', 'in', ['da_tinh', 'computed'])])
-            record.bang_luong_xac_nhan = salary_model.search_count(salary_domain + [('state', 'in', ['xac_nhan', 'confirmed'])])
-            record.bang_luong_da_thanh_toan = salary_model.search_count(salary_domain + [('state', '=', 'da_thanh_toan')])
-            record.bang_luong_chua_xac_nhan = salary_model.search_count(salary_domain + [('state', 'not in', ['xac_nhan', 'confirmed', 'da_thanh_toan'])])
-            record.tong_canh_bao = warnings_count
-            record.so_canh_bao_cao = warning_model.search_count(warning_domain + [('muc_do', '=', 'cao')])
+            record.so_luot_di_muon = so_luot_di_muon
+            record.so_ngay_nghi = so_ngay_nghi
+            record.so_bang_luong_thang = so_bang_luong_thang
+            record.tong_quy_luong = round(tong_quy_luong, 2)
+            record.tong_bao_hiem = round(tong_bao_hiem, 2)
+            record.tong_phu_cap = round(tong_phu_cap, 2)
+            record.bang_luong_da_tinh = bang_luong_da_tinh
+            record.bang_luong_xac_nhan = bang_luong_xac_nhan
+            record.bang_luong_da_thanh_toan = bang_luong_da_thanh_toan
+            record.bang_luong_chua_xac_nhan = bang_luong_chua_xac_nhan
+            record.tong_canh_bao = tong_canh_bao
+            record.so_canh_bao_cao = so_canh_bao_cao
 
     def _get_month_range(self):
         self.ensure_one()
-        month = int(self.thang)
-        year = self.nam
-        start_date = date(year, month, 1)
-        if month == 12:
-            end_date = date(year + 1, 1, 1)
-        else:
-            end_date = date(year, month + 1, 1)
-        return start_date, end_date
+        return get_month_range(self.thang, self.nam)
 
     def _build_action(self, xmlid, domain=None, context=None):
         self.ensure_one()
-        action = self.env.ref(xmlid).read()[0]
+        action = self.env.ref(xmlid).sudo().read()[0]
         if domain is not None:
             action['domain'] = domain
         if context:
-            action['context'] = dict(self.env.context, **context)
+            merged_context = dict(self.env.context, **context)
+            # Không kế thừa các cờ UI từ dashboard/form hiện tại sang action mới.
+            # Nếu không, các action danh sách sẽ bị ẩn nút Create/Add dù ACL vẫn cho phép.
+            for key in ('create', 'edit', 'delete'):
+                merged_context.pop(key, None)
+            action['context'] = merged_context
         return action
+
+    def _open_payroll_list(self, extra_domain=None, action_xmlid='cham_cong_tinh_luong.action_bang_luong'):
+        self.ensure_one()
+        domain = [('thang', '=', self.thang), ('nam', '=', self.nam)]
+        if extra_domain:
+            domain.extend(extra_domain)
+        return self._build_action(
+            action_xmlid,
+            domain=domain,
+            context={'search_default_filter_month': 1},
+        )
 
     def action_refresh_dashboard(self):
         today = fields.Date.context_today(self)
@@ -169,7 +257,7 @@ class DashboardChamCongLuong(models.Model):
 
     def action_create_cham_cong(self):
         self.ensure_one()
-        action = self.env.ref('cham_cong_tinh_luong.action_cham_cong').read()[0]
+        action = self.env.ref('cham_cong_tinh_luong.action_cham_cong').sudo().read()[0]
         action['view_mode'] = 'form'
         action['views'] = [(self.env.ref('cham_cong_tinh_luong.view_cham_cong_form').id, 'form')]
         action['target'] = 'current'
@@ -178,19 +266,14 @@ class DashboardChamCongLuong(models.Model):
 
     def action_open_import_cham_cong(self):
         self.ensure_one()
-        return self.env.ref('cham_cong_tinh_luong.action_import_cham_cong_wizard').read()[0]
+        return self.env.ref('cham_cong_tinh_luong.action_import_cham_cong_wizard').sudo().read()[0]
 
     def action_open_phan_tich_canh_bao(self):
         self.ensure_one()
-        return self.env.ref('cham_cong_tinh_luong.action_phan_tich_canh_bao_wizard').read()[0]
+        return self.env.ref('cham_cong_tinh_luong.action_phan_tich_canh_bao_wizard').sudo().read()[0]
 
     def action_open_bang_luong(self):
-        self.ensure_one()
-        return self._build_action(
-            'cham_cong_tinh_luong.action_thong_ke_bang_luong',
-            domain=[('thang', '=', self.thang), ('nam', '=', self.nam)],
-            context={'search_default_filter_computed': 1},
-        )
+        return self._open_payroll_list()
 
     def action_open_canh_bao(self):
         self.ensure_one()
@@ -200,27 +283,34 @@ class DashboardChamCongLuong(models.Model):
         )
 
     def action_open_thong_ke_luong(self):
-        self.ensure_one()
-        return self._build_action(
-            'cham_cong_tinh_luong.action_thong_ke_bang_luong',
-            domain=[('thang', '=', self.thang), ('nam', '=', self.nam)],
-            context={'search_default_filter_month': 1},
-        )
+        return self._open_payroll_list(action_xmlid='cham_cong_tinh_luong.action_thong_ke_bang_luong')
 
     def action_open_bang_luong_list(self):
-        self.ensure_one()
-        return self._build_action(
-            'cham_cong_tinh_luong.action_bang_luong',
-            domain=[('thang', '=', self.thang), ('nam', '=', self.nam)],
-            context={'search_default_filter_month': 1},
-        )
+        return self._open_payroll_list()
 
     def action_open_in_phieu_luong_pdf(self):
-        self.ensure_one()
-        return self._build_action(
-            'cham_cong_tinh_luong.action_in_phieu_luong_pdf',
-            context={'search_default_filter_month': 1},
-        )
+        return self._open_payroll_list(action_xmlid='cham_cong_tinh_luong.action_in_phieu_luong_pdf')
+
+    def action_open_bang_luong_da_tinh(self):
+        return self._open_payroll_list([('state', 'in', ['da_tinh', 'computed'])])
+
+    def action_open_bang_luong_da_xac_nhan(self):
+        return self._open_payroll_list([('state', 'in', ['xac_nhan', 'confirmed'])])
+
+    def action_open_bang_luong_chua_xac_nhan(self):
+        return self._open_payroll_list([('state', 'not in', ['xac_nhan', 'confirmed', 'da_thanh_toan', 'huy', 'cancel'])])
+
+    def action_open_bang_luong_da_thanh_toan(self):
+        return self._open_payroll_list([('state', '=', 'da_thanh_toan')])
+
+    def action_open_tong_quy_luong(self):
+        return self._open_payroll_list()
+
+    def action_open_tong_phu_cap(self):
+        return self._open_payroll_list()
+
+    def action_open_tong_bao_hiem(self):
+        return self._open_payroll_list()
 
     def action_open_cau_hinh_luong(self):
         self.ensure_one()
@@ -228,7 +318,11 @@ class DashboardChamCongLuong(models.Model):
 
     def action_open_xuat_bang_luong(self):
         self.ensure_one()
-        return self.env.ref('cham_cong_tinh_luong.action_xuat_bang_luong_wizard').read()[0]
+        return self.env.ref('cham_cong_tinh_luong.action_xuat_bang_luong_wizard').sudo().read()[0]
+
+    def action_open_sinh_bang_luong(self):
+        self.ensure_one()
+        return self.env.ref('cham_cong_tinh_luong.action_sinh_bang_luong_wizard').sudo().read()[0]
 
     def action_open_my_dashboard(self):
         self.ensure_one()

@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ai.chat.session -->
+    <record id="view_ai_chat_session_tree" model="ir.ui.view">
+        <field name="name">ai.chat.session.tree</field>
+        <field name="model">ai.chat.session</field>
+        <field name="groups_id" eval="[(4, ref('cham_cong_ai_chatbot.group_ai_chatbot_manager')), (4, ref('cham_cong_ai_chatbot.group_ai_chatbot_admin')), (4, ref('cham_cong_tinh_luong.group_cham_cong_nhan_su')), (4, ref('cham_cong_tinh_luong.group_cham_cong_quan_tri'))]"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="employee_id"/>
+                <field name="message_count"/>
+                <field name="action_count"/>
+                <field name="state"/>
+                <field name="write_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ai_chat_session_form" model="ir.ui.view">
+        <field name="name">ai.chat.session.form</field>
+        <field name="model">ai.chat.session</field>
+        <field name="groups_id" eval="[(4, ref('cham_cong_ai_chatbot.group_ai_chatbot_manager')), (4, ref('cham_cong_ai_chatbot.group_ai_chatbot_admin')), (4, ref('cham_cong_tinh_luong.group_cham_cong_nhan_su')), (4, ref('cham_cong_tinh_luong.group_cham_cong_quan_tri'))]"/>
+        <field name="arch" type="xml">
+            <form string="AI Chatbot Nhân sự">
+                <header>
+                    <button name="action_new_session" type="object" string="Phiên mới"
+                            class="btn-secondary"/>
+                    <button name="action_confirm_pending_action" type="object"
+                            string="Xác nhận hành động" class="btn-primary"
+                            attrs="{'invisible': [('pending_action_id', '=', False)]}"/>
+                    <button name="action_cancel_pending_action" type="object"
+                            string="Hủy hành động"
+                            attrs="{'invisible': [('pending_action_id', '=', False)]}"/>
+                    <button name="action_archive" type="object" string="Lưu trữ"
+                            attrs="{'invisible': [('state', '=', 'archived')]}"/>
+                    <button name="action_activate" type="object" string="Kích hoạt"
+                            attrs="{'invisible': [('state', '=', 'active')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên phiên chat"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="employee_id"/>
+                            <field name="last_message" readonly="1"/>
+                            <field name="pending_action_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="message_count"/>
+                            <field name="action_count"/>
+                            <field name="pending_action_count"/>
+                            <field name="pending_action_summary" readonly="1"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Chat">
+                            <field name="message_ids" readonly="1" nolabel="1">
+                                <tree>
+                                    <field name="create_date"/>
+                                    <field name="role"/>
+                                    <field name="content"/>
+                                    <field name="function_name"/>
+                                </tree>
+                            </field>
+                            <div class="o_ai_chat_input_area mt-2">
+                                <field name="new_message" nolabel="1"
+                                       placeholder="Nhập tin nhắn rồi bấm Gửi..."
+                                       attrs="{'readonly': [('state', '=', 'archived')]}"/>
+                                <button name="action_send_message"
+                                        string="Gửi"
+                                        type="object"
+                                        class="btn btn-primary o_ai_send_btn"
+                                        attrs="{'invisible': [('state', '=', 'archived')]}"/>
+                            </div>
+                        </page>
+                        <page string="Hành động">
+                            <field name="action_log_ids" readonly="1" nolabel="1">
+                                <tree>
+                                    <field name="create_date"/>
+                                    <field name="action_type"/>
+                                    <field name="state"/>
+                                    <field name="summary"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_chat_session" model="ir.actions.act_window">
+        <field name="name">Phiên chat</field>
+        <field name="res_model">ai.chat.session</field>
+        <field name="view_mode">tree,form</field>
+        <field name="groups_id" eval="[(4, ref('cham_cong_ai_chatbot.group_ai_chatbot_manager')), (4, ref('cham_cong_ai_chatbot.group_ai_chatbot_admin')), (4, ref('cham_cong_tinh_luong.group_cham_cong_nhan_su')), (4, ref('cham_cong_tinh_luong.group_cham_cong_quan_tri'))]"/>
+    </record>
+
+    <!-- ai.chat.message -->
+    <record id="view_ai_chat_message_tree" model="ir.ui.view">
+        <field name="name">ai.chat.message.tree</field>
+        <field name="model">ai.chat.message</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="session_id"/>
+                <field name="role"/>
+                <field name="content"/>
+                <field name="function_name"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ai_chat_message_form" model="ir.ui.view">
+        <field name="name">ai.chat.message.form</field>
+        <field name="model">ai.chat.message</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="session_id"/>
+                        <field name="user_id"/>
+                        <field name="employee_id"/>
+                        <field name="role"/>
+                        <field name="function_name"/>
+                        <field name="intent"/>
+                    </group>
+                    <group string="Nội dung">
+                        <field name="content" nolabel="1"/>
+                    </group>
+                    <group string="Dữ liệu thô">
+                        <field name="raw_payload" nolabel="1"/>
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_chat_message" model="ir.actions.act_window">
+        <field name="name">Tin nhắn</field>
+        <field name="res_model">ai.chat.message</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- ai.chat.action.log -->
+    <record id="view_ai_chat_action_log_tree" model="ir.ui.view">
+        <field name="name">ai.chat.action.log.tree</field>
+        <field name="model">ai.chat.action.log</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state == 'done'"
+                  decoration-warning="state == 'pending_confirm'"
+                  decoration-danger="state == 'error'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="employee_id"/>
+                <field name="intent"/>
+                <field name="function_name"/>
+                <field name="action_type"/>
+                <field name="state"/>
+                <field name="summary"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ai_chat_action_log_form" model="ir.ui.view">
+        <field name="name">ai.chat.action.log.form</field>
+        <field name="model">ai.chat.action.log</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" type="object" string="Xác nhận &amp; thực hiện"
+                            class="btn-primary"
+                            attrs="{'invisible': [('state', 'not in', ('pending_confirm', 'draft'))]}"/>
+                    <button name="action_cancel" type="object" string="Hủy"
+                            attrs="{'invisible': [('state', 'in', ('done', 'cancelled', 'error'))]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="action_type"/>
+                            <field name="intent"/>
+                            <field name="function_name"/>
+                            <field name="user_id"/>
+                            <field name="employee_id"/>
+                            <field name="session_id"/>
+                            <field name="message_id"/>
+                        </group>
+                        <group>
+                            <field name="target_model"/>
+                            <field name="target_record_id"/>
+                            <field name="confirmed_at"/>
+                            <field name="done_at"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <group string="Tóm tắt">
+                        <field name="summary" nolabel="1"/>
+                    </group>
+                    <group string="Câu hỏi gốc">
+                        <field name="original_text" nolabel="1"/>
+                    </group>
+                    <group string="Dữ liệu trích xuất (Input)">
+                        <field name="extracted_data" nolabel="1"/>
+                    </group>
+                    <group string="Dữ liệu phản hồi (Output)">
+                        <field name="function_output" nolabel="1"/>
+                    </group>
+                    <group string="Lỗi" attrs="{'invisible': [('error_message', '=', False)]}">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_chat_action_log_search" model="ir.ui.view">
+        <field name="name">ai.chat.action.log.search</field>
+        <field name="model">ai.chat.action.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="employee_id"/>
+                <filter name="filter_pending" string="Chờ xác nhận"
+                        domain="[('state', '=', 'pending_confirm')]"/>
+                <filter name="filter_done" string="Đã thực hiện"
+                        domain="[('state', '=', 'done')]"/>
+                <filter name="filter_error" string="Lỗi"
+                        domain="[('state', '=', 'error')]"/>
+                <group expand="0" string="Nhóm theo">
+                    <filter name="group_action_type" string="Loại hành động"
+                            context="{'group_by': 'action_type'}"/>
+                    <filter name="group_state" string="Trạng thái"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ai_chat_action_log" model="ir.actions.act_window">
+        <field name="name">Log hành động</field>
+        <field name="res_model">ai.chat.action.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_ai_chat_action_log_search"/>
+    </record>
+
+    <!-- Tổng quan Chatbot: sessions sorted by date with all states -->
+    <record id="action_ai_chatbot_overview" model="ir.actions.act_window">
+        <field name="name">Tổng quan Chatbot</field>
+        <field name="res_model">ai.chat.session</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
+    </record>
+
+    <!-- Search view for sessions (used by overview) -->
+    <record id="view_ai_chat_session_search" model="ir.ui.view">
+        <field name="name">ai.chat.session.search</field>
+        <field name="model">ai.chat.session</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="employee_id"/>
+                <filter name="filter_active" string="Đang dùng" domain="[('state','=','active')]"/>
+                <filter name="filter_archived" string="Lưu trữ" domain="[('state','=','archived')]"/>
+                <group expand="0" string="Nhóm theo">
+                    <filter name="group_user" string="Người dùng" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_phieu_luong_preview_wizard_form" model="ir.ui.view">
+        <field name="name">phieu.luong.preview.wizard.form</field>
+        <field name="model">phieu_luong_preview_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Xem trước phiếu lương" create="false" edit="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Phiếu lương</h1>
+                        <h2>
+                            <field name="nhan_vien_id" readonly="1" nolabel="1"/>
+                            — Tháng <field name="thang" readonly="1" nolabel="1"/>/<field name="nam" readonly="1" nolabel="1"/>
+                        </h2>
+                    </div>
+
+                    <group string="Thông tin chấm công">
+                        <group>
+                            <field name="so_ngay_di_lam" readonly="1"/>
+                            <field name="tong_ngay_cong" readonly="1"/>
+                            <field name="tong_gio_lam" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="tong_gio_tang_ca" readonly="1"/>
+                            <field name="so_ngay_nghi" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Thu nhập">
+                        <group>
+                            <field name="luong_co_ban" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                            <field name="luong_theo_cong" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                            <field name="tong_phu_cap" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                            <field name="tong_khen_thuong" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                            <field name="tong_ky_luat" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                            <field name="tien_tang_ca" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                        </group>
+                    </group>
+
+                    <group string="Khấu trừ">
+                        <group>
+                            <field name="tien_bao_hiem" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                            <field name="thue_tncn" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                            <field name="khau_tru_khac" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                            <field name="tong_khau_tru" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                        </group>
+                    </group>
+
+                    <group string="Tổng lương thực nhận">
+                        <group>
+                            <field name="tong_luong" readonly="1" widget="monetary" options="{'currency_field': false}"/>
+                            <field name="state" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Ghi chú" attrs="{'invisible': [('ghi_chu', '=', False)]}">
+                        <field name="ghi_chu" readonly="1" nolabel="1"/>
+                    </group>
+                </sheet>
+
+                <footer>
+                    <button name="action_tai_pdf"
+                            type="object"
+                            string="Tải PDF"
+                            class="btn-primary"/>
+                    <button string="Đóng"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

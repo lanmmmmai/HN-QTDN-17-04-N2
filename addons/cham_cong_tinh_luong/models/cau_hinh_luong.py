@@ -6,8 +6,12 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
+DEFAULT_INSURANCE_RATE = 10.5
+
+
 class CauHinhLuong(models.Model):
     _name = 'cau_hinh_luong'
+    _inherit = ['nhan_vien_thong_tin.mixin']
     _description = 'Cấu hình lương'
     _order = 'trang_thai desc, ngay_bat_dau desc, nhan_vien_id, id desc'
 
@@ -23,12 +27,6 @@ class CauHinhLuong(models.Model):
         store=True,
         readonly=True,
     )
-    phong_ban_id = fields.Many2one(
-        'don_vi',
-        string='Phòng ban',
-        compute='_compute_thong_tin_nhan_vien',
-        readonly=True,
-    )
     luong_co_ban = fields.Float(string='Lương cơ bản', required=True, default=0.0)
     so_ngay_cong_chuan = fields.Float(string='Số ngày công chuẩn', default=26.0, required=True)
     so_gio_cong_chuan = fields.Float(string='Số giờ công chuẩn/ngày', default=8.0, required=True)
@@ -41,7 +39,7 @@ class CauHinhLuong(models.Model):
         compute='_compute_tong_phu_cap',
         store=True,
     )
-    ty_le_bao_hiem = fields.Float(string='Tỷ lệ bảo hiểm (%)', default=10.5)
+    ty_le_bao_hiem = fields.Float(string='Tỷ lệ bảo hiểm (%)', default=DEFAULT_INSURANCE_RATE)
     thue_tncn = fields.Float(string='Thuế TNCN', default=0.0)
     khau_tru_khac = fields.Float(string='Khấu trừ khác', default=0.0)
     ngay_bat_dau = fields.Date(
@@ -54,28 +52,11 @@ class CauHinhLuong(models.Model):
         [
             ('dang_ap_dung', 'Đang áp dụng'),
             ('ngung_ap_dung', 'Ngừng áp dụng'),
-            ('ap_dung', 'Đang áp dụng'),
         ],
         string='Trạng thái',
         required=True,
         default='dang_ap_dung',
     )
-
-    @api.depends('nhan_vien_id')
-    def _compute_thong_tin_nhan_vien(self):
-        employee_ids = self.mapped('nhan_vien_id').ids
-        latest_histories = {}
-        if employee_ids:
-            histories = self.env['lich_su_cong_tac'].search(
-                [('nhan_vien_id', 'in', employee_ids)],
-                order='nhan_vien_id desc, id desc',
-            )
-            for history in histories:
-                latest_histories.setdefault(history.nhan_vien_id.id, history)
-
-        for record in self:
-            history = latest_histories.get(record.nhan_vien_id.id)
-            record.phong_ban_id = history.don_vi_id if history else False
 
     @api.depends(
         'phu_cap_an_trua',
@@ -138,14 +119,14 @@ class CauHinhLuong(models.Model):
     @api.constrains('nhan_vien_id', 'ngay_bat_dau', 'ngay_ket_thuc', 'trang_thai')
     def _check_overlap_active_configs(self):
         for record in self:
-            if record.trang_thai not in ('dang_ap_dung', 'ap_dung') or not record.nhan_vien_id:
+            if record.trang_thai != 'dang_ap_dung' or not record.nhan_vien_id:
                 continue
             start_1 = record.ngay_bat_dau or date(1900, 1, 1)
             end_1 = record.ngay_ket_thuc or date(2999, 12, 31)
             others = self.search([
                 ('id', '!=', record.id),
                 ('nhan_vien_id', '=', record.nhan_vien_id.id),
-                ('trang_thai', 'in', ['dang_ap_dung', 'ap_dung']),
+                ('trang_thai', '=', 'dang_ap_dung'),
             ])
             for other in others:
                 start_2 = other.ngay_bat_dau or date(1900, 1, 1)

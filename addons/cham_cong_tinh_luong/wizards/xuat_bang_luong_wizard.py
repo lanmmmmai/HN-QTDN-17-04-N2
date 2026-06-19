@@ -82,9 +82,9 @@ class XuatBangLuongWizard(models.TransientModel):
             ('nam', '=', self.nam),
         ], order='nhan_vien_id')
         headers = [
-            'STT', 'Mã nhân viên', 'Họ tên nhân viên', 'Tháng', 'Năm', 'Tổng ngày công', 'Tổng giờ làm',
-            'Tổng giờ tăng ca', 'Lương cơ bản', 'Lương theo công', 'Tiền tăng ca', 'Tổng phụ cấp',
-            'Tiền bảo hiểm', 'Thuế TNCN', 'Khấu trừ khác', 'Tổng lương thực nhận', 'Trạng thái bảng lương',
+            'STT', 'Mã nhân viên', 'Họ tên nhân viên', 'Tháng', 'Năm', 'Số ngày đi làm', 'Tổng giờ làm',
+            'Tổng giờ tăng ca', 'Lương cơ bản', 'Lương theo ngày công', 'Tổng phụ cấp',
+            'Khen thưởng', 'Kỷ luật', 'Tổng khấu trừ', 'Tổng lương thực nhận', 'Trạng thái bảng lương',
         ]
         rows = []
         for index, line in enumerate(payslips, start=1):
@@ -94,16 +94,15 @@ class XuatBangLuongWizard(models.TransientModel):
                 line.nhan_vien_id.ho_va_ten or '',
                 line.thang,
                 line.nam,
-                line.tong_ngay_cong,
+                line.so_ngay_di_lam,
                 line.tong_gio_lam,
                 line.tong_gio_tang_ca,
                 line.luong_co_ban,
                 line.luong_theo_cong,
-                line.tien_tang_ca,
                 line.tong_phu_cap,
-                line.tien_bao_hiem,
-                line.thue_tncn,
-                line.khau_tru_khac,
+                line.tong_khen_thuong,
+                line.tong_ky_luat,
+                line.tong_khau_tru,
                 line.tong_luong,
                 line.state,
             ])

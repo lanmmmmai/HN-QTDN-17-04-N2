@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from . import nhan_vien_thong_tin_mixin
 from . import cham_cong
 from . import cau_hinh_luong
 from . import bang_luong
+from . import khen_thuong_ky_luat
 from . import canh_bao_cham_cong
 from . import dashboard_cham_cong_luong
 from . import nhan_vien_extend

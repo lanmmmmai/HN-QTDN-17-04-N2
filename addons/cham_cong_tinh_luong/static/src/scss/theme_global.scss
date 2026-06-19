@@ -1,0 +1,694 @@
+// ═══════════════════════════════════════════════════════════════
+// BizCore ERP — Global Theme
+// Bảng màu: nền #E4F4FD | chủ đạo #0369A1 | chữ #000 | card #FFF
+// ═══════════════════════════════════════════════════════════════
+
+$theme-primary:    #0369A1;
+$theme-primary-h:  #0284c7;   // hover
+$theme-primary-l:  #E4F4FD;   // light bg
+$theme-bg:         #E4F4FD;
+$theme-white:      #FFFFFF;
+$theme-text:       #000000;
+$theme-text-muted: #475569;
+$theme-border:     #daeaf6;
+$theme-shadow:     rgba(3, 105, 161, 0.08);
+
+// ───────────────────────────────────────────────────────────────
+// 1. THANH MENU TRÊN (Navbar)
+// ───────────────────────────────────────────────────────────────
+.o_main_navbar {
+  background: $theme-primary !important;
+  border-bottom: none !important;
+  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.20) !important;
+  min-height: 50px !important;
+
+  // Logo / brand
+  .o_menu_brand {
+    color: #fff !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    letter-spacing: 0.3px;
+    &:hover { opacity: 0.9; }
+  }
+
+  // Menu items top-level
+  .o_menu_sections > .o_nav_entry,
+  .o_menu_sections > li > a,
+  .o_menu_sections .o_dropdown_toggler,
+  .o_menu_sections .o_nav_entry {
+    color: rgba(255,255,255,0.85) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 6px 13px !important;
+    border-radius: 6px !important;
+    transition: background 0.15s, color 0.15s !important;
+
+    &:hover, &:focus, &.show {
+      background: rgba(255,255,255,0.15) !important;
+      color: #fff !important;
+    }
+
+    &.active, &.o_active {
+      background: rgba(255,255,255,0.18) !important;
+      color: #fff !important;
+    }
+  }
+
+  // Dropdown menu khi hover
+  .o_menu_sections .dropdown-menu {
+    background: $theme-white !important;
+    border: 1px solid $theme-border !important;
+    border-radius: 10px !important;
+    box-shadow: 0 8px 24px $theme-shadow !important;
+    padding: 6px !important;
+
+    .dropdown-item {
+      color: $theme-text !important;
+      font-size: 13px !important;
+      border-radius: 6px !important;
+      padding: 7px 12px !important;
+
+      &:hover, &:focus {
+        background: $theme-primary-l !important;
+        color: $theme-primary !important;
+      }
+    }
+
+    .dropdown-divider { border-color: $theme-border !important; }
+  }
+
+  // Icons và nút phải (notification, user, debug...)
+  .o_menu_systray .o_nav_entry,
+  .o_menu_systray > li > a,
+  .o_menu_systray .o_dropdown_toggler,
+  .o_user_menu > .dropdown-toggle {
+    color: rgba(255,255,255,0.85) !important;
+    border-radius: 8px !important;
+    transition: background 0.15s !important;
+
+    &:hover {
+      background: rgba(255,255,255,0.15) !important;
+      color: #fff !important;
+    }
+  }
+
+  // Nút debug / setting icon
+  .o_menu_systray .o_notification_manager,
+  .o_menu_systray .o_icon_btn {
+    color: rgba(255,255,255,0.85) !important;
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 2. NỀN TRANG TỔNG THỂ
+// ───────────────────────────────────────────────────────────────
+.o_web_client,
+.o_action_manager,
+.o_home_menu_background,
+.o_home_menu {
+  background: $theme-bg !important;
+}
+
+.o_action_manager > .o_action {
+  background: $theme-bg !important;
+}
+
+// Home menu (app switcher)
+.o_home_menu {
+  background: $theme-bg !important;
+
+  .o_app {
+    .o_app_icon { border-radius: 16px !important; }
+
+    .o_app_name {
+      color: $theme-text !important;
+      font-weight: 500 !important;
+    }
+
+    &:hover .o_app_name { color: $theme-primary !important; }
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 3. CONTROL PANEL (breadcrumb + search + buttons)
+// ───────────────────────────────────────────────────────────────
+.o_control_panel {
+  background: $theme-white !important;
+  border-bottom: 1px solid $theme-border !important;
+  box-shadow: 0 1px 4px $theme-shadow !important;
+  padding: 8px 20px !important;
+
+  .breadcrumb-item, .breadcrumb-item a,
+  .o_breadcrumb .o_breadcrumb_title {
+    color: $theme-text !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+  }
+
+  .breadcrumb-item + .breadcrumb-item::before {
+    color: $theme-text-muted !important;
+  }
+
+  .breadcrumb-item:last-child,
+  .breadcrumb-item.active {
+    color: $theme-primary !important;
+    font-weight: 600 !important;
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 4. FORM VIEW
+// ───────────────────────────────────────────────────────────────
+.o_form_view {
+  background: $theme-bg !important;
+
+  .o_form_sheet_bg {
+    background: $theme-bg !important;
+    padding: 16px 20px !important;
+  }
+
+  .o_form_sheet {
+    background: $theme-white !important;
+    border-radius: 14px !important;
+    border: 1px solid $theme-border !important;
+    box-shadow: 0 2px 12px $theme-shadow !important;
+    max-width: 1200px !important;
+  }
+
+  .o_form_statusbar {
+    background: $theme-white !important;
+    border-bottom: 1px solid $theme-border !important;
+    border-radius: 14px 14px 0 0 !important;
+
+    .o_statusbar_status button.btn {
+      color: $theme-text-muted !important;
+      font-size: 12px !important;
+
+      &.o_arrow_button_current {
+        color: $theme-primary !important;
+        font-weight: 600 !important;
+
+        &::before { border-right-color: $theme-primary !important; }
+      }
+
+      &:hover { color: $theme-primary !important; }
+    }
+  }
+
+  .o_group {
+    .o_field_widget input,
+    .o_field_widget textarea,
+    .o_field_widget select {
+      border-radius: 8px !important;
+      border-color: $theme-border !important;
+
+      &:focus {
+        border-color: $theme-primary !important;
+        box-shadow: 0 0 0 3px rgba(3,105,161,0.12) !important;
+      }
+    }
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 5. LIST VIEW (bảng dữ liệu)
+// ───────────────────────────────────────────────────────────────
+.o_list_view {
+  background: $theme-white !important;
+  border-radius: 12px !important;
+  border: 1px solid $theme-border !important;
+  box-shadow: 0 2px 8px $theme-shadow !important;
+  overflow: hidden !important;
+
+  .o_list_table {
+    background: $theme-white !important;
+
+    thead th {
+      background: #f8fbfd !important;
+      color: $theme-text-muted !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5px !important;
+      border-bottom: 1px solid $theme-border !important;
+      padding: 10px 14px !important;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #f1f5f9 !important;
+      transition: background 0.1s !important;
+
+      &:hover {
+        background: $theme-primary-l !important;
+      }
+
+      &:last-child { border-bottom: none !important; }
+
+      td {
+        color: $theme-text !important;
+        font-size: 13px !important;
+        padding: 10px 14px !important;
+      }
+    }
+  }
+
+  // Checkbox chọn hàng
+  .o_list_record_selector .o_checkbox input:checked + span {
+    background: $theme-primary !important;
+    border-color: $theme-primary !important;
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 6. KANBAN VIEW
+// ───────────────────────────────────────────────────────────────
+.o_kanban_view {
+  background: $theme-bg !important;
+
+  .o_kanban_group {
+    background: rgba(3,105,161,0.04) !important;
+    border-radius: 12px !important;
+
+    .o_kanban_header_title {
+      color: $theme-primary !important;
+      font-weight: 600 !important;
+    }
+  }
+
+  .o_kanban_record {
+    background: $theme-white !important;
+    border-radius: 10px !important;
+    border: 1px solid $theme-border !important;
+    box-shadow: 0 1px 4px $theme-shadow !important;
+    transition: box-shadow 0.15s, transform 0.15s !important;
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(3,105,161,0.12) !important;
+      transform: translateY(-1px) !important;
+    }
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 7. NÚT BẤM (Buttons)
+// ───────────────────────────────────────────────────────────────
+.btn-primary,
+.o_form_button_save,
+button.btn-primary {
+  background: $theme-primary !important;
+  border-color: $theme-primary !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  transition: background 0.15s, transform 0.1s !important;
+
+  &:hover, &:focus {
+    background: $theme-primary-h !important;
+    border-color: $theme-primary-h !important;
+    color: #fff !important;
+  }
+
+  &:active { transform: scale(0.98) !important; }
+}
+
+.btn-secondary, .btn-outline-secondary {
+  background: $theme-white !important;
+  border-color: $theme-border !important;
+  color: $theme-primary !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+
+  &:hover {
+    background: $theme-primary-l !important;
+    border-color: #bae0f6 !important;
+    color: $theme-primary !important;
+  }
+}
+
+.o_statusbar_buttons .btn,
+.o_form_buttons_view .btn {
+  border-radius: 7px !important;
+  font-size: 13px !important;
+}
+
+// ───────────────────────────────────────────────────────────────
+// 8. SEARCH VIEW
+// ───────────────────────────────────────────────────────────────
+.o_searchview {
+  background: $theme-white !important;
+  border: 1px solid $theme-border !important;
+  border-radius: 9px !important;
+  box-shadow: none !important;
+
+  &:focus-within {
+    border-color: $theme-primary !important;
+    box-shadow: 0 0 0 3px rgba(3,105,161,0.10) !important;
+  }
+
+  .o_searchview_input {
+    color: $theme-text !important;
+    font-size: 13px !important;
+  }
+
+  .o_searchview_dropdown_toggler {
+    color: $theme-text-muted !important;
+    &:hover { color: $theme-primary !important; }
+  }
+}
+
+.o_search_panel {
+  background: $theme-white !important;
+  border-right: 1px solid $theme-border !important;
+
+  .o_search_panel_category_value,
+  .o_search_panel_filter_value {
+    border-radius: 6px !important;
+    color: $theme-text !important;
+
+    &:hover { background: $theme-primary-l !important; }
+
+    &.active, &.o_active {
+      background: $theme-primary-l !important;
+      color: $theme-primary !important;
+      font-weight: 600 !important;
+    }
+  }
+
+  .o_search_panel_section_header {
+    color: $theme-text-muted !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.6px !important;
+  }
+}
+
+// Facet (filter tag)
+.o_searchview .o_facet {
+  background: $theme-primary-l !important;
+  border-radius: 6px !important;
+  border: 1px solid #bae0f6 !important;
+  color: $theme-primary !important;
+
+  .o_facet_remove { color: $theme-primary !important; }
+}
+
+// Dropdown filter
+.o_filter_menu, .o_group_by_menu, .o_favorite_menu,
+.o_searchview .dropdown-menu {
+  background: $theme-white !important;
+  border: 1px solid $theme-border !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px $theme-shadow !important;
+  padding: 6px !important;
+
+  .dropdown-item {
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    color: $theme-text !important;
+
+    &:hover { background: $theme-primary-l !important; color: $theme-primary !important; }
+    &.selected { color: $theme-primary !important; font-weight: 600 !important; }
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 9. PAGER (phân trang)
+// ───────────────────────────────────────────────────────────────
+.o_pager {
+  .o_pager_limit,
+  .o_pager_value { color: $theme-text !important; font-size: 13px !important; }
+
+  .o_pager_previous, .o_pager_next {
+    color: $theme-primary !important;
+    border-color: $theme-border !important;
+    border-radius: 6px !important;
+
+    &:hover { background: $theme-primary-l !important; }
+    &:disabled { opacity: 0.4 !important; }
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 10. SIDEBAR / CHATTER (phần ghi chú, log)
+// ───────────────────────────────────────────────────────────────
+.o_form_view .o_chatter {
+  background: $theme-white !important;
+  border-left: 1px solid $theme-border !important;
+
+  .o_thread_composer {
+    .o_composer {
+      border-radius: 10px !important;
+      border-color: $theme-border !important;
+    }
+  }
+
+  .o_message {
+    border-radius: 10px !important;
+    border: 1px solid $theme-border !important;
+    background: #f8fbfd !important;
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 11. DIALOG / MODAL
+// ───────────────────────────────────────────────────────────────
+.modal-content {
+  border-radius: 14px !important;
+  border: 1px solid $theme-border !important;
+  box-shadow: 0 16px 48px rgba(3,105,161,0.12) !important;
+  overflow: hidden !important;
+}
+
+.modal-header {
+  background: $theme-primary !important;
+  border-bottom: none !important;
+  padding: 14px 20px !important;
+
+  .modal-title { color: #fff !important; font-weight: 600 !important; font-size: 15px !important; }
+  .btn-close { filter: brightness(0) invert(1) !important; opacity: 0.8 !important; }
+}
+
+.modal-footer {
+  background: #f8fbfd !important;
+  border-top: 1px solid $theme-border !important;
+}
+
+// ───────────────────────────────────────────────────────────────
+// 12. NOTIFICATION / TOAST
+// ───────────────────────────────────────────────────────────────
+.o_notification_manager {
+  .o_notification {
+    border-radius: 12px !important;
+    border: 1px solid rgba(3, 105, 161, 0.16) !important;
+    background: $theme-white !important;
+    box-shadow: 0 8px 24px $theme-shadow !important;
+
+    &.o_notification_danger { 
+      border-color: rgba(220, 38, 38, 0.24) !important; 
+      background: #fef2f2 !important; 
+    }
+    &.o_notification_warning { 
+      border-color: rgba(217, 119, 6, 0.24) !important; 
+      background: #fff7ed !important; 
+    }
+    &.o_notification_success { 
+      border-color: rgba(22, 163, 74, 0.24) !important; 
+      background: #ecfdf5 !important; 
+    }
+
+    .o_notification_title { color: $theme-text !important; font-weight: 600 !important; }
+    .o_notification_content { color: $theme-text-muted !important; }
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 13. LOADING / SPINNER
+// ───────────────────────────────────────────────────────────────
+.o_loading_indicator {
+  background: $theme-primary !important;
+}
+
+// ───────────────────────────────────────────────────────────────
+// 14. SCROLLBAR (Webkit)
+// ───────────────────────────────────────────────────────────────
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(3,105,161,0.25);
+  border-radius: 10px;
+  &:hover { background: rgba(3,105,161,0.45); }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 15. BADGE / PILL trạng thái toàn cục
+// ───────────────────────────────────────────────────────────────
+.badge.bg-primary,
+.badge.text-bg-primary { background: $theme-primary !important; color: #fff !important; }
+
+.badge.bg-success,
+.badge.text-bg-success { background: #dcfce7 !important; color: #15803d !important; }
+
+.badge.bg-warning,
+.badge.text-bg-warning { background: #fef3c7 !important; color: #b45309 !important; }
+
+.badge.bg-danger,
+.badge.text-bg-danger { background: #fee2e2 !important; color: #dc2626 !important; }
+
+.badge { border-radius: 20px !important; font-size: 11px !important; }
+
+// ───────────────────────────────────────────────────────────────
+// 16. OPTIONAL: Màu link chung
+// ───────────────────────────────────────────────────────────────
+a, .o_form_uri {
+  color: $theme-primary !important;
+  &:hover { color: $theme-primary-h !important; }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 17. SIDEBAR / LEFT PANEL — override dark backgrounds
+// ───────────────────────────────────────────────────────────────
+
+// Home menu background (dark image/overlay Odoo 15 default)
+.o_home_menu_background,
+.o_home_menu_background::before,
+.o_home_menu_background::after {
+  background: $theme-bg !important;
+  background-image: none !important;
+  opacity: 1 !important;
+}
+
+// Home menu apps overlay panel
+.o_home_menu {
+  background: $theme-bg !important;
+  background-image: none !important;
+
+  // App icons
+  .o_app {
+    .o_app_icon_container,
+    .o_app_icon { border-radius: 16px !important; }
+
+    .o_app_name {
+      color: $theme-text !important;
+      font-weight: 500 !important;
+    }
+
+    &:hover .o_app_name { color: $theme-primary !important; }
+  }
+
+  // Search inside home menu
+  .o_search_hidden_input, .o_home_menu_search {
+    background: $theme-white !important;
+    color: $theme-text !important;
+  }
+}
+
+// Top menu / app drawer dropdowns
+.o_main_navbar .o_navbar_apps_menu .dropdown-menu,
+.o_main_navbar .o_menu_sections .dropdown-menu,
+.o_main_navbar .o_menu_systray .dropdown-menu {
+  background: $theme-white !important;
+  border: 1px solid $theme-border !important;
+  border-radius: 12px !important;
+  box-shadow: 0 12px 32px rgba(3, 105, 161, 0.12) !important;
+
+  .dropdown-item {
+    color: $theme-text !important;
+
+    &:hover,
+    &:focus,
+    &.active {
+      background: $theme-primary-l !important;
+      color: $theme-primary !important;
+    }
+  }
+}
+
+.o_main_navbar .o_navbar_apps_menu .dropdown-toggle,
+.o_main_navbar .o_menu_toggle,
+.o_main_navbar .o_menu_sections > .o_nav_entry,
+.o_main_navbar .o_menu_systray > li > a,
+.o_main_navbar .o_menu_systray .o_dropdown_toggler {
+  color: rgba(255, 255, 255, 0.92) !important;
+
+  &:hover,
+  &:focus,
+  &.show {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #fff !important;
+  }
+}
+
+// Left sidebar in list/form that some views render
+.o_view_controller .o_left_panel,
+.o_left_panel,
+aside.o_side_panel,
+.o_main_content > aside {
+  background: $theme-white !important;
+  border-right: 1px solid $theme-border !important;
+}
+
+// Navigation left (debug panel, app list drawer)
+.o_apps_menu_background,
+.o_action_manager .o_action > .o_view_controller,
+.o_content > .o_view_controller {
+  background: transparent !important;
+}
+
+// Dark overlay that Odoo 15 sometimes puts behind home menu
+.o_menu_toggle,
+.o_home_menu_backdrop {
+  background: $theme-bg !important;
+  opacity: 1 !important;
+}
+
+// Any element with explicit dark bg that's a direct child of body or web client
+.o_web_client > *,
+.o_action_manager > .o_action {
+  &[style*="background: rgb(31"],
+  &[style*="background: #1f"],
+  &[style*="background-color: #1f"],
+  &[style*="background-color: rgb(31"] {
+    background: $theme-bg !important;
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+// 19. OPTIONAL: Tabs (inside form)
+// ───────────────────────────────────────────────────────────────
+.o_notebook .nav-tabs {
+  border-bottom: 2px solid $theme-border !important;
+
+  .nav-item .nav-link {
+    color: $theme-text-muted !important;
+    border: none !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 8px 16px !important;
+    border-bottom: 2px solid transparent !important;
+    margin-bottom: -2px !important;
+    border-radius: 0 !important;
+    transition: color 0.15s !important;
+
+    &:hover { color: $theme-primary !important; }
+
+    &.active {
+      color: $theme-primary !important;
+      border-bottom-color: $theme-primary !important;
+      background: transparent !important;
+      font-weight: 600 !important;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+}

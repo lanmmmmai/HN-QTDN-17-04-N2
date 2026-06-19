@@ -18,6 +18,7 @@ Module chấm công và tính lương tích hợp với module Quản lý nhân 
 
     'assets': {
         'web.assets_backend': [
+            'cham_cong_tinh_luong/static/src/scss/theme_global.scss',
             'cham_cong_tinh_luong/static/src/scss/cham_cong_tinh_luong.scss',
         ],
     },
@@ -36,19 +37,22 @@ Module chấm công và tính lương tích hợp với module Quản lý nhân 
         'views/cham_cong_view.xml',
         'views/cau_hinh_luong_view.xml',
         'views/canh_bao_cham_cong_view.xml',
-        'views/dashboard_views.xml',
         'views/nhan_vien_extend_view.xml',
 
         # 5. Wizard
         'wizards/phan_tich_cham_cong_wizard_view.xml',
         'wizards/xuat_bang_luong_wizard_view.xml',
+        'wizards/sinh_bang_luong_wizard_view.xml',
         'wizards/import_cham_cong_wizard_view.xml',
+        'wizards/phieu_luong_preview_wizard_view.xml',
 
         # 6. Report
         'report/bang_luong_report.xml',
 
         # 7. View dùng report/action nên nạp sau khi report đã có XML ID
         'views/bang_luong_view.xml',
+        'views/khen_thuong_ky_luat_view.xml',
+        'views/dashboard_views.xml',
 
         # 8. Menu nên để cuối cùng
         'views/menu.xml',

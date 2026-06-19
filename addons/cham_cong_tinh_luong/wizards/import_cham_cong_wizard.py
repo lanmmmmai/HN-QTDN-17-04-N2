@@ -1,14 +1,15 @@
-# -*- coding: utf-8 -*-
-
 import base64
 import csv
+import logging
 from datetime import datetime
 from io import BytesIO, StringIO
 from zipfile import ZipFile
 from xml.etree import ElementTree as ET
 
 from odoo import fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
+
+_logger = logging.getLogger(__name__)
 
 
 class ImportChamCongWizard(models.TransientModel):
@@ -55,6 +56,10 @@ class ImportChamCongWizard(models.TransientModel):
 
     def action_import(self):
         self.ensure_one()
+        if not (self.env.user.has_group('cham_cong_tinh_luong.group_cham_cong_nhan_su') or 
+                self.env.user.has_group('cham_cong_tinh_luong.group_cham_cong_quan_tri')):
+            raise AccessError('Bạn không có quyền import dữ liệu chấm công. Chỉ Nhân sự hoặc Quản trị mới được phép.')
+
         content = base64.b64decode(self.file_data)
         filename = (self.file_name or '').lower()
         rows = self._parse_xlsx_rows(content) if filename.endswith('.xlsx') else self._parse_csv_rows(content)
@@ -121,6 +126,7 @@ class ImportChamCongWizard(models.TransientModel):
                 messages.append('Dòng %s: %s' % (total + 1, exc))
 
         self.ket_qua_import = 'Tổng số dòng: %s\nThành công: %s\nLỗi: %s\n%s' % (total, success, error, '\n'.join(messages))
+        _logger.info('Import chấm công hoàn tất: tổng %s, thành công %s, lỗi %s.', total, success, error)
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'import_cham_cong_wizard',

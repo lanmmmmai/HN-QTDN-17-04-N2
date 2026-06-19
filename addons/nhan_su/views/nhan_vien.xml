@@ -6,6 +6,13 @@
             <field name="model">nhan_vien</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <button name="action_mo_wizard_tao_tai_khoan"
+                                type="object"
+                                string="Tạo tài khoản người dùng"
+                                class="btn-primary"
+                                attrs="{'invisible': [('user_id', '!=', False)]}"/>
+                    </header>
                     <sheet>
                         <div class="oe_read_only" style="font-size:25px">Nhân viên</div>
                         <group col="4" string="Thông tin chung">
@@ -18,15 +25,40 @@
                             <field name="so_nguoi_bang_tuoi"/>
                             <field name="que_quan"/>
                             <field name="email"/>
-                            <field name="user_id"/>
                             <field name="anh" widget="image"/>
+                        </group>
+                        <group col="4" string="Thông tin công việc">
+                            <field name="phong_ban_id" readonly="1"/>
+                            <field name="chuc_vu_id" readonly="1"/>
+                            <field name="user_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                        </group>
+                        <group col="1" string="Phòng ban &amp; chứng chỉ">
+                            <field name="phong_ban_id" readonly="1"/>
+                            <field name="danh_sach_chung_chi_bang_cap_ids" nolabel="1"/>
                         </group>
                         <notebook>
                             <page string="Danh sách lịch sử công tác">
                                 <field name="lich_su_cong_tac_ids"/>
                             </page>
                             <page string="Danh sách chứng chỉ bằng cấp">
-                                <field name="danh_sach_chung_chi_bang_cap_ids"/>
+                                <field name="danh_sach_chung_chi_bang_cap_ids">
+                                    <tree editable="bottom">
+                                        <field name="nhan_vien_id" invisible="1"/>
+                                        <field name="ma_dinh_danh" invisible="1"/>
+                                        <field name="chung_chi_bang_cap_id"/>
+                                        <field name="ghi_chu"/>
+                                    </tree>
+                                    <form>
+                                        <sheet>
+                                            <group col="4" string="Chứng chỉ / bằng cấp">
+                                                <field name="nhan_vien_id" invisible="1"/>
+                                                <field name="ma_dinh_danh" readonly="1"/>
+                                                <field name="chung_chi_bang_cap_id"/>
+                                                <field name="ghi_chu"/>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
@@ -50,6 +82,8 @@
                     <field name="que_quan"/>
                     <field name="email"/>
                     <field name="user_id"/>
+                    <field name="phong_ban_id"/>
+                    <field name="chuc_vu_id"/>
                 </tree>
             </field>
         </record>

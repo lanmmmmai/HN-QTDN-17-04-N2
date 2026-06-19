@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="cham_cong_ai_chatbot.AIChatbotClientAction" owl="1">
+  <div class="o_aicb_wrap">
+    <!-- Sidebar -->
+    <div class="o_aicb_sidebar" t-att-class="state.sidebarOpen ? '' : 'collapsed'">
+      <div class="o_aicb_sidebar_header">
+        <span>Phiên chat</span>
+        <div class="o_aicb_sidebar_header_actions">
+          <button class="btn btn-sm btn-outline-primary" t-on-click="toggleSidebar">Thu gọn</button>
+          <button class="btn btn-sm btn-primary" t-on-click="createSession">+ Mới</button>
+        </div>
+      </div>
+      <div class="o_aicb_session_list">
+        <t t-foreach="state.sessions" t-as="session" t-key="session.id">
+          <div class="o_aicb_session_item"
+               t-att-class="session.id === state.currentSessionId ? 'active' : ''"
+               t-on-click="() => this.switchSession(session.id)">
+            <div class="o_aicb_session_name" t-esc="session.name"/>
+          </div>
+        </t>
+      </div>
+    </div>
+    <!-- Main chat area -->
+    <div class="o_aicb_main">
+      <div class="o_aicb_main_header">
+        <div>
+          <div class="o_aicb_main_title">AI Chatbot Nhân sự</div>
+          <div class="o_aicb_main_subtitle">Chấm công, lương, tăng ca và yêu cầu nội bộ.</div>
+        </div>
+        <div class="o_aicb_main_header_actions">
+          <button class="btn btn-outline-primary o_aicb_sidebar_toggle_btn" t-on-click="toggleSidebar">
+            <t t-esc="state.sidebarOpen ? 'Thu gọn' : 'Mở danh sách'"/>
+          </button>
+          <button class="btn btn-primary o_aicb_new_session_btn" t-on-click="createSession">+ Mới</button>
+        </div>
+      </div>
+      <div class="o_aicb_messages" t-ref="messagesContainer">
+        <t t-foreach="state.messages" t-as="msg" t-key="msg.id || msg._localId">
+          <div t-attf-class="o_aicb_msg #{msg.role === 'user' ? 'o_aicb_msg_user' : 'o_aicb_msg_ai'}">
+            <div class="o_aicb_bubble">
+              <t t-esc="msg.content"/>
+            </div>
+          </div>
+        </t>
+        <!-- Typing indicator -->
+        <t t-if="state.isLoading">
+          <div class="o_aicb_msg o_aicb_msg_ai">
+            <div class="o_aicb_bubble o_aicb_typing">
+              <span/><span/><span/>
+            </div>
+          </div>
+        </t>
+        <!-- Pending action card -->
+        <t t-if="state.pendingAction">
+          <div class="o_aicb_action_card">
+            <div class="o_aicb_action_summary" t-esc="state.pendingAction.summary"/>
+            <div class="o_aicb_action_buttons">
+              <button class="btn btn-success btn-sm" t-on-click="confirmAction">✓ Xác nhận</button>
+              <button class="btn btn-outline-secondary btn-sm" t-on-click="cancelAction">✕ Hủy</button>
+            </div>
+          </div>
+        </t>
+      </div>
+      <!-- Composer -->
+      <div class="o_aicb_composer">
+        <textarea class="o_aicb_input"
+                  placeholder="Nhập câu hỏi... (Enter để gửi, Shift+Enter xuống dòng)"
+                  t-model="state.inputText"
+                  t-on-keydown="onKeydown"
+                  rows="2"/>
+        <button class="o_aicb_send_btn btn btn-primary"
+                t-on-click="sendMessage"
+                t-att-disabled="state.isLoading">
+          <i class="fa fa-paper-plane"/>
+        </button>
+      </div>
+      <t t-if="state.error">
+        <div class="o_aicb_error alert alert-danger" t-esc="state.error"/>
+      </t>
+    </div>
+  </div>
+</t>
+</templates>

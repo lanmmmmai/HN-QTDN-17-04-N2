@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ═══════════════════════════════════════════════════
+             VĂN BẢN ĐẾN
+        ═══════════════════════════════════════════════════ -->
+
+        <!-- Nhân viên: chỉ xem văn bản mình là người xử lý -->
+        <record id="rule_van_ban_den_nhan_vien_own" model="ir.rule">
+            <field name="name">Văn bản đến - Nhân viên xem văn bản được giao</field>
+            <field name="model_id" ref="model_van_ban_den"/>
+            <field name="domain_force">[('nhan_vien_xu_ly_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('quan_ly_van_ban.group_van_ban_nhan_vien'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Văn thư: xem tất cả văn bản đến -->
+        <record id="rule_van_ban_den_van_thu_all" model="ir.rule">
+            <field name="name">Văn bản đến - Văn thư xem tất cả</field>
+            <field name="model_id" ref="model_van_ban_den"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('quan_ly_van_ban.group_van_ban_van_thu'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Lãnh đạo: xem tất cả văn bản đến (chỉ đọc và phê duyệt) -->
+        <record id="rule_van_ban_den_lanh_dao_all" model="ir.rule">
+            <field name="name">Văn bản đến - Lãnh đạo xem tất cả</field>
+            <field name="model_id" ref="model_van_ban_den"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('quan_ly_van_ban.group_van_ban_lanh_dao'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Quản trị: toàn quyền văn bản đến -->
+        <record id="rule_van_ban_den_quan_tri_all" model="ir.rule">
+            <field name="name">Văn bản đến - Quản trị toàn quyền</field>
+            <field name="model_id" ref="model_van_ban_den"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('quan_ly_van_ban.group_van_ban_quan_tri'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!-- ═══════════════════════════════════════════════════
+             VĂN BẢN ĐI
+        ═══════════════════════════════════════════════════ -->
+
+        <!-- Nhân viên: chỉ xem văn bản mình là người ký -->
+        <record id="rule_van_ban_di_nhan_vien_own" model="ir.rule">
+            <field name="name">Văn bản đi - Nhân viên xem văn bản liên quan</field>
+            <field name="model_id" ref="model_van_ban_di"/>
+            <field name="domain_force">[('nguoi_ky_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('quan_ly_van_ban.group_van_ban_nhan_vien'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Văn thư: xem tất cả văn bản đi -->
+        <record id="rule_van_ban_di_van_thu_all" model="ir.rule">
+            <field name="name">Văn bản đi - Văn thư xem tất cả</field>
+            <field name="model_id" ref="model_van_ban_di"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('quan_ly_van_ban.group_van_ban_van_thu'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Lãnh đạo: xem tất cả văn bản đi -->
+        <record id="rule_van_ban_di_lanh_dao_all" model="ir.rule">
+            <field name="name">Văn bản đi - Lãnh đạo xem tất cả</field>
+            <field name="model_id" ref="model_van_ban_di"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('quan_ly_van_ban.group_van_ban_lanh_dao'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Quản trị: toàn quyền văn bản đi -->
+        <record id="rule_van_ban_di_quan_tri_all" model="ir.rule">
+            <field name="name">Văn bản đi - Quản trị toàn quyền</field>
+            <field name="model_id" ref="model_van_ban_di"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('quan_ly_van_ban.group_van_ban_quan_tri'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+    </data>
+</odoo>

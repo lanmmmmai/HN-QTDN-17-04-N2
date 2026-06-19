@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sinh_bang_luong_wizard_form" model="ir.ui.view">
+        <field name="name">sinh.bang.luong.wizard.form</field>
+        <field name="model">sinh_bang_luong_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Sinh bảng lương hàng loạt">
+                <sheet>
+                    <group>
+                        <field name="thang"/>
+                        <field name="nam"/>
+                        <field name="phong_ban_id" options="{'no_create': True}"/>
+                        <field name="nhan_vien_ids" widget="many2many_tags" attrs="{'invisible': [('phong_ban_id', '!=', False)]}"/>
+                    </group>
+                    <group string="Ghi chú">
+                        <div class="text-muted">
+                            Nếu chọn phòng ban, hệ thống sẽ sinh bảng lương cho toàn bộ nhân viên thuộc phòng ban đó. Nếu để trống cả hai, hệ thống sẽ sinh bảng lương cho toàn bộ nhân viên.
+                        </div>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_sinh_bang_luong" type="object" string="Sinh / Cập nhật" class="btn-primary"/>
+                    <button string="Hủy" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sinh_bang_luong_wizard" model="ir.actions.act_window">
+        <field name="name">Sinh bảng lương</field>
+        <field name="res_model">sinh_bang_luong_wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

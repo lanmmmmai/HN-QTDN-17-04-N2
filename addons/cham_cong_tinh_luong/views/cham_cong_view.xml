@@ -5,12 +5,16 @@
             <field name="name">cham_cong.tree</field>
             <field name="model">cham_cong</field>
             <field name="arch" type="xml">
-                <tree string="Chấm công" decoration-success="trang_thai == 'di_lam'" decoration-warning="trang_thai == 'di_muon'" decoration-danger="trang_thai == 'nghi'" decoration-info="trang_thai == 'tang_ca'">
+                <tree string="Chấm công" decoration-success="trang_thai == 'di_lam' or trang_thai == 'nua_ngay'" decoration-warning="trang_thai == 'di_muon'" decoration-danger="trang_thai in ('nghi', 'nghi_co_phep', 'nghi_khong_phep')" decoration-info="trang_thai == 'tang_ca'">
                     <field name="nhan_vien_id"/>
+                    <field name="ma_nhan_vien"/>
+                    <field name="phong_ban_id"/>
+                    <field name="chuc_vu_id"/>
                     <field name="ngay_cham_cong"/>
                     <field name="ca_lam_viec"/>
                     <field name="gio_vao"/>
                     <field name="gio_ra"/>
+                    <field name="so_ngay_cong"/>
                     <field name="so_gio_lam"/>
                     <field name="so_gio_tang_ca"/>
                     <field name="trang_thai"/>
@@ -49,6 +53,7 @@
                                         <field name="ca_lam_viec"/>
                                         <field name="gio_vao"/>
                                         <field name="gio_ra"/>
+                                        <field name="so_ngay_cong" readonly="1" class="o_cctl_metric_value"/>
                                         <field name="so_gio_lam" readonly="1" class="o_cctl_metric_value"/>
                                         <field name="so_gio_tang_ca" readonly="1" class="o_cctl_metric_value"/>
                                     </group>
@@ -79,11 +84,11 @@
                     <field name="ngay_cham_cong"/>
                     <field name="trang_thai"/>
                     <filter name="filter_today" string="Hôm nay" domain="[('ngay_cham_cong', '=', context_today())]"/>
-                    <filter name="filter_month" string="Tháng này" domain="[('ngay_cham_cong', '&gt;=', context_today().replace(day=1)), ('ngay_cham_cong', '&lt;', context_today().replace(day=1) + relativedelta(months=1))]"/>
+                    <filter name="filter_month" string="Tháng này" date="ngay_cham_cong" default_period="this_month"/>
                     <filter name="filter_muon" string="Đi muộn" domain="[('trang_thai', '=', 'di_muon')]"/>
-                    <filter name="filter_nghi" string="Nghỉ" domain="[('trang_thai', '=', 'nghi')]"/>
+                    <filter name="filter_nghi" string="Nghỉ" domain="[('trang_thai', 'in', ('nghi', 'nghi_co_phep', 'nghi_khong_phep'))]"/>
                     <filter name="filter_tang_ca" string="Tăng ca" domain="[('trang_thai', '=', 'tang_ca')]"/>
-                    <filter name="filter_confirmed" string="Đã xác nhận" domain="['|', ('state', '=', 'xac_nhan'), ('state', '=', 'confirmed')]"/>
+                    <filter name="filter_confirmed" string="Đã xác nhận" domain="[('state', '=', 'xac_nhan')]"/>
                     <separator/>
                     <filter name="group_employee" string="Nhân viên" context="{'group_by': 'nhan_vien_id'}"/>
                     <filter name="group_status" string="Trạng thái" context="{'group_by': 'state'}"/>
@@ -98,6 +103,8 @@
             <field name="name">Chấm công</field>
             <field name="res_model">cham_cong</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_cham_cong_search"/>
         </record>
 
@@ -105,11 +112,12 @@
             <field name="name">cham_cong.my.tree</field>
             <field name="model">cham_cong</field>
             <field name="arch" type="xml">
-                <tree string="Chấm công của tôi" decoration-success="trang_thai == 'di_lam'" decoration-warning="trang_thai == 'di_muon'" decoration-danger="trang_thai == 'nghi'" decoration-info="trang_thai == 'tang_ca'">
+                <tree string="Chấm công của tôi" decoration-success="trang_thai == 'di_lam' or trang_thai == 'nua_ngay'" decoration-warning="trang_thai == 'di_muon'" decoration-danger="trang_thai in ('nghi', 'nghi_co_phep', 'nghi_khong_phep')" decoration-info="trang_thai == 'tang_ca'">
                     <field name="ngay_cham_cong"/>
                     <field name="ca_lam_viec"/>
                     <field name="gio_vao"/>
                     <field name="gio_ra"/>
+                    <field name="so_ngay_cong"/>
                     <field name="so_gio_lam"/>
                     <field name="so_gio_tang_ca"/>
                     <field name="trang_thai"/>
@@ -131,6 +139,7 @@
                             <field name="ca_lam_viec" readonly="1"/>
                             <field name="gio_vao" readonly="1"/>
                             <field name="gio_ra" readonly="1"/>
+                            <field name="so_ngay_cong" readonly="1"/>
                             <field name="so_gio_lam" readonly="1"/>
                             <field name="so_gio_tang_ca" readonly="1"/>
                             <field name="trang_thai" readonly="1"/>
@@ -150,11 +159,11 @@
                     <field name="ngay_cham_cong"/>
                     <field name="trang_thai"/>
                     <filter name="my_today" string="Hôm nay" domain="[('ngay_cham_cong', '=', context_today())]"/>
-                    <filter name="my_month" string="Tháng này" domain="[('ngay_cham_cong', '&gt;=', context_today().replace(day=1)), ('ngay_cham_cong', '&lt;', context_today().replace(day=1) + relativedelta(months=1))]"/>
+                    <filter name="my_month" string="Tháng này" date="ngay_cham_cong" default_period="this_month"/>
                     <filter name="my_late" string="Đi muộn" domain="[('trang_thai', '=', 'di_muon')]"/>
-                    <filter name="my_absent" string="Nghỉ" domain="[('trang_thai', '=', 'nghi')]"/>
+                    <filter name="my_absent" string="Nghỉ" domain="[('trang_thai', 'in', ('nghi', 'nghi_co_phep', 'nghi_khong_phep'))]"/>
                     <filter name="my_overtime" string="Tăng ca" domain="[('trang_thai', '=', 'tang_ca')]"/>
-                    <filter name="my_confirmed" string="Đã xác nhận" domain="['|', ('state', '=', 'xac_nhan'), ('state', '=', 'confirmed')]"/>
+                    <filter name="my_confirmed" string="Đã xác nhận" domain="[('state', '=', 'xac_nhan')]"/>
                 </search>
             </field>
         </record>

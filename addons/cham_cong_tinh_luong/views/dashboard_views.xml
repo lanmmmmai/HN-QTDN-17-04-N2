@@ -29,58 +29,66 @@
                             <div class="row g-3 o_cctl_stats_grid">
                                 <div class="col-12 col-md-6 col-xl-3">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--info">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-users"/></div>
-                                        <div class="o_cctl_stat_value"><field name="so_nhan_vien_da_cham_cong" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Số nhân viên đã chấm công</div>
-                                        <div class="text-muted small">Số nhân viên có phát sinh chấm công trong kỳ.</div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6 col-xl-3">
-                                    <div class="o_cctl_stat_card o_cctl_stat_card--info">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-calendar-check-o"/></div>
-                                        <div class="o_cctl_stat_value"><field name="tong_cham_cong" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Bản ghi chấm công</div>
-                                        <div class="text-muted small">Tổng số dòng chấm công trong tháng.</div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-users" title="Tổng nhân viên"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_nhan_vien" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Tổng nhân viên</div>
+                                        <div class="text-muted small">Tổng số nhân sự có trong hệ thống.</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--success">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-clock-o"/></div>
-                                        <div class="o_cctl_stat_value"><field name="tong_gio_lam" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Tổng giờ làm</div>
-                                        <div class="text-muted small">Tổng thời gian làm việc của kỳ hiện tại.</div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6 col-xl-3">
-                                    <div class="o_cctl_stat_card o_cctl_stat_card--success">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-plus-circle"/></div>
-                                        <div class="o_cctl_stat_value"><field name="tong_gio_tang_ca" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Tổng giờ tăng ca</div>
-                                        <div class="text-muted small">Số giờ làm thêm ngoài ca chuẩn.</div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-check-square-o" title="Đã chấm công hôm nay"/></div>
+                                        <div class="o_cctl_stat_value"><field name="so_nhan_vien_da_cham_cong_hom_nay" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Đã chấm công hôm nay</div>
+                                        <div class="text-muted small">Nhân viên đã ghi nhận giờ vào hôm nay.</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--warning">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-exclamation-circle"/></div>
-                                        <div class="o_cctl_stat_value"><field name="so_luot_di_muon" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Số lượt đi muộn</div>
-                                        <div class="text-muted small">Các lần đi muộn đã được ghi nhận.</div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-minus-square-o" title="Chưa chấm công hôm nay"/></div>
+                                        <div class="o_cctl_stat_value"><field name="so_nhan_vien_chua_cham_cong_hom_nay" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Chưa chấm công hôm nay</div>
+                                        <div class="text-muted small">Nhân viên chưa chấm công trong ngày.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--info">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-calendar" title="Tổng ngày công tháng này"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_ngay_cong" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Tổng ngày công tháng này</div>
+                                        <div class="text-muted small">Tổng số ngày đi làm thực tế trong tháng.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--success">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-clock-o" title="Tổng giờ làm"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_gio_lam" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Tổng giờ làm</div>
+                                        <div class="text-muted small">Tổng số giờ làm việc tích lũy trong tháng.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--success">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-plus-circle" title="Tổng giờ tăng ca"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_gio_tang_ca" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Tổng giờ tăng ca</div>
+                                        <div class="text-muted small">Tổng số giờ làm thêm ngoài ca chuẩn.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="o_cctl_stat_card o_cctl_stat_card--success">
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-money" title="Tổng quỹ lương tháng"/></div>
+                                        <div class="o_cctl_stat_value"><field name="tong_quy_luong" nolabel="1" readonly="1"/></div>
+                                        <div class="o_cctl_stat_label">Tổng quỹ lương tháng</div>
+                                        <div class="text-muted small">Tổng quỹ lương thực lĩnh dự kiến của tháng.</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--danger">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-bed"/></div>
-                                        <div class="o_cctl_stat_value"><field name="so_ngay_nghi" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Số ngày nghỉ</div>
-                                        <div class="text-muted small">Các ngày nghỉ không có công.</div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6 col-xl-3">
-                                    <div class="o_cctl_stat_card o_cctl_stat_card--danger">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-bell"/></div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-bell" title="Cảnh báo chấm công"/></div>
                                         <div class="o_cctl_stat_value"><field name="tong_canh_bao" nolabel="1" readonly="1"/></div>
-                                        <div class="o_cctl_stat_label">Cảnh báo bất thường</div>
-                                        <div class="text-muted small">Tổng số cảnh báo trong kỳ.</div>
+                                        <div class="o_cctl_stat_label">Cảnh báo chấm công</div>
+                                        <div class="text-muted small">Các vi phạm chấm công thông minh trong tháng.</div>
                                     </div>
                                 </div>
                             </div>
@@ -112,12 +120,13 @@
             <field name="name">dashboard.tinh.luong.form</field>
             <field name="model">dashboard_cham_cong_luong</field>
             <field name="arch" type="xml">
-                <form string="Dashboard tính lương" class="o_cctl_form">
+                <form string="Dashboard tính lương" class="o_cctl_form" create="false" edit="false" delete="false">
                     <header>
                         <button name="action_refresh_dashboard" type="object" string="Cập nhật" class="btn-primary"/>
                         <button name="action_open_bang_luong_list" type="object" string="Xem bảng lương"/>
                         <button name="action_open_in_phieu_luong_pdf" type="object" string="In phiếu lương PDF"/>
                         <button name="action_open_cau_hinh_luong" type="object" string="Cấu hình lương"/>
+                        <button name="action_open_sinh_bang_luong" type="object" string="Sinh bảng lương"/>
                         <button name="action_open_xuat_bang_luong" type="object" string="Xuất Excel"/>
                         <button name="action_open_thong_ke_luong" type="object" string="Báo cáo lương"/>
                     </header>
@@ -135,80 +144,97 @@
                             </group>
                             <div class="row g-3 o_cctl_stats_grid">
                                 <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_bang_luong_list" class="btn o_cctl_card_button">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--info">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-file-text-o"/></div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-file-text-o" title="Bảng lương trong tháng"/></div>
                                         <div class="o_cctl_stat_value"><field name="so_bang_luong_thang" nolabel="1" readonly="1"/></div>
                                         <div class="o_cctl_stat_label">Số bảng lương trong tháng</div>
                                         <div class="text-muted small">Tổng số bảng lương phát sinh trong kỳ.</div>
                                     </div>
+                                    </button>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_tong_quy_luong" class="btn o_cctl_card_button">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--success">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-money"/></div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-money" title="Tổng quỹ lương"/></div>
                                         <div class="o_cctl_stat_value"><field name="tong_quy_luong" nolabel="1" readonly="1"/></div>
                                         <div class="o_cctl_stat_label">Tổng quỹ lương</div>
                                         <div class="text-muted small">Tổng chi lương dự kiến của kỳ.</div>
                                     </div>
+                                    </button>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_tong_phu_cap" class="btn o_cctl_card_button">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--info">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-gift"/></div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-gift" title="Tổng phụ cấp"/></div>
                                         <div class="o_cctl_stat_value"><field name="tong_phu_cap" nolabel="1" readonly="1"/></div>
                                         <div class="o_cctl_stat_label">Tổng phụ cấp</div>
                                         <div class="text-muted small">Tổng giá trị các khoản phụ cấp.</div>
                                     </div>
+                                    </button>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_tong_bao_hiem" class="btn o_cctl_card_button">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--info">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-shield"/></div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-shield" title="Tổng bảo hiểm"/></div>
                                         <div class="o_cctl_stat_value"><field name="tong_bao_hiem" nolabel="1" readonly="1"/></div>
                                         <div class="o_cctl_stat_label">Tổng bảo hiểm</div>
                                         <div class="text-muted small">Tổng chi phí bảo hiểm theo kỳ.</div>
                                     </div>
+                                    </button>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_bang_luong_chua_xac_nhan" class="btn o_cctl_card_button">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--warning">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-hourglass-half"/></div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-hourglass-half" title="Chưa xác nhận"/></div>
                                         <div class="o_cctl_stat_value"><field name="bang_luong_chua_xac_nhan" nolabel="1" readonly="1"/></div>
                                         <div class="o_cctl_stat_label">Bảng lương chưa xác nhận</div>
                                         <div class="text-muted small">Số bảng lương chưa được chốt.</div>
                                     </div>
+                                    </button>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_bang_luong_da_xac_nhan" class="btn o_cctl_card_button">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--success">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-check-circle"/></div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-check-circle" title="Đã xác nhận"/></div>
                                         <div class="o_cctl_stat_value"><field name="bang_luong_xac_nhan" nolabel="1" readonly="1"/></div>
                                         <div class="o_cctl_stat_label">Bảng lương đã xác nhận</div>
                                         <div class="text-muted small">Số bảng lương đã chốt xong.</div>
                                     </div>
+                                    </button>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_bang_luong_da_thanh_toan" class="btn o_cctl_card_button">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--success">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-credit-card"/></div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-credit-card" title="Đã thanh toán"/></div>
                                         <div class="o_cctl_stat_value"><field name="bang_luong_da_thanh_toan" nolabel="1" readonly="1"/></div>
                                         <div class="o_cctl_stat_label">Bảng lương đã thanh toán</div>
                                         <div class="text-muted small">Số bảng lương đã chi trả.</div>
                                     </div>
+                                    </button>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-3">
+                                    <button type="object" name="action_open_bang_luong_da_tinh" class="btn o_cctl_card_button">
                                     <div class="o_cctl_stat_card o_cctl_stat_card--danger">
-                                        <div class="o_cctl_stat_icon"><i class="fa fa-exclamation-triangle"/></div>
+                                        <div class="o_cctl_stat_icon"><i class="fa fa-exclamation-triangle" title="Đã tính"/></div>
                                         <div class="o_cctl_stat_value"><field name="bang_luong_da_tinh" nolabel="1" readonly="1"/></div>
                                         <div class="o_cctl_stat_label">Đã tính</div>
                                         <div class="text-muted small">Bảng lương đã tính nhưng chưa chốt.</div>
                                     </div>
+                                    </button>
                                 </div>
                             </div>
                             <div class="o_cctl_dashboard_summary">
-                                <div class="o_cctl_badge_info">Bảng lương <field name="so_bang_luong_thang" nolabel="1" readonly="1"/></div>
-                                <div class="o_cctl_badge_success">Xác nhận <field name="bang_luong_xac_nhan" nolabel="1" readonly="1"/></div>
-                                <div class="o_cctl_badge_warning">Chưa xác nhận <field name="bang_luong_chua_xac_nhan" nolabel="1" readonly="1"/></div>
-                                <div class="o_cctl_badge_success">Thanh toán <field name="bang_luong_da_thanh_toan" nolabel="1" readonly="1"/></div>
+                                <button type="object" name="action_open_bang_luong_list" class="o_cctl_badge_info o_cctl_dashboard_badge_button">Bảng lương <field name="so_bang_luong_thang" nolabel="1" readonly="1"/></button>
+                                <button type="object" name="action_open_bang_luong_da_xac_nhan" class="o_cctl_badge_success o_cctl_dashboard_badge_button">Xác nhận <field name="bang_luong_xac_nhan" nolabel="1" readonly="1"/></button>
+                                <button type="object" name="action_open_bang_luong_chua_xac_nhan" class="o_cctl_badge_warning o_cctl_dashboard_badge_button">Chưa xác nhận <field name="bang_luong_chua_xac_nhan" nolabel="1" readonly="1"/></button>
+                                <button type="object" name="action_open_bang_luong_da_thanh_toan" class="o_cctl_badge_success o_cctl_dashboard_badge_button">Thanh toán <field name="bang_luong_da_thanh_toan" nolabel="1" readonly="1"/></button>
                             </div>
                             <div class="o_cctl_section mt-3">
                                 <div class="fw-bold mb-2">Thao tác nhanh</div>
                                 <div class="d-flex gap-2 flex-wrap">
                                     <button type="object" name="action_open_bang_luong_list" class="btn btn-outline-primary btn-sm">Xem bảng lương</button>
+                                    <button type="object" name="action_open_sinh_bang_luong" class="btn btn-outline-success btn-sm">Sinh bảng lương</button>
                                     <button type="object" name="action_open_in_phieu_luong_pdf" class="btn btn-outline-secondary btn-sm">In phiếu lương PDF</button>
                                     <button type="object" name="action_open_cau_hinh_luong" class="btn btn-outline-secondary btn-sm">Cấu hình lương</button>
                                     <button type="object" name="action_open_xuat_bang_luong" class="btn btn-outline-secondary btn-sm">Xuất Excel</button>
@@ -220,6 +246,12 @@
                 </form>
             </field>
         </record>
+
+        <data noupdate="1">
+            <record id="dashboard_tinh_luong_record" model="dashboard_cham_cong_luong">
+                <field name="name">Dashboard tính lương</field>
+            </record>
+        </data>
 
         <record id="action_dashboard_cham_cong_server" model="ir.actions.server">
             <field name="name">Dashboard chấm công</field>
@@ -233,6 +265,8 @@
             <field name="res_model">dashboard_cham_cong_luong</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="dashboard_tinh_luong_form_view"/>
+            <field name="res_id" ref="dashboard_tinh_luong_record"/>
+            <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
         </record>
 
         <record id="action_dashboard_cua_toi" model="ir.actions.act_window">
@@ -240,6 +274,7 @@
             <field name="res_model">dashboard_cham_cong_luong</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="dashboard_tinh_luong_form_view"/>
+            <field name="res_id" ref="dashboard_tinh_luong_record"/>
             <field name="context">{'dashboard_scope': 'mine'}</field>
         </record>
 
@@ -320,6 +355,13 @@
             <field name="res_model">bang_luong</field>
             <field name="view_mode">tree,graph,pivot</field>
             <field name="search_view_id" ref="view_bang_luong_search"/>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {'sequence': 1, 'view_mode': 'tree', 'view_id': ref('view_bang_luong_tree')}),
+                (0, 0, {'sequence': 2, 'view_mode': 'graph', 'view_id': ref('view_bang_luong_graph')}),
+                (0, 0, {'sequence': 3, 'view_mode': 'pivot', 'view_id': ref('view_bang_luong_pivot')}),
+            ]"/>
         </record>
+
     </data>
 </odoo>
