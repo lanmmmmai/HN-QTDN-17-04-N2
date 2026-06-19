@@ -423,6 +423,37 @@ class BangLuong(models.Model):
         ])
         payroll_map = {p.nhan_vien_id.id: p for p in existing_payrolls}
 
+        # Bulk pre-fetching configs, attendance, and rewards/disciplines to prevent N+1 queries
+        configs = self.env['cau_hinh_luong'].search([
+            ('nhan_vien_id', 'in', employees.ids),
+            ('trang_thai', 'in', ['dang_ap_dung', 'ap_dung']),
+        ], order='ngay_bat_dau desc, id desc')
+
+        start_date = date(int(nam), int(thang), 1)
+        if int(thang) == 12:
+            end_date = date(int(nam) + 1, 1, 1)
+        else:
+            end_date = date(int(nam), int(thang) + 1, 1)
+
+        cham_cong = self.env['cham_cong'].search([
+            ('nhan_vien_id', 'in', employees.ids),
+            ('ngay_cham_cong', '>=', start_date),
+            ('ngay_cham_cong', '<', end_date),
+            ('state', 'in', ['xac_nhan', 'confirmed']),
+        ], order='ngay_cham_cong, gio_vao, id')
+
+        rewards_disciplines = self.env['khen_thuong_ky_luat'].search([
+            ('nhan_vien_id', 'in', employees.ids),
+            ('ngay_ap_dung', '>=', start_date),
+            ('ngay_ap_dung', '<', end_date),
+        ])
+
+        prefetched = {
+            'configs': configs,
+            'cham_cong': cham_cong,
+            'rewards_disciplines': rewards_disciplines,
+        }
+
         created = 0
         updated = 0
         skipped = 0
@@ -435,7 +466,7 @@ class BangLuong(models.Model):
                 'nam': int(nam),
                 'ngay_tao': fields.Date.context_today(self),
             })
-            values = payroll._get_payroll_values(require_config=False)
+            values = payroll._get_payroll_values(require_config=False, prefetched_data=prefetched)
             if values['canh_bao'] and not values['luong_co_ban']:
                 skipped += 1
                 messages.append('%s: %s' % (employee.ho_va_ten, values['canh_bao']))
