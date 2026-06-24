@@ -171,3 +171,28 @@ class TestPayroll(TransactionCase):
         # thuc_linh (Net Salary) = tong_luong - tong_khau_tru - tong_ky_luat
         # = 1985576.91 - 1200000 - 50000 = 735576.91
         self.assertAlmostEqual(salary_sheet.thuc_linh, 735576.91, places=2)
+
+    def test_03_payroll_email_notification(self):
+        """Test sending payroll slips via email automatically on payment confirmation"""
+        self.assertTrue(self.employee.email)
+        
+        salary_sheet = self.env['bang_luong'].create({
+            'nhan_vien_id': self.employee.id,
+            'thang': '6',
+            'nam': 2026,
+            'state': 'da_tinh',
+        })
+        
+        salary_sheet.action_xac_nhan()
+        self.assertEqual(salary_sheet.state, 'xac_nhan')
+        
+        mail_count_before = self.env['mail.mail'].search_count([])
+        salary_sheet.action_da_thanh_toan()
+        self.assertEqual(salary_sheet.state, 'da_thanh_toan')
+        
+        mail_count_after = self.env['mail.mail'].search_count([])
+        self.assertEqual(mail_count_after, mail_count_before + 1)
+        
+        mail = self.env['mail.mail'].search([], order='id desc', limit=1)
+        self.assertEqual(mail.email_to, self.employee.email)
+        self.assertIn('Phiếu lương', mail.subject)

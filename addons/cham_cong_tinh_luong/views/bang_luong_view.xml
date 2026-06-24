@@ -52,6 +52,10 @@
                                 attrs="{'invisible': [('state', '=', 'nhap')]}"
                                 class="btn-secondary"
                                 groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
+                        <button name="action_gui_email_phieu_luong" type="object" string="Gửi Email"
+                                attrs="{'invisible': [('state', '=', 'nhap')]}"
+                                class="btn-secondary"
+                                groups="cham_cong_tinh_luong.group_cham_cong_ke_toan,cham_cong_tinh_luong.group_cham_cong_quan_tri"/>
                         <button name="action_in_phieu_luong" type="object" string="Xem phiếu lương"
                                 attrs="{'invisible': [('state', '=', 'nhap')]}"
                                 class="btn-primary"

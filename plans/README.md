@@ -11,6 +11,10 @@
 | **003** | [Thêm kiểm tra quyền hạn chặt chẽ khi sinh bảng lương hàng loạt](file:///d:/My_Lan/HN-QTDN-17-04-N2/plans/003-secure-sinh-bang-luong-action.md) | P3 | S | — | DONE |
 | **004** | [Tối ưu hóa hiệu năng tính lương (Giảm thiểu truy vấn N+1) trong Bảng lương](file:///d:/My_Lan/HN-QTDN-17-04-N2/plans/004-optimize-payroll-nplusone.md) | P2 | M | — | DONE |
 | **005** | [Tinh chỉnh Giao diện và Khả năng tiếp cận (Accessibility & Contrast) theo tiêu chuẩn Impeccable](file:///d:/My_Lan/HN-QTDN-17-04-N2/plans/005-improve-style-accessibility.md) | P3 | S | — | DONE |
+| **006** | [Tự động hóa gửi Phiếu lương qua Email & Chatter](file:///d:/My_Lan/HN-QTDN-17-04-N2/plans/006-auto-send-payroll-email.md) | P2 | S | — | DONE |
+| **007** | [Thiết lập Cron Job tự động tính công và sinh bảng lương định kỳ cuối tháng](file:///d:/My_Lan/HN-QTDN-17-04-N2/plans/007-auto-payroll-cron.md) | P2 | S | — | TODO |
+| **008** | [Nâng cấp AI Chatbot Nhân sự lên chuẩn OpenAI Chat Completions API](file:///d:/My_Lan/HN-QTDN-17-04-N2/plans/008-upgrade-ai-chatbot.md) | P2 | S | — | TODO |
+| **009** | [Bổ sung biểu đồ phân tích dữ liệu trực quan trên Dashboard](file:///d:/My_Lan/HN-QTDN-17-04-N2/plans/009-dashboard-visual-charts.md) | P2 | S | — | TODO |
 
 *Trạng thái có thể cập nhật: `TODO` \| `IN PROGRESS` \| `DONE` \| `BLOCKED` \| `REJECTED`*
 

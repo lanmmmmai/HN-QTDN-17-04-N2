@@ -33,6 +33,9 @@ Module chấm công và tính lương tích hợp với module Quản lý nhân 
         # 3. Record rule load sau access rights
         'security/rules.xml',
 
+        # Mail template data
+        'data/mail_template_data.xml',
+
         # 4. View chính
         'views/cham_cong_view.xml',
         'views/cau_hinh_luong_view.xml',
