@@ -12,7 +12,7 @@ DEFAULT_OVERTIME_MULTIPLIER = 1.5
 
 class BangLuong(models.Model):
     _name = 'bang_luong'
-    _inherit = ['nhan_vien_thong_tin.mixin']
+    _inherit = ['mail.thread', 'nhan_vien_thong_tin.mixin']
     _description = 'Bảng lương'
     _order = 'nam desc, thang_so desc, nhan_vien_id'
     _sql_constraints = [
@@ -496,9 +496,28 @@ class BangLuong(models.Model):
         self._check_payroll_manager_rights()
         self.write({'state': 'xac_nhan'})
 
+    def action_gui_email_phieu_luong(self):
+        self.ensure_one()
+        if not self.nhan_vien_id.email:
+            raise ValidationError('Nhân viên %s chưa cấu hình địa chỉ Email.' % self.nhan_vien_id.ho_va_ten)
+        
+        template = self.env.ref('cham_cong_tinh_luong.mail_template_phieu_luong', raise_if_not_found=False)
+        if not template:
+            raise ValidationError('Không tìm thấy mẫu email Phiếu lương.')
+            
+        template.send_mail(self.id, force_send=True)
+        self.message_post(body='Đã gửi phiếu lương tháng %s/%s qua email cho nhân viên.' % (self.thang, self.nam))
+        return True
+
     def action_da_thanh_toan(self):
         self._check_payroll_manager_rights()
         self.write({'state': 'da_thanh_toan'})
+        for record in self:
+            if record.nhan_vien_id.email:
+                try:
+                    record.action_gui_email_phieu_luong()
+                except Exception as e:
+                    _logger.error('Lỗi khi gửi email tự động cho nhân viên %s: %s', record.nhan_vien_id.ho_va_ten, str(e))
 
     def action_huy(self):
         self._check_payroll_manager_rights()
@@ -507,6 +526,17 @@ class BangLuong(models.Model):
     def action_draft(self):
         self._check_payroll_manager_rights()
         self.write({'state': 'nhap'})
+
+    @api.model
+    def cron_auto_calculate_payroll(self):
+        _logger.info('Bắt đầu chạy Cron tự động sinh bảng lương tháng...')
+        today = fields.Date.context_today(self)
+        thang = str(today.month)
+        nam = today.year
+        # Gọi hàm sinh bảng lương hàng loạt bằng quyền hệ thống (sudo)
+        self.env['bang_luong'].sudo().action_sinh_bang_luong_thang(thang, nam)
+        _logger.info('Cron tự động sinh bảng lương tháng kết thúc thành công.')
+        return True
 
     def action_in_phieu_luong(self):
         self.ensure_one()

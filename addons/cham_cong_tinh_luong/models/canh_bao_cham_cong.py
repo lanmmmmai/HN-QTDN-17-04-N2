@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import logging
 
-from odoo import fields, models
+from odoo import api, fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class CanhBaoChamCong(models.Model):
@@ -51,3 +54,20 @@ class CanhBaoChamCong(models.Model):
 
     def action_danh_dau_da_xu_ly(self):
         self.write({'state': 'da_xu_ly'})
+
+    @api.model
+    def cron_auto_analyze_attendance(self):
+        _logger.info('Bắt đầu chạy Cron tự động phân tích chấm công tháng...')
+        today = fields.Date.context_today(self)
+        thang = str(today.month)
+        nam = today.year
+        
+        # Giả lập hoạt động của wizard phân tích chấm công
+        employees = self.env['nhan_vien'].sudo().search([])
+        wizard = self.env['phan_tich_cham_cong_wizard'].sudo().create({
+            'thang': thang,
+            'nam': nam,
+        })
+        wizard.action_phan_tich_canh_bao()
+        _logger.info('Cron tự động phân tích chấm công tháng kết thúc thành công.')
+        return True

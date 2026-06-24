@@ -52,6 +52,10 @@ class TestPayroll(TransactionCase):
             'ngay_bat_dau': date(2026, 6, 1),
             'trang_thai': 'dang_ap_dung',
         })
+        
+        # Grant payroll manager group to the test user to allow calling manager action methods
+        group_admin = self.env.ref('cham_cong_tinh_luong.group_cham_cong_quan_tri')
+        self.env.user.write({'groups_id': [(4, group_admin.id)]})
 
     def test_01_attendance_shift_overtime(self):
         """Test that overtime is calculated correctly according to work shifts (Task 4)"""
@@ -171,3 +175,88 @@ class TestPayroll(TransactionCase):
         # thuc_linh (Net Salary) = tong_luong - tong_khau_tru - tong_ky_luat
         # = 1985576.91 - 1200000 - 50000 = 735576.91
         self.assertAlmostEqual(salary_sheet.thuc_linh, 735576.91, places=2)
+
+    def test_03_payroll_email_notification(self):
+        """Test sending payroll slips via email automatically on payment confirmation"""
+        self.assertTrue(self.employee.email)
+        
+        salary_sheet = self.env['bang_luong'].create({
+            'nhan_vien_id': self.employee.id,
+            'thang': '6',
+            'nam': 2026,
+            'state': 'da_tinh',
+        })
+        
+        salary_sheet.action_xac_nhan()
+        self.assertEqual(salary_sheet.state, 'xac_nhan')
+        
+        template = self.env.ref('cham_cong_tinh_luong.mail_template_phieu_luong')
+        template.write({'auto_delete': False})
+
+        mail_count_before = self.env['mail.mail'].search_count([])
+        salary_sheet.action_da_thanh_toan()
+        self.assertEqual(salary_sheet.state, 'da_thanh_toan')
+        
+        mail_count_after = self.env['mail.mail'].search_count([])
+        self.assertEqual(mail_count_after, mail_count_before + 1)
+        
+        mail = self.env['mail.mail'].search([], order='id desc', limit=1)
+        self.assertEqual(mail.email_to, self.employee.email)
+        self.assertIn('Phiếu lương', mail.subject)
+
+    def test_04_cron_jobs(self):
+        """Test scheduled cron jobs for automatic attendance warnings and draft payroll generation"""
+        # Create standard confirmed attendance
+        self.env['cham_cong'].create({
+            'nhan_vien_id': self.employee.id,
+            'ngay_cham_cong': date(2026, 6, 1),
+            'ca_lam_viec': 'hanh_chinh',
+            'gio_vao': datetime(2026, 6, 1, 1, 0, 0),
+            'gio_ra': datetime(2026, 6, 1, 11, 0, 0),
+            'trang_thai': 'di_muon', # Vi phạm đi muộn để phát sinh cảnh báo
+            'ly_do_di_muon': 'Đường đông kẹt xe',
+            'state': 'xac_nhan',
+        })
+        
+        # 1. Test cron_auto_analyze_attendance
+        warn_count_before = self.env['canh_bao_cham_cong'].search_count([])
+        self.env['canh_bao_cham_cong'].cron_auto_analyze_attendance()
+        warn_count_after = self.env['canh_bao_cham_cong'].search_count([])
+        self.assertTrue(warn_count_after > warn_count_before, "Cron analysis should generate warnings")
+        
+        # 2. Test cron_auto_calculate_payroll
+        payroll_count_before = self.env['bang_luong'].search_count([])
+        self.env['bang_luong'].cron_auto_calculate_payroll()
+        payroll_count_after = self.env['bang_luong'].search_count([])
+        self.assertEqual(payroll_count_after, payroll_count_before + 1, "Cron payroll generation should create a new payroll sheet")
+        
+        # Verify the newly created payroll sheet is in state 'da_tinh'
+        new_payroll = self.env['bang_luong'].search([], order='id desc', limit=1)
+        self.assertEqual(new_payroll.state, 'da_tinh')
+        self.assertEqual(new_payroll.nhan_vien_id.id, self.employee.id)
+
+    def test_05_dashboard_charts(self):
+        """Test dashboard chart data generation"""
+        dashboard = self.env['dashboard_cham_cong_luong'].create({
+            'name': 'Test Dashboard Charts',
+            'thang': '6',
+            'nam': 2026,
+        })
+        # Kích hoạt compute các biểu đồ
+        dashboard._compute_charts()
+        
+        # Kiểm nghiệm dữ liệu JSON trả về
+        self.assertTrue(dashboard.chart_payroll_history)
+        self.assertTrue(dashboard.chart_warning_distribution)
+        
+        import json
+        payroll_data = json.loads(dashboard.chart_payroll_history)
+        self.assertEqual(payroll_data['type'], 'bar')
+        self.assertIn('labels', payroll_data)
+        self.assertIn('datasets', payroll_data)
+        
+        warn_data = json.loads(dashboard.chart_warning_distribution)
+        self.assertEqual(warn_data['type'], 'doughnut')
+        self.assertIn('labels', warn_data)
+        self.assertIn('datasets', warn_data)
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Cron Job 1: Tự động phân tích cảnh báo chấm công hàng tháng -->
+        <record id="ir_cron_auto_analyze_attendance" model="ir.cron">
+            <field name="name">Chấm công: Tự động phân tích cảnh báo chấm công hàng tháng</field>
+            <field name="model_id" ref="cham_cong_tinh_luong.model_canh_bao_cham_cong"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_auto_analyze_attendance()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Cron Job 2: Tự động sinh bảng lương nháp hàng tháng -->
+        <record id="ir_cron_auto_calculate_payroll" model="ir.cron">
+            <field name="name">Tính lương: Tự động sinh bảng lương nháp hàng tháng</field>
+            <field name="model_id" ref="cham_cong_tinh_luong.model_bang_luong"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_auto_calculate_payroll()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

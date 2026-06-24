@@ -44,10 +44,12 @@ _QUERY_PARAMS = {
 def _query_tool(name, description):
     return {
         'type': 'function',
-        'name': name,
-        'description': description,
-        'strict': True,
-        'parameters': _QUERY_PARAMS,
+        'function': {
+            'name': name,
+            'description': description,
+            'strict': True,
+            'parameters': _QUERY_PARAMS,
+        }
     }
 
 
@@ -69,85 +71,95 @@ class AiChatbotService(models.AbstractModel):
                     'Tra cứu đơn giá giờ và các khoản phụ cấp của nhân viên.'),
         {
             'type': 'function',
-            'name': 'create_attendance_request',
-            'description': 'Tạo một bản ghi chấm công mới (cần người dùng xác nhận trước khi lưu).',
-            'strict': True,
-            'parameters': {
-                'type': 'object',
-                'properties': {
-                    'employee_scope': {'type': 'string', 'enum': ['self', 'specific_employee']},
-                    'employee_name': {'type': ['string', 'null']},
-                    'date_text': {'type': 'string', 'description': 'Ngày chấm công dạng tự nhiên: hôm nay, hôm qua, ngày mai, DD/MM, DD/MM/YYYY.'},
-                    'check_in': {'type': ['string', 'null'], 'description': 'Giờ vào dạng HH:MM.'},
-                    'check_out': {'type': ['string', 'null'], 'description': 'Giờ ra dạng HH:MM.'},
-                    'reason': {'type': ['string', 'null'], 'description': 'Ghi chú/lý do.'},
+            'function': {
+                'name': 'create_attendance_request',
+                'description': 'Tạo một bản ghi chấm công mới (cần người dùng xác nhận trước khi lưu).',
+                'strict': True,
+                'parameters': {
+                    'type': 'object',
+                    'properties': {
+                        'employee_scope': {'type': 'string', 'enum': ['self', 'specific_employee']},
+                        'employee_name': {'type': ['string', 'null']},
+                        'date_text': {'type': 'string', 'description': 'Ngày chấm công dạng tự nhiên: hôm nay, hôm qua, ngày mai, DD/MM, DD/MM/YYYY.'},
+                        'check_in': {'type': ['string', 'null'], 'description': 'Giờ vào dạng HH:MM.'},
+                        'check_out': {'type': ['string', 'null'], 'description': 'Giờ ra dạng HH:MM.'},
+                        'reason': {'type': ['string', 'null'], 'description': 'Ghi chú/lý do.'},
+                    },
+                    'required': ['employee_scope', 'employee_name', 'date_text', 'check_in', 'check_out', 'reason'],
+                    'additionalProperties': False,
                 },
-                'required': ['employee_scope', 'employee_name', 'date_text', 'check_in', 'check_out', 'reason'],
-                'additionalProperties': False,
-            },
+            }
         },
         {
             'type': 'function',
-            'name': 'update_attendance_request',
-            'description': 'Cập nhật một bản ghi chấm công đã có (cần người dùng xác nhận).',
-            'strict': True,
-            'parameters': {
-                'type': 'object',
-                'properties': {
-                    'employee_scope': {'type': 'string', 'enum': ['self', 'specific_employee']},
-                    'employee_name': {'type': ['string', 'null']},
-                    'date_text': {'type': 'string', 'description': 'Ngày của bản ghi cần sửa.'},
-                    'check_in': {'type': ['string', 'null'], 'description': 'Giờ vào mới HH:MM.'},
-                    'check_out': {'type': ['string', 'null'], 'description': 'Giờ ra mới HH:MM.'},
-                    'reason': {'type': ['string', 'null']},
+            'function': {
+                'name': 'update_attendance_request',
+                'description': 'Cập nhật một bản ghi chấm công đã có (cần người dùng xác nhận).',
+                'strict': True,
+                'parameters': {
+                    'type': 'object',
+                    'properties': {
+                        'employee_scope': {'type': 'string', 'enum': ['self', 'specific_employee']},
+                        'employee_name': {'type': ['string', 'null']},
+                        'date_text': {'type': 'string', 'description': 'Ngày của bản ghi cần sửa.'},
+                        'check_in': {'type': ['string', 'null'], 'description': 'Giờ vào mới HH:MM.'},
+                        'check_out': {'type': ['string', 'null'], 'description': 'Giờ ra mới HH:MM.'},
+                        'reason': {'type': ['string', 'null']},
+                    },
+                    'required': ['employee_scope', 'employee_name', 'date_text', 'check_in', 'check_out', 'reason'],
+                    'additionalProperties': False,
                 },
-                'required': ['employee_scope', 'employee_name', 'date_text', 'check_in', 'check_out', 'reason'],
-                'additionalProperties': False,
-            },
+            }
         },
         {
             'type': 'function',
-            'name': 'create_leave_request',
-            'description': 'Tạo yêu cầu nghỉ phép (cần người dùng xác nhận).',
-            'strict': True,
-            'parameters': {
-                'type': 'object',
-                'properties': {
-                    'employee_scope': {'type': 'string', 'enum': ['self', 'specific_employee']},
-                    'employee_name': {'type': ['string', 'null']},
-                    'date_from_text': {'type': 'string', 'description': 'Ngày bắt đầu nghỉ.'},
-                    'date_to_text': {'type': 'string', 'description': 'Ngày kết thúc nghỉ.'},
-                    'leave_type': {'type': ['string', 'null'], 'enum': ['paid', 'unpaid', 'sick', 'other', None]},
-                    'reason': {'type': ['string', 'null']},
+            'function': {
+                'name': 'create_leave_request',
+                'description': 'Tạo yêu cầu nghỉ phép (cần người dùng xác nhận).',
+                'strict': True,
+                'parameters': {
+                    'type': 'object',
+                    'properties': {
+                        'employee_scope': {'type': 'string', 'enum': ['self', 'specific_employee']},
+                        'employee_name': {'type': ['string', 'null']},
+                        'date_from_text': {'type': 'string', 'description': 'Ngày bắt đầu nghỉ.'},
+                        'date_to_text': {'type': 'string', 'description': 'Ngày kết thúc nghỉ.'},
+                        'leave_type': {'type': ['string', 'null'], 'enum': ['paid', 'unpaid', 'sick', 'other', None]},
+                        'reason': {'type': ['string', 'null']},
+                    },
+                    'required': ['employee_scope', 'employee_name', 'date_from_text', 'date_to_text', 'leave_type', 'reason'],
+                    'additionalProperties': False,
                 },
-                'required': ['employee_scope', 'employee_name', 'date_from_text', 'date_to_text', 'leave_type', 'reason'],
-                'additionalProperties': False,
-            },
+            }
         },
         {
             'type': 'function',
-            'name': 'print_payroll',
-            'description': 'In / mở bảng lương của nhân viên cho một kỳ (cần người dùng xác nhận).',
-            'strict': True,
-            'parameters': {
-                'type': 'object',
-                'properties': {
-                    'employee_scope': {'type': 'string', 'enum': ['self', 'specific_employee']},
-                    'employee_name': {'type': ['string', 'null']},
-                    'period': {'type': 'string', 'enum': ['current_month', 'last_month', 'specific_month']},
-                    'month': {'type': ['integer', 'null']},
-                    'year': {'type': ['integer', 'null']},
+            'function': {
+                'name': 'print_payroll',
+                'description': 'In / mở bảng lương của nhân viên cho một kỳ (cần người dùng xác nhận).',
+                'strict': True,
+                'parameters': {
+                    'type': 'object',
+                    'properties': {
+                        'employee_scope': {'type': 'string', 'enum': ['self', 'specific_employee']},
+                        'employee_name': {'type': ['string', 'null']},
+                        'period': {'type': 'string', 'enum': ['current_month', 'last_month', 'specific_month']},
+                        'month': {'type': ['integer', 'null']},
+                        'year': {'type': ['integer', 'null']},
+                    },
+                    'required': ['employee_scope', 'employee_name', 'period', 'month', 'year'],
+                    'additionalProperties': False,
                 },
-                'required': ['employee_scope', 'employee_name', 'period', 'month', 'year'],
-                'additionalProperties': False,
-            },
+            }
         },
         {
             'type': 'function',
-            'name': 'get_attendance_alerts',
-            'description': 'Tra cứu các cảnh báo chấm công (đi muộn, về sớm, thiếu giờ ra,...) của nhân viên trong một kỳ.',
-            'strict': True,
-            'parameters': _QUERY_PARAMS,
+            'function': {
+                'name': 'get_attendance_alerts',
+                'description': 'Tra cứu các cảnh báo chấm công (đi muộn, về sớm, thiếu giờ ra,...) của nhân viên trong một kỳ.',
+                'strict': True,
+                'parameters': _QUERY_PARAMS,
+            }
         },
     ]
 
@@ -200,7 +212,7 @@ class AiChatbotService(models.AbstractModel):
             return None, 'Thư viện requests chưa được cài đặt.'
         body = {
             'model': self._get_model(),
-            'input': [
+            'messages': [
                 {'role': 'system', 'content': system_prompt},
                 {'role': 'user', 'content': question},
             ],
@@ -210,7 +222,7 @@ class AiChatbotService(models.AbstractModel):
             body['tool_choice'] = 'auto'
         try:
             resp = requests.post(
-                '%s/responses' % self._get_base_url(),
+                '%s/chat/completions' % self._get_base_url(),
                 headers=self._headers(), json=body, timeout=self._get_timeout(),
             )
             _logger.info('AI_CHATBOT_TOOL: first_call_status=%s', resp.status_code)
@@ -225,27 +237,42 @@ class AiChatbotService(models.AbstractModel):
                             func_args_str, tool_result_str):
         if requests is None:
             return None, 'Thư viện requests chưa được cài đặt.'
+        
+        # Standard OpenAI format requires:
+        # 1. Assistant message describing the tool call
+        # 2. Tool message returning the output of that tool call ID
+        assistant_message = {
+            'role': 'assistant',
+            'tool_calls': [
+                {
+                    'id': func_call_id,
+                    'type': 'function',
+                    'function': {
+                        'name': func_name,
+                        'arguments': func_args_str or '{}',
+                    }
+                }
+            ]
+        }
+        tool_message = {
+            'role': 'tool',
+            'tool_call_id': func_call_id,
+            'name': func_name,
+            'content': tool_result_str,
+        }
+        
         body = {
             'model': self._get_model(),
-            'input': [
+            'messages': [
                 {'role': 'system', 'content': system_prompt},
                 {'role': 'user', 'content': question},
-                {
-                    'type': 'function_call',
-                    'call_id': func_call_id,
-                    'name': func_name,
-                    'arguments': func_args_str or '{}',
-                },
-                {
-                    'type': 'function_call_output',
-                    'call_id': func_call_id,
-                    'output': tool_result_str,
-                },
+                assistant_message,
+                tool_message,
             ],
         }
         try:
             resp = requests.post(
-                '%s/responses' % self._get_base_url(),
+                '%s/chat/completions' % self._get_base_url(),
                 headers=self._headers(), json=body, timeout=self._get_timeout(),
             )
             _logger.info('AI_CHATBOT_TOOL: second_call_status=%s', resp.status_code)
@@ -257,26 +284,25 @@ class AiChatbotService(models.AbstractModel):
             return None, str(exc)
 
     def _extract_text(self, payload):
-        """Extract assistant text from a Responses API payload."""
         if not payload:
             return ''
-        if payload.get('output_text'):
-            return payload['output_text']
-        texts = []
-        for item in payload.get('output', []) or []:
-            if item.get('type') == 'message':
-                for part in item.get('content', []) or []:
-                    if part.get('type') in ('output_text', 'text') and part.get('text'):
-                        texts.append(part['text'])
-        return '\n'.join(texts).strip()
+        choices = payload.get('choices', [])
+        if choices:
+            return choices[0].get('message', {}).get('content', '') or ''
+        return ''
 
     def _extract_function_call(self, payload):
-        """Return (call_id, name, arguments_str) or (None, None, None)."""
         if not payload:
             return None, None, None
-        for item in payload.get('output', []) or []:
-            if item.get('type') == 'function_call':
-                return item.get('call_id') or item.get('id'), item.get('name'), item.get('arguments') or '{}'
+        choices = payload.get('choices', [])
+        if not choices:
+            return None, None, None
+        message = choices[0].get('message', {})
+        tool_calls = message.get('tool_calls', [])
+        if tool_calls:
+            tool_call = tool_calls[0]
+            func = tool_call.get('function', {})
+            return tool_call.get('id'), func.get('name'), func.get('arguments') or '{}'
         return None, None, None
 
     # ------------------------------------------------------------------

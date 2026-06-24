@@ -14,12 +14,14 @@ Module chấm công và tính lương tích hợp với module Quản lý nhân 
         'base',
         'web',
         'nhan_su',
+        'mail',
     ],
 
     'assets': {
         'web.assets_backend': [
             'cham_cong_tinh_luong/static/src/scss/theme_global.scss',
             'cham_cong_tinh_luong/static/src/scss/cham_cong_tinh_luong.scss',
+            'cham_cong_tinh_luong/static/src/js/dashboard_chart_widget.js',
         ],
     },
 
@@ -32,6 +34,10 @@ Module chấm công và tính lương tích hợp với module Quản lý nhân 
 
         # 3. Record rule load sau access rights
         'security/rules.xml',
+
+        # Mail template data
+        'data/mail_template_data.xml',
+        'data/ir_cron_data.xml',
 
         # 4. View chính
         'views/cham_cong_view.xml',

@@ -42,6 +42,8 @@ class DashboardChamCongLuong(models.Model):
     bang_luong_da_thanh_toan = fields.Integer(string='Bảng lương đã thanh toán', compute='_compute_dashboard')
     tong_canh_bao = fields.Integer(string='Cảnh báo thông minh', compute='_compute_dashboard')
     so_canh_bao_cao = fields.Integer(string='Cảnh báo mức cao', compute='_compute_dashboard')
+    chart_payroll_history = fields.Text(string='Dữ liệu biểu đồ quỹ lương', compute='_compute_charts')
+    chart_warning_distribution = fields.Text(string='Dữ liệu biểu đồ cảnh báo', compute='_compute_charts')
 
     @api.depends('thang', 'nam')
     def _compute_dashboard(self):
@@ -208,6 +210,108 @@ class DashboardChamCongLuong(models.Model):
             record.bang_luong_chua_xac_nhan = bang_luong_chua_xac_nhan
             record.tong_canh_bao = tong_canh_bao
             record.so_canh_bao_cao = so_canh_bao_cao
+
+    @api.depends('thang', 'nam')
+    def _compute_charts(self):
+        import json
+        salary_model = self.env['bang_luong']
+        warning_model = self.env['canh_bao_cham_cong']
+        
+        for rec in self:
+            # --- 1. Dữ liệu Quỹ lương 6 tháng gần nhất ---
+            labels_payroll = []
+            data_payroll = []
+            
+            try:
+                current_month = int(rec.thang)
+            except (ValueError, TypeError):
+                current_month = 1
+            current_year = rec.nam or 2026
+            
+            for i in range(5, -1, -1):
+                m = current_month - i
+                y = current_year
+                if m <= 0:
+                    m += 12
+                    y -= 1
+                labels_payroll.append('T%s/%s' % (m, y))
+                
+                # Query tổng thực lĩnh của các bảng lương đã thanh toán hoặc đã xác nhận
+                salaries = salary_model.sudo().search([
+                    ('thang', '=', str(m)),
+                    ('nam', '=', y),
+                    ('state', 'in', ['xac_nhan', 'confirmed', 'da_thanh_toan']),
+                ])
+                data_payroll.append(sum(salaries.mapped('thuc_linh')))
+                
+            rec.chart_payroll_history = json.dumps({
+                'type': 'bar',
+                'labels': labels_payroll,
+                'datasets': [{
+                    'label': 'Quỹ lương thực lĩnh (VND)',
+                    'data': data_payroll,
+                    'backgroundColor': 'rgba(102, 16, 242, 0.65)', # HSL Purple
+                    'borderColor': 'rgb(102, 16, 242)',
+                    'borderWidth': 1
+                }],
+                'options': {
+                    'responsive': True,
+                    'maintainAspectRatio': False,
+                    'plugins': {
+                        'legend': {'display': True}
+                    }
+                }
+            }, ensure_ascii=False)
+            
+            # --- 2. Dữ liệu Phân bổ Cảnh báo Chấm công ---
+            warn_groups = warning_model.read_group(
+                [('thang', '=', rec.thang), ('nam', '=', rec.nam)],
+                ['loai_canh_bao'],
+                ['loai_canh_bao']
+            )
+            
+            alert_types = {
+                'di_muon_nhieu': 'Đi muộn nhiều',
+                'thieu_cong': 'Thiếu công',
+                'tang_ca_qua_nhieu': 'Tăng ca quá nhiều',
+                'thieu_du_lieu_cham_cong': 'Thiếu giờ vào/ra',
+                'di_muon': 'Đi muộn',
+                've_som': 'Về sớm',
+                'thieu_gio_ra': 'Thiếu giờ ra',
+            }
+            
+            labels_warn = []
+            data_warn = []
+            for group in warn_groups:
+                loai = group.get('loai_canh_bao')
+                lbl = alert_types.get(loai, loai or 'Khác')
+                count = group.get('loai_canh_bao_count', 0)
+                if lbl in labels_warn:
+                    idx = labels_warn.index(lbl)
+                    data_warn[idx] += count
+                else:
+                    labels_warn.append(lbl)
+                    data_warn.append(count)
+                    
+            if not labels_warn or sum(data_warn) == 0:
+                labels_warn = ['Không có cảnh báo']
+                data_warn = [0]
+                
+            rec.chart_warning_distribution = json.dumps({
+                'type': 'doughnut',
+                'labels': labels_warn,
+                'datasets': [{
+                    'label': 'Số lượng cảnh báo',
+                    'data': data_warn,
+                    'backgroundColor': [
+                        '#dc3545', '#ffc107', '#28a745', '#17a2b8', '#6610f2', '#e83e8c', '#6c757d'
+                    ]
+                }],
+                'options': {
+                    'responsive': True,
+                    'maintainAspectRatio': False,
+                }
+            }, ensure_ascii=False)
 
     def _get_month_range(self):
         self.ensure_one()
