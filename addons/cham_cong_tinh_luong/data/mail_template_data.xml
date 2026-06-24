@@ -4,16 +4,16 @@
         <record id="mail_template_phieu_luong" model="mail.template">
             <field name="name">Phiếu lương nhân viên</field>
             <field name="model_id" ref="cham_cong_tinh_luong.model_bang_luong"/>
-            <field name="subject">Phiếu lương Tháng ${object.thang}/${object.nam} - ${object.nhan_vien_id.ho_va_ten}</field>
-            <field name="email_to">${object.nhan_vien_id.email}</field>
+            <field name="subject">Phiếu lương Tháng {{ object.thang }}/{{ object.nam }} - {{ object.nhan_vien_id.ho_va_ten }}</field>
+            <field name="email_to">{{ object.nhan_vien_id.email }}</field>
             <field name="body_html" type="html">
                 <div style="font-family: 'DejaVu Sans', Arial, sans-serif; font-size: 14px; color: #1a1a1a; padding: 20px;">
-                    <p>Kính gửi anh/chị <strong>${object.nhan_vien_id.ho_va_ten}</strong>,</p>
-                    <p>Phòng Kế toán xin gửi thông tin phiếu lương của anh/chị trong kỳ lương <strong>Tháng ${object.thang}/${object.nam}</strong> như sau:</p>
+                    <p>Kính gửi anh/chị <strong>{{ object.nhan_vien_id.ho_va_ten }}</strong>,</p>
+                    <p>Phòng Kế toán xin gửi thông tin phiếu lương của anh/chị trong kỳ lương <strong>Tháng {{ object.thang }}/{{ object.nam }}</strong> như sau:</p>
                     <ul>
-                        <li>Số ngày đi làm thực tế: <strong>${object.so_ngay_di_lam} ngày</strong></li>
-                        <li>Tổng giờ tăng ca: <strong>${object.tong_gio_tang_ca} giờ</strong></li>
-                        <li>Tổng lương thực nhận (Net): <strong style="color: #0284c7;">${'{:,.0f}'.format(object.thuc_linh)} VNĐ</strong></li>
+                        <li>Số ngày đi làm thực tế: <strong>{{ object.so_ngay_di_lam }} ngày</strong></li>
+                        <li>Tổng giờ tăng ca: <strong>{{ object.tong_gio_tang_ca }} giờ</strong></li>
+                        <li>Tổng lương thực nhận (Net): <strong style="color: #0284c7;">{{ '{:,.0f}'.format(object.thuc_linh) }} VNĐ</strong></li>
                     </ul>
                     <p>Chi tiết các khoản thu nhập, phụ cấp và khấu trừ được đính kèm trong file PDF gửi kèm thư này.</p>
                     <p>Mọi thắc mắc về số liệu vui lòng phản hồi lại với bộ phận Kế toán để được giải đáp sớm nhất.</p>
@@ -23,7 +23,7 @@
                 </div>
             </field>
             <field name="report_template" ref="cham_cong_tinh_luong.action_report_bang_luong"/>
-            <field name="report_name">Phieu_luong_thang_${object.thang}_${object.nam}</field>
+            <field name="report_name">Phieu_luong_thang_{{ object.thang }}_{{ object.nam }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
     </data>

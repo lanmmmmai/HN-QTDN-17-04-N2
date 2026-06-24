@@ -12,7 +12,7 @@ DEFAULT_OVERTIME_MULTIPLIER = 1.5
 
 class BangLuong(models.Model):
     _name = 'bang_luong'
-    _inherit = ['nhan_vien_thong_tin.mixin']
+    _inherit = ['mail.thread', 'nhan_vien_thong_tin.mixin']
     _description = 'Bảng lương'
     _order = 'nam desc, thang_so desc, nhan_vien_id'
     _sql_constraints = [
@@ -526,6 +526,17 @@ class BangLuong(models.Model):
     def action_draft(self):
         self._check_payroll_manager_rights()
         self.write({'state': 'nhap'})
+
+    @api.model
+    def cron_auto_calculate_payroll(self):
+        _logger.info('Bắt đầu chạy Cron tự động sinh bảng lương tháng...')
+        today = fields.Date.context_today(self)
+        thang = str(today.month)
+        nam = today.year
+        # Gọi hàm sinh bảng lương hàng loạt bằng quyền hệ thống (sudo)
+        self.env['bang_luong'].sudo().action_sinh_bang_luong_thang(thang, nam)
+        _logger.info('Cron tự động sinh bảng lương tháng kết thúc thành công.')
+        return True
 
     def action_in_phieu_luong(self):
         self.ensure_one()
