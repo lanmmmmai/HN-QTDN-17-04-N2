@@ -234,3 +234,29 @@ class TestPayroll(TransactionCase):
         new_payroll = self.env['bang_luong'].search([], order='id desc', limit=1)
         self.assertEqual(new_payroll.state, 'da_tinh')
         self.assertEqual(new_payroll.nhan_vien_id.id, self.employee.id)
+
+    def test_05_dashboard_charts(self):
+        """Test dashboard chart data generation"""
+        dashboard = self.env['dashboard_cham_cong_luong'].create({
+            'name': 'Test Dashboard Charts',
+            'thang': '6',
+            'nam': 2026,
+        })
+        # Kích hoạt compute các biểu đồ
+        dashboard._compute_charts()
+        
+        # Kiểm nghiệm dữ liệu JSON trả về
+        self.assertTrue(dashboard.chart_payroll_history)
+        self.assertTrue(dashboard.chart_warning_distribution)
+        
+        import json
+        payroll_data = json.loads(dashboard.chart_payroll_history)
+        self.assertEqual(payroll_data['type'], 'bar')
+        self.assertIn('labels', payroll_data)
+        self.assertIn('datasets', payroll_data)
+        
+        warn_data = json.loads(dashboard.chart_warning_distribution)
+        self.assertEqual(warn_data['type'], 'doughnut')
+        self.assertIn('labels', warn_data)
+        self.assertIn('datasets', warn_data)
+

@@ -21,6 +21,7 @@ Module chấm công và tính lương tích hợp với module Quản lý nhân 
         'web.assets_backend': [
             'cham_cong_tinh_luong/static/src/scss/theme_global.scss',
             'cham_cong_tinh_luong/static/src/scss/cham_cong_tinh_luong.scss',
+            'cham_cong_tinh_luong/static/src/js/dashboard_chart_widget.js',
         ],
     },
 
