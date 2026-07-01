@@ -13,6 +13,7 @@
                         <button name="action_open_cham_cong" type="object" string="Xem dữ liệu chấm công"/>
                         <button name="action_open_canh_bao" type="object" string="Xem cảnh báo"/>
                         <button name="action_open_phan_tich_canh_bao" type="object" string="Phân tích cảnh báo"/>
+                        <button name="action_chot_cong_va_tinh_luong" type="object" string="Chốt công &amp; Tính lương" class="btn-danger" confirm="Bạn có chắc chắn muốn chốt công toàn bộ nhân viên và tự động sinh bảng lương cho tháng này không?"/>
                     </header>
                     <sheet>
                         <div class="o_cctl_dashboard">
@@ -129,6 +130,7 @@
                         <button name="action_open_sinh_bang_luong" type="object" string="Sinh bảng lương"/>
                         <button name="action_open_xuat_bang_luong" type="object" string="Xuất Excel"/>
                         <button name="action_open_thong_ke_luong" type="object" string="Báo cáo lương"/>
+                        <button name="action_chot_cong_va_tinh_luong" type="object" string="Chốt công &amp; Tính lương" class="btn-danger" confirm="Bạn có chắc chắn muốn chốt công toàn bộ nhân viên và tự động sinh bảng lương cho tháng này không?"/>
                     </header>
                     <sheet>
                         <div class="o_cctl_dashboard">

@@ -260,3 +260,66 @@ class TestPayroll(TransactionCase):
         self.assertIn('labels', warn_data)
         self.assertIn('datasets', warn_data)
 
+    def test_06_dashboard_chot_cong_va_tinh_luong(self):
+        """Test chot_cong_va_tinh_luong button from dashboard with permission checks"""
+        from odoo.exceptions import AccessError
+        
+        # 1. Create a draft attendance record
+        attendance = self.env['cham_cong'].create({
+            'nhan_vien_id': self.employee.id,
+            'ngay_cham_cong': date(2026, 6, 5),
+            'ca_lam_viec': 'hanh_chinh',
+            'gio_vao': datetime(2026, 6, 5, 1, 0, 0),
+            'gio_ra': datetime(2026, 6, 5, 9, 0, 0),
+            'trang_thai': 'di_lam',
+            'state': 'nhap',
+        })
+        
+        dashboard = self.env['dashboard_cham_cong_luong'].create({
+            'name': 'Test Dashboard Chot Cong',
+            'thang': '6',
+            'nam': 2026,
+        })
+        
+        # 2. Test permission block for non-manager user
+        normal_user = self.env['res.users'].create({
+            'name': 'Normal Employee',
+            'login': 'employee_normal',
+            'email': 'normal@company.com',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])], # Only base user group
+        })
+        
+        # Switch context to normal user and call action
+        dashboard_as_normal = dashboard.with_user(normal_user)
+        with self.assertRaises(AccessError):
+            dashboard_as_normal.action_chot_cong_va_tinh_luong()
+            
+        # Attendance state should remain unchanged
+        self.assertEqual(attendance.state, 'nhap')
+        
+        # 3. Test successful action from authorized manager
+        # self.env.user already has group_cham_cong_quan_tri from setUp
+        payroll_count_before = self.env['bang_luong'].search_count([])
+        
+        action = dashboard.action_chot_cong_va_tinh_luong()
+        
+        # Attendance state should be updated to 'xac_nhan'
+        self.assertEqual(attendance.state, 'xac_nhan')
+        
+        # Payroll sheet should be automatically generated
+        payroll_count_after = self.env['bang_luong'].search_count([])
+        self.assertEqual(payroll_count_after, payroll_count_before + 1)
+        
+        new_payroll = self.env['bang_luong'].search([
+            ('nhan_vien_id', '=', self.employee.id),
+            ('thang', '=', '6'),
+            ('nam', '=', 2026),
+        ], limit=1)
+        self.assertTrue(new_payroll)
+        self.assertEqual(new_payroll.state, 'da_tinh')
+        
+        # Check action returns redirection
+        self.assertEqual(action['type'], 'ir.actions.act_window')
+        self.assertEqual(action['res_model'], 'bang_luong')
+
+
