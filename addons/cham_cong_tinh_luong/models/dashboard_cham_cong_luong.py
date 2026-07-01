@@ -350,6 +350,38 @@ class DashboardChamCongLuong(models.Model):
         })
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
+    def _is_payroll_manager(self):
+        return self.env['bang_luong']._is_payroll_manager()
+
+    def _check_payroll_manager_rights(self):
+        self.env['bang_luong']._check_payroll_manager_rights()
+
+    def action_chot_cong_va_tinh_luong(self):
+
+        self.ensure_one()
+        # 1. Kiểm tra phân quyền cho 3 role bảo mật
+        self._check_payroll_manager_rights()
+        
+        start_date, end_date = self._get_month_range()
+        
+        # 2. Chốt công hàng loạt trong kỳ
+        cham_cong_records = self.env['cham_cong'].search([
+            ('ngay_cham_cong', '>=', start_date),
+            ('ngay_cham_cong', '<', end_date),
+            ('state', '!=', 'xac_nhan'),
+        ])
+        if cham_cong_records:
+            cham_cong_records.sudo().write({'state': 'xac_nhan'})
+            
+        # 3. Kích hoạt sinh bảng lương nháp hàng loạt
+        self.env['bang_luong'].action_sinh_bang_luong_thang(self.thang, self.nam)
+        
+        # 4. Chuyển hướng sang danh sách bảng lương của kỳ này
+        action = self.env.ref('cham_cong_tinh_luong.action_thong_ke_bang_luong').sudo().read()[0]
+        action['domain'] = [('thang', '=', self.thang), ('nam', '=', self.nam)]
+        return action
+
+
     def action_open_cham_cong(self):
         self.ensure_one()
         start_date, end_date = self._get_month_range()
