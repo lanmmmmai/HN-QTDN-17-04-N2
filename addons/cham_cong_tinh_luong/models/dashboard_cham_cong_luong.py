@@ -250,15 +250,24 @@ class DashboardChamCongLuong(models.Model):
                 'datasets': [{
                     'label': 'Quỹ lương thực lĩnh (VND)',
                     'data': data_payroll,
-                    'backgroundColor': 'rgba(102, 16, 242, 0.65)', # HSL Purple
-                    'borderColor': 'rgb(102, 16, 242)',
-                    'borderWidth': 1
+                    'backgroundColor': 'rgba(99, 102, 241, 0.85)', # Modern Indigo
+                    'borderColor': 'rgb(99, 102, 241)',
+                    'borderWidth': 1.5,
+                    'borderRadius': 4, # Bo góc đầu cột biểu đồ
                 }],
                 'options': {
                     'responsive': True,
                     'maintainAspectRatio': False,
                     'plugins': {
-                        'legend': {'display': True}
+                        'legend': {'display': False} # Ẩn legend để tối giản
+                    },
+                    'scales': {
+                        'x': {
+                            'grid': {'display': False} # Ẩn đường lưới dọc
+                        },
+                        'y': {
+                            'grid': {'color': 'rgba(0, 0, 0, 0.05)'} # Đường lưới ngang siêu mỏng
+                        }
                     }
                 }
             }, ensure_ascii=False)
@@ -304,12 +313,23 @@ class DashboardChamCongLuong(models.Model):
                     'label': 'Số lượng cảnh báo',
                     'data': data_warn,
                     'backgroundColor': [
-                        '#dc3545', '#ffc107', '#28a745', '#17a2b8', '#6610f2', '#e83e8c', '#6c757d'
-                    ]
+                        '#f43f5e', '#fbbf24', '#10b981', '#06b6d4', '#6366f1', '#ec4899', '#64748b'
+                    ], # Premium Tailwind Palette
+                    'borderWidth': 0, # Tối giản không viền
                 }],
                 'options': {
                     'responsive': True,
                     'maintainAspectRatio': False,
+                    'cutout': '70%', # Thiết kế mỏng thanh lịch
+                    'plugins': {
+                        'legend': {
+                            'position': 'right',
+                            'labels': {
+                                'boxWidth': 12,
+                                'usePointStyle': True
+                            }
+                        }
+                    }
                 }
             }, ensure_ascii=False)
 
