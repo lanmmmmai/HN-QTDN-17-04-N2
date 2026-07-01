@@ -238,7 +238,35 @@ class PhanTichChamCongWizard(models.TransientModel):
                     })
 
         if alerts_to_create:
-            Alert.create(alerts_to_create)
+            created_alerts = Alert.create(alerts_to_create)
+            for alert in created_alerts:
+                if alert.nhan_vien_id.telegram_chat_id:
+                    try:
+                        # Bản đồ lấy tên hiển thị của loại cảnh báo
+                        selection_dict = dict(alert._fields['loai_canh_bao'].selection)
+                        loai_canh_bao_str = selection_dict.get(alert.loai_canh_bao, alert.loai_canh_bao)
+                        
+                        msg = (
+                            "<b>CẢNH BÁO CHẤM CÔNG</b>\n"
+                            "Chào <b>%s</b>,\n"
+                            "Hệ thống ghi nhận cảnh báo chấm công tháng %s/%s:\n"
+                            "• Loại cảnh báo: <b>%s</b>\n"
+                            "• Mức độ: %s\n"
+                            "• Chi tiết: <i>%s</i>\n"
+                            "• Gợi ý xử lý: %s"
+                        ) % (
+                            alert.nhan_vien_id.ho_va_ten,
+                            alert.thang,
+                            alert.nam,
+                            loai_canh_bao_str,
+                            alert.muc_do.upper(),
+                            alert.noi_dung,
+                            alert.goi_y_xu_ly or "Không có"
+                        )
+                        # Gọi thông báo gửi tin Telegram qua helper bang_luong
+                        self.env['bang_luong']._send_telegram_notification(msg, chat_id=alert.nhan_vien_id.telegram_chat_id)
+                    except Exception:
+                        pass
 
         return {
             'type': 'ir.actions.client',

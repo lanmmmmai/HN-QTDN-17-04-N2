@@ -322,4 +322,64 @@ class TestPayroll(TransactionCase):
         self.assertEqual(action['type'], 'ir.actions.act_window')
         self.assertEqual(action['res_model'], 'bang_luong')
 
+    def test_07_telegram_notification(self):
+        """Test Telegram notifications for payroll and attendance alerts using mock"""
+        from unittest.mock import patch
+        
+        # Setup telegram chat id for employee and system parameter
+        self.employee.write({'telegram_chat_id': '123456789'})
+        self.env['ir.config_parameter'].sudo().set_param('telegram_bot_token', '12345:ABCDEF')
+        
+        # 1. Test telegram notification on payroll payment confirmation
+        salary_sheet = self.env['bang_luong'].create({
+            'nhan_vien_id': self.employee.id,
+            'thang': '6',
+            'nam': 2026,
+            'state': 'xac_nhan',
+        })
+        
+        # Mock requests.post to avoid real internet connection and inspect payload
+        with patch('requests.post') as mock_post:
+            # Configure mock response
+            class MockResponse:
+                status_code = 200
+                text = "OK"
+            mock_post.return_value = MockResponse()
+            
+            salary_sheet.action_da_thanh_toan()
+            
+            # Assert requests.post was called with the telegram api sendMessage
+            self.assertTrue(mock_post.called)
+            args, kwargs = mock_post.call_args
+            self.assertEqual(args[0], 'https://api.telegram.org/bot12345:ABCDEF/sendMessage')
+            self.assertEqual(kwargs['json']['chat_id'], '123456789')
+            self.assertIn('THÔNG BÁO NHẬN LƯƠNG', kwargs['json']['text'])
+
+        # 2. Test telegram notification on attendance alert creation
+        # Create standard confirmed attendance that triggers late warning
+        self.env['cham_cong'].create({
+            'nhan_vien_id': self.employee.id,
+            'ngay_cham_cong': date(2026, 6, 6),
+            'ca_lam_viec': 'hanh_chinh',
+            'gio_vao': datetime(2026, 6, 6, 1, 0, 0),
+            'gio_ra': datetime(2026, 6, 6, 11, 0, 0),
+            'trang_thai': 'di_muon',
+            'ly_do_di_muon': 'Muộn xe buýt',
+            'state': 'xac_nhan',
+        })
+        
+        with patch('requests.post') as mock_post:
+            mock_post.return_value = MockResponse()
+            
+            # Run analysis wizard which triggers warning alerts and thus telegrams
+            self.env['canh_bao_cham_cong'].cron_auto_analyze_attendance()
+            
+            # Assert requests.post was called with the telegram api sendMessage
+            self.assertTrue(mock_post.called)
+            args, kwargs = mock_post.call_args
+            self.assertEqual(args[0], 'https://api.telegram.org/bot12345:ABCDEF/sendMessage')
+            self.assertEqual(kwargs['json']['chat_id'], '123456789')
+            self.assertIn('CẢNH BÁO CHẤM CÔNG', kwargs['json']['text'])
+
+
 

@@ -25,6 +25,7 @@
                             <field name="so_nguoi_bang_tuoi"/>
                             <field name="que_quan"/>
                             <field name="email"/>
+                            <field name="telegram_chat_id"/>
                             <field name="anh" widget="image"/>
                         </group>
                         <group col="4" string="Thông tin công việc">
@@ -81,6 +82,7 @@
                     <field name="so_nguoi_bang_tuoi"/>
                     <field name="que_quan"/>
                     <field name="email"/>
+                    <field name="telegram_chat_id"/>
                     <field name="user_id"/>
                     <field name="phong_ban_id"/>
                     <field name="chuc_vu_id"/>

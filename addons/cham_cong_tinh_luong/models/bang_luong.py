@@ -1,6 +1,7 @@
 import logging
 from datetime import date
 
+import requests
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
@@ -509,6 +510,37 @@ class BangLuong(models.Model):
         self.message_post(body='Đã gửi phiếu lương tháng %s/%s qua email cho nhân viên.' % (self.thang, self.nam))
         return True
 
+    def _send_telegram_notification(self, message, chat_id=None):
+        token = self.env['ir.config_parameter'].sudo().get_param('telegram_bot_token')
+        if not token:
+            _logger.warning('Chưa cấu hình telegram_bot_token. Không thể gửi thông báo Telegram.')
+            return False
+        
+        target_chat_id = chat_id
+        if not target_chat_id and self:
+            target_chat_id = self[0].nhan_vien_id.telegram_chat_id
+            
+        if not target_chat_id:
+            return False
+            
+        url = "https://api.telegram.org/bot%s/sendMessage" % token
+        payload = {
+            'chat_id': target_chat_id,
+            'text': message,
+            'parse_mode': 'HTML'
+        }
+        try:
+            response = requests.post(url, json=payload, timeout=10)
+            if response.status_code == 200:
+                _logger.info('Đã gửi tin nhắn Telegram thành công cho %s.', self.nhan_vien_id.ho_va_ten)
+                return True
+            else:
+                _logger.error('Gửi Telegram thất bại (Mã lỗi: %s): %s', response.status_code, response.text)
+                return False
+        except Exception as e:
+            _logger.error('Lỗi kết nối khi gửi thông báo Telegram: %s', str(e))
+            return False
+
     def action_da_thanh_toan(self):
         self._check_payroll_manager_rights()
         self.write({'state': 'da_thanh_toan'})
@@ -518,6 +550,22 @@ class BangLuong(models.Model):
                     record.action_gui_email_phieu_luong()
                 except Exception as e:
                     _logger.error('Lỗi khi gửi email tự động cho nhân viên %s: %s', record.nhan_vien_id.ho_va_ten, str(e))
+            if record.nhan_vien_id.telegram_chat_id:
+                try:
+                    msg = (
+                        "<b>THÔNG BÁO NHẬN LƯƠNG</b>\n"
+                        "Chúc mừng <b>%s</b>! Bảng lương tháng %s/%s của bạn đã được thanh toán.\n"
+                        "Số tiền thực lĩnh: <b>%s</b> VNĐ.\n"
+                        "Vui lòng kiểm tra email để nhận phiếu lương chi tiết."
+                    ) % (
+                        record.nhan_vien_id.ho_va_ten,
+                        record.thang,
+                        record.nam,
+                        "{:,.2f}".format(record.thuc_linh)
+                    )
+                    record._send_telegram_notification(msg)
+                except Exception as e:
+                    _logger.error('Lỗi khi gửi tin nhắn Telegram cho nhân viên %s: %s', record.nhan_vien_id.ho_va_ten, str(e))
 
     def action_huy(self):
         self._check_payroll_manager_rights()
